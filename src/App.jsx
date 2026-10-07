@@ -17,6 +17,7 @@ function App() {
         </div>
         <div>
           <h1>vicky creado</h1>
+          <h1>rox creado</h1>
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
