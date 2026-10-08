@@ -5,7 +5,7 @@ import { agregar, useCarrito } from './Productos'
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
 
-// detalleProducto.html no tenía clase en el <body>: fondo blanco de Bootstrap
+
 export default function DetalleProducto() {
   const [params] = useSearchParams()
   const idProducto = params.get('id')
