@@ -1,7 +1,7 @@
 .background {
     background-image: url(/img/fondoaz.jpg);
     background-size: cover;
-    background-position: center;
+     background-position: center;
 }
 
 .h1-blogs {
@@ -14,4 +14,334 @@
 .card {
     margin-left: auto;
     margin-right: auto;
+}
+
+.bg-main {
+    background-image: url('/img/fondoaz.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.video-section-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #1e293b;
+    color: #ffffff;
+    padding: 40px;
+    gap: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.video-text-col {
+    flex: 1;
+    min-width: 280px;
+}
+
+.video-title {
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.video-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin-bottom: 0;
+}
+
+.video-iframe-col {
+    flex: 1;
+    min-width: 280px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.video-iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: none;
+}
+
+.bg-gia-card {
+    background-color: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(5px);
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gia-logo {
+    max-height: 100px;
+    filter: brightness(0) invert(1); 
+}
+
+.text-light-subtle {
+    color: #cbd5e1;
+}
+
+.hero-simple {
+    position: relative;
+    width: 100%;
+    height: 60vh; 
+    min-height: 400px;
+    background-image: url('https://www.jorgejuanjoyeros.es/blog/wp-content/uploads/2023/06/diamantes-caros.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.hero-simple-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.65);
+    z-index: 1;
+}
+
+.hero-simple-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    color: #ffffff;
+}
+
+.herotitulo {
+    font-size: 4.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.herosubtitulo {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: #e2e8f0;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+.titulo-nosotros {
+    text-align: center;
+    color: white;
+    padding-top: 50px;
+    margin-bottom: 50px;
+    font-size: 55px;
+    font-family: 'Times New Roman', Times, serif;
+ }
+
+.divisor {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 3px;
+      background-color: #294374;
+      border: none;
+      margin: 40px auto;
+      width: 500px;
+    }
+
+.decoracion-superior {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.decoracion-superior::before,
+.decoracion-superior::after {
+  content: "";
+  flex: 1;
+  max-width: 100px;
+  height: 1px;
+  background-color: #1e293b;
+}
+
+.rombo {
+  color: #4e7fdb;
+  margin: 0 10px;
+  font-size: 12px;
+}
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tarjeta-gema {
+  background-color: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.imagen-contenedor {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-color: #1a1a1a; 
+  position: relative;
+}
+
+.contenido {
+  padding: 20px;
+}
+
+.origen {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif;
+}
+
+.origen::before {
+  content: "•";
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.tag-azul::before { color: #5271ff; }
+
+.tag-rojo::before { color: #ff4a4a; }
+
+.tag-morado::before { color: #bf55ec; }
+
+.tag-verde::before { color: #2ecc71; }
+
+.tarjeta-gema h3 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 15px 0;
+}
+
+.tarjeta-gema p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgb(40, 42, 108);
+  margin: 0;
+}
+
+.seccion {
+  max-width: 700px;
+  margin: 60px auto;
+  position: relative;
+  padding-right: 20px;
+}
+
+.item {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  position: relative;
+  margin-bottom: 70px;
+  padding-right: 80px; 
+}
+
+.contenido {
+  text-align: right;
+  max-width: 550px;
+}
+
+.numero {
+  display: block;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: #4e7fdb;
+  font-family: 'Times New Roman', Times, serif;
+  margin-bottom: 5px;
+}
+
+.titulo {
+  font-size: 32px;
+  color: #ffffff;
+  font-weight: 400;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin: 0 0 15px 0;
+}
+
+.texto {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgb(254, 254, 255);
+  font-family: sans-serif; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.icono {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #d4af37; 
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0f0e0c; 
+  z-index: 2; 
+  font-size: 18px;
+}
+
+.seccion::before {
+  content: '';
+  position: absolute;
+  right: 25px; 
+  top: 35px;
+  bottom: 35px;
+  width: 1px;
+  background-color: rgba(212, 175, 55, 0.4);
+  z-index: 1;
+}
+
+.imagen-contenedor {
+  width: 100%;
+  height: 200px;             
+  background-color: #ffffff; 
+  overflow: hidden;          
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagen-contenedor img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        
+  object-position: center;   
+}
+
+.titulo-cards {
+    color: rgb(25, 25, 97);
+    text-shadow: 2px 2px 4px rgba(27, 20, 70, 0.3);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.textbasico {
+    color: #fbfbfb;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
