@@ -103,6 +103,10 @@ export async function pagar(carrito) {
 }
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
+
+// BD: productos.en_oferta + productos.precio_oferta. Si está en oferta se cobra el precio de oferta.
+export const precioFinal = (producto) =>
+  producto.en_oferta && producto.precio_oferta ? Number(producto.precio_oferta) : Number(producto.precio)
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
 
 
@@ -119,7 +123,17 @@ export function TarjetaProducto({ producto, deshabilitado, onAgregar }) {
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">{producto.nombre}</h5>
           <p className="card-text text-muted">{producto.origen ? producto.origen : ''}</p>
-          <p className="card-text fw-bold">${formatearPrecio(producto.precio)}</p>
+          <p className="card-text fw-bold">
+            {precioFinal(producto) < Number(producto.precio) ? (
+              <>
+                <span className="badge bg-danger me-1">Oferta</span>
+                <span className="text-muted text-decoration-line-through me-1">
+                  ${formatearPrecio(producto.precio)}
+                </span>
+              </>
+            ) : null}
+            ${formatearPrecio(precioFinal(producto))}
+          </p>
 
           <div className="mt-auto d-flex gap-2">
             <Link
@@ -173,7 +187,7 @@ export default function Productos() {
                 producto={producto}
                 deshabilitado={contarEnCarrito(carrito, producto.id_producto) >= producto.stock}
                 onAgregar={() =>
-                  agregar(carrito, producto.nombre, producto.precio, producto.id_producto, producto.stock)
+                  agregar(carrito, producto.nombre, precioFinal(producto), producto.id_producto, producto.stock)
                 }
               />
             ))}
@@ -183,4 +197,5 @@ export default function Productos() {
     </div>
   )
 }
+
 
