@@ -25,6 +25,33 @@
     font-family: system-ui, -apple-system, sans-serif;
 }
 
+.background {
+    background-image: url(/img/fondoaz.jpg);
+    background-size: cover;
+     background-position: center;
+}
+
+.h1-blogs {
+    text-align: center;
+    color: white;
+    padding-top: 30px;
+    margin-bottom: 30px;
+}
+
+.card {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bg-main {
+    background-image: url('/img/fondoaz.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
 .video-section-card {
     display: flex;
     flex-wrap: wrap;
@@ -344,4 +371,92 @@
 .textbasico {
     color: #fbfbfb;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+/* ===== Footer (componente Footer.jsx) — copiado tal cual del original ===== */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    background-color: rgba(39, 55, 110, 0.993);
+    color: white;
+    padding: 40px 20px 20px 20px;
+}
+
+.footer_marca, 
+.footer_navegacion, 
+.footer_contacto {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.footer_marca {
+    text-align: left;
+}
+
+.footer_navegacion {
+    text-align: left;
+}
+
+.footer_contacto {
+    text-align: left;
+}
+
+
+.footer_navegacion ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer_navegacion li {
+    margin-bottom: 8px;
+}
+
+.footer_navegacion a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+}
+
+.footer_navegacion a.activo, 
+.footer_navegacion a:hover {
+    color: #ffd700;
+}
+
+
+.iconos {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.iconos a {
+    color: white;
+    transition: transform 0.2s ease;
+}
+
+.iconos a:hover {
+    transform: scale(1.4);
+}
+
+.fuente {
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+.footer_copyright {
+    width: 100%;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(255, 255, 255, 0.15); /* Línea delgada arriba */
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.footer_copyright p {
+    margin: 0;
 }

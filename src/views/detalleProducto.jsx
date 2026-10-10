@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { agregar, useCarrito } from './Productos'
+import { agregar, precioFinal, useCarrito } from './Productos'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
 
-// detalleProducto.html no tenía clase en el <body>: fondo blanco de Bootstrap
+
 export default function DetalleProducto() {
   const [params] = useSearchParams()
   const idProducto = params.get('id')
@@ -19,7 +19,10 @@ export default function DetalleProducto() {
 
     let vigente = true
     fetch('/api/productos/' + idProducto)
-      .then((respuesta) => respuesta.json())
+      .then((respuesta) => {
+        if (!respuesta.ok) throw new Error('Producto no encontrado (' + respuesta.status + ')')
+        return respuesta.json()
+      })
       .then((datos) => {
         if (vigente) setProducto(datos)
       })
@@ -59,7 +62,15 @@ export default function DetalleProducto() {
             <h1 id="detNombre">{nombre}</h1>
             <p className="text-muted" id="detOrigen">{p.origen || ''}</p>
             <h3 className="fw-bold" id="detPrecio">
-              {producto ? '$' + formatearPrecio(p.precio) : ''}
+              {producto && precioFinal(p) < Number(p.precio) && (
+                <>
+                  <span className="badge bg-danger fs-6 me-2">Oferta</span>
+                  <span className="text-muted fs-5 text-decoration-line-through me-2">
+                    ${formatearPrecio(p.precio)}
+                  </span>
+                </>
+              )}
+              {producto ? '$' + formatearPrecio(precioFinal(p)) : ''}
             </h3>
             <p id="detDescripcion">{p.descripcion || ''}</p>
             <ul className="list-group list-group-flush mb-4">
@@ -75,7 +86,7 @@ export default function DetalleProducto() {
               id="btnAgregarDetalle"
               disabled={producto ? !hayStock : false}
               onClick={() => {
-                if (hayStock) agregar(carrito, p.nombre, p.precio, p.id_producto, p.stock)
+                if (hayStock) agregar(carrito, p.nombre, precioFinal(p), p.id_producto, p.stock)
               }}
             >
               {producto && !hayStock ? 'Sin stock' : 'Agregar al carrito'}
