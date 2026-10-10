@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { agregar, precioFinal, useCarrito } from './Productos'
+import { agregar, precioFinal, useCarrito } from './productos'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')

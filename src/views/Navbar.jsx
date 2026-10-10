@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { pagar, quitar, useCarrito, vaciar } from './Productos'
+import { Offcanvas } from 'bootstrap'
+import { quitar, useCarrito, vaciar } from './productos'
 import CarritoLateral from './Carrito'
 
-// ================= NAVBAR =================
 // Misma clave de localStorage que usaba navbar.js
 function leerUsuario() {
   try {
@@ -34,6 +34,8 @@ function MenuComprador() {
     <ul className="navbar-nav me-auto align-items-center" id="menuComprador">
       <li className="nav-item"><Link className="nav-link" to="/home">Inicio</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/productos">Productos</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/categorias">Categorías</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/nosotros">Nosotros</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/blogs">Blogs</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
@@ -55,6 +57,18 @@ function Navbar() {
     localStorage.removeItem('usuarioActual')
     setRefrescar((n) => n + 1)
     navigate('/home')
+  }
+
+  // "Ir a pagar": cierra el panel del carrito y va al checkout
+  const irAPagar = () => {
+    if (carrito.length === 0) {
+      alert('Tu carrito está vacío.')
+      return
+    }
+    const panel = document.getElementById('carritoLateral')
+    const instancia = panel && Offcanvas.getInstance(panel)
+    if (instancia) instancia.hide()
+    navigate('/checkout')
   }
 
   return (
@@ -106,7 +120,7 @@ function Navbar() {
           carrito={carrito}
           onQuitar={(i) => quitar(carrito, i)}
           onVaciar={vaciar}
-          onPagar={() => pagar(carrito)}
+          onPagar={irAPagar}
         />
       )}
     </>

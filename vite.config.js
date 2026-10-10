@@ -15,6 +15,11 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
+      // las imágenes de los productos viven en el backend (public/img)
+      '/img': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
     },
   },
 })

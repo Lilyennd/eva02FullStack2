@@ -7,7 +7,7 @@ import Nosotros from './views/nosotros'
 import Blogs from './views/blogs'
 import DetalleBlog from './views/detalleBlog'
 import Contacto from './views/contacto'
-import Productos from './views/Productos'
+import Productos from './views/productos'
 import DetalleProducto from './views/detalleProducto'
 import Login from './views/login'
 import RegistroUsuario from './views/registroUsuario'
@@ -17,6 +17,11 @@ import ModificarProducto from './views/modificarProducto'
 import ListarUsuarios from './views/listarUsuarios'
 import CrearUsuario from './views/crearUsuario'
 import EditarUsuario from './views/editarUsuario'
+import Categorias from './views/categorias'
+import Ofertas from './views/ofertas'
+import Checkout from './views/checkout'
+import PagoCorrecto from './views/pagoCorrecto'
+import PagoError from './views/pagoError'
 
 function Layout() {
   return (
@@ -50,6 +55,11 @@ function App() {
           <Route path="/listarUsuarios" element={<ListarUsuarios />} />
           <Route path="/crearUsuario" element={<CrearUsuario />} />
           <Route path="/editarUsuario" element={<EditarUsuario />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/ofertas" element={<Ofertas />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pagoCorrecto" element={<PagoCorrecto />} />
+          <Route path="/pagoError" element={<PagoError />} />
         </Route>
       </Routes>
     </BrowserRouter>
