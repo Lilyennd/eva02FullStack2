@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { agregar, contarEnCarrito, precioFinal, TarjetaProducto, useCarrito } from './productos'
+import { apiFetch } from '../services/api'
 
 // Vista Ofertas: solo los productos con en_oferta (GET /api/productos?oferta=1)
 export default function Ofertas() {
@@ -9,7 +10,7 @@ export default function Ofertas() {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch('/api/productos?oferta=1')
+    apiFetch('/api/productos?oferta=1')
       .then((respuesta) => respuesta.json())
       .then((datos) => setProductos(Array.isArray(datos) ? datos : []))
       .catch((err) => {

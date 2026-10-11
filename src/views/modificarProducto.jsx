@@ -1,31 +1,34 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { apiFetch } from '../services/api'
+import CamposProducto, { IMAGENES_PRODUCTO, useCatalogosProducto } from './CamposProducto'
 
 
-
-const IMAGENES_BASE = [
-  'diamante1.jpg', 'diamanterosa1.jpg', 'esmeralda1.jpg', 'ruby1.jpg', 'zafiro1.jpg',
-]
 
 const productoVacio = {
   codigo_producto: '', nombre: '', descripcion: '', precio: '', id_categoria: '',
   stock: '', stock_critico: '', origen: '', imagen_principal: '',
   kilates: '', corte: '', claridad: '', color: '', certificado: '', peso_gramos: '',
+  en_oferta: false, precio_oferta: '',
 }
 
 export default function ModificarProducto() {
   const navigate = useNavigate()
-  const { categorias, imagenes } = useCatalogosProducto(IMAGENES_BASE)
+  const [params] = useSearchParams()
+  const idInicial = params.get('id')
+  const { categorias, imagenes } = useCatalogosProducto(IMAGENES_PRODUCTO)
   const [listaProductos, setListaProductos] = useState([])
   const [idSeleccionado, setIdSeleccionado] = useState('')
   const [datos, setDatos] = useState(productoVacio)
 
   useEffect(() => {
     let vigente = true
-    fetch('/api/productos')
+    apiFetch('/api/productos')
       .then((respuesta) => respuesta.json())
       .then((lista) => {
-        if (vigente) setListaProductos(lista)
+        if (!vigente) return
+        setListaProductos(lista)
+        if (idInicial) seleccionar(idInicial, lista)
       })
       .catch(() => {
         if (vigente) alert('Error al cargar los productos desde la base de datos.')
@@ -40,11 +43,10 @@ export default function ModificarProducto() {
     setDatos((prev) => ({ ...prev, [id]: value }))
   }
 
-  const handleSeleccion = (e) => {
-    const id = e.target.value
+  const seleccionar = (id, lista) => {
     setIdSeleccionado(id)
 
-    const elegido = listaProductos.find((p) => p.id_producto == id)
+    const elegido = lista.find((p) => String(p.id_producto) === String(id))
     if (elegido) {
       setDatos({
         codigo_producto: elegido.codigo_producto,
@@ -62,15 +64,24 @@ export default function ModificarProducto() {
         color: elegido.color || '',
         certificado: elegido.certificado || '',
         peso_gramos: elegido.peso_gramos || '',
+        en_oferta: !!elegido.en_oferta,
+        precio_oferta: elegido.precio_oferta || '',
       })
     }
   }
+
+  const handleSeleccion = (e) => seleccionar(e.target.value, listaProductos)
 
   const handleSubmit = async (evento) => {
     evento.preventDefault()
 
     if (idSeleccionado === '') {
       alert('Por favor, selecciona un producto primero.')
+      return
+    }
+
+    if (datos.en_oferta && (datos.precio_oferta === '' || Number(datos.precio_oferta) >= Number(datos.precio))) {
+      alert('El precio de oferta es obligatorio y debe ser menor al precio normal.')
       return
     }
 
@@ -89,10 +100,12 @@ export default function ModificarProducto() {
       certificado: datos.certificado || null,
       peso_gramos: Number(datos.peso_gramos) || null,
       imagen_principal: datos.imagen_principal || null,
+      en_oferta: !!datos.en_oferta,
+      precio_oferta: datos.en_oferta ? Number(datos.precio_oferta) : null,
     }
 
     try {
-      const respuesta = await fetch('/api/productos/' + idSeleccionado, {
+      const respuesta = await apiFetch('/api/productos/' + idSeleccionado, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(paqueteDatos),
@@ -123,7 +136,7 @@ export default function ModificarProducto() {
                     <label htmlFor="select_producto" className="form-label">Seleccionar Producto a Modificar</label>
                     <select className="form-select bg-light fw-bold" id="select_producto" required
                       value={idSeleccionado} onChange={handleSeleccion}>
-                      <option value="" disabled>Cargando productos...</option>
+                      <option value="" disabled>Selecciona un producto...</option>
                       {listaProductos.map((p) => (
                         <option key={p.id_producto} value={p.id_producto}>
                           {p.codigo_producto + ' - ' + p.nombre}

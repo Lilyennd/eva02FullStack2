@@ -9,17 +9,14 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] })
   ],
   server: {
-    // El frontend (Vite, :5173) pide /api/... y se redirige al backend Next.js (:3000)
+    // Las APIs se llaman directo al backend de Vercel (src/services/api.js).
+    // Solo las imágenes (/img/...) viven en el backend, así que se piden allá.
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      // las imágenes de los productos viven en el backend (public/img)
       '/img': {
-        target: 'http://localhost:3000',
+        target: 'https://eva01-full-stack2-eight.vercel.app',
         changeOrigin: true,
       },
     },
   },
 })
+

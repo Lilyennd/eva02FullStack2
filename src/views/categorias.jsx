@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { agregar, contarEnCarrito, precioFinal, TarjetaProducto, useCarrito } from './productos'
+import { apiFetch } from '../services/api'
 
 export function TarjetaCategoria({ categoria, imagen, activa }) {
   return (
@@ -34,8 +35,8 @@ export default function Categorias() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/categorias').then((r) => r.json()),
-      fetch('/api/productos').then((r) => r.json()),
+      apiFetch('/api/categorias').then((r) => r.json()),
+      apiFetch('/api/productos').then((r) => r.json()),
     ])
       .then(([listaCategorias, listaProductos]) => {
         setCategorias(Array.isArray(listaCategorias) ? listaCategorias : [])

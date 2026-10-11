@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { agregar, precioFinal, useCarrito } from './productos'
+import { apiFetch } from '../services/api'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
@@ -18,7 +19,7 @@ export default function DetalleProducto() {
     if (!idProducto) return
 
     let vigente = true
-    fetch('/api/productos/' + idProducto)
+    apiFetch('/api/productos/' + idProducto)
       .then((respuesta) => {
         if (!respuesta.ok) throw new Error('Producto no encontrado (' + respuesta.status + ')')
         return respuesta.json()
@@ -45,7 +46,7 @@ export default function DetalleProducto() {
   const hayStock = producto && producto.stock > 0
 
   return (
-    <div className="min-vh-100">
+    <div className="background min-vh-100">
       <div className="container my-5">
         <div className="row g-5">
           <div className="col-12 col-md-6">

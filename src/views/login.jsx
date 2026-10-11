@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 // Solo estos dominios pueden entrar (antes venía de utils/validaciones)
 function correoPermitido(correo) {
@@ -32,7 +33,7 @@ export default function Login() {
     }
 
     try {
-      const respuesta = await fetch('/api/login', {
+      const respuesta = await apiFetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo: correoLimpio, password }),
@@ -47,7 +48,8 @@ export default function Login() {
 
       // Misma clave que usaba navbar.js
       localStorage.setItem('usuarioActual', JSON.stringify(data.usuario))
-      navigate('/home')
+      // Administrador (1) y Vendedor (2) van al panel; el cliente va a la tienda
+      navigate(data.usuario.id_rol === 1 || data.usuario.id_rol === 2 ? '/admin' : '/home')
     } catch (error) {
       console.error('Error de red:', error)
       setErrorPassword('No se pudo conectar con el servidor.')
@@ -106,3 +108,4 @@ export default function Login() {
     </div>
   )
 }
+

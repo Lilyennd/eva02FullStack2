@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCarrito, vaciar } from './productos'
 import { formatearPrecio, TablaCompra } from './DatosCompra'
+import { apiFetch } from '../services/api'
 
 // checkout: resumen del carrito + datos del cliente + dirección de entrega.
 // crea la orden (POST /api/ordenes) y simula el pago marcándola como 'Pagada'
@@ -62,12 +63,12 @@ export default function Checkout() {
 
   // regiones + imágenes de los productos (el carrito solo guarda nombre, precio e id)
   useEffect(() => {
-    fetch('/api/regiones')
+    apiFetch('/api/regiones')
       .then((r) => r.json())
       .then(setRegiones)
       .catch((err) => console.error('Error cargando regiones:', err))
 
-    fetch('/api/productos')
+    apiFetch('/api/productos')
       .then((r) => r.json())
       .then((productos) => {
         const mapa = {}
@@ -81,7 +82,7 @@ export default function Checkout() {
   useEffect(() => {
     if (!idRegion) return
     let vigente = true
-    fetch('/api/comunas?regionId=' + idRegion)
+    apiFetch('/api/comunas?regionId=' + idRegion)
       .then((r) => r.json())
       .then((lista) => { if (vigente) setComunas(lista) })
       .catch((err) => console.error('Error cargando comunas:', err))
@@ -92,7 +93,7 @@ export default function Checkout() {
   const idUsuario = usuario?.id_usuario
   useEffect(() => {
     if (!idUsuario) return
-    fetch('/api/usuarios/' + idUsuario)
+    apiFetch('/api/usuarios/' + idUsuario)
       .then((r) => (r.ok ? r.json() : null))
       .then((u) => {
         if (!u) return
@@ -150,7 +151,7 @@ export default function Checkout() {
     setProcesando(true)
     try {
       // a) crear la orden (el servidor valida stock y precios)
-      const resOrden = await fetch('/api/ordenes', {
+      const resOrden = await apiFetch('/api/ordenes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos),
@@ -162,14 +163,14 @@ export default function Checkout() {
       }
 
       // b) pago simulado: la orden pasa a 'Pagada' y se descuenta el stock
-      const resPago = await fetch('/api/ordenes/' + orden.id_orden, {
+      const resPago = await apiFetch('/api/ordenes/' + orden.id_orden, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ estado: 'Pagada' }),
       })
       if (!resPago.ok) {
         const errorPago = await resPago.json()
-        await fetch('/api/ordenes/' + orden.id_orden, {
+        await apiFetch('/api/ordenes/' + orden.id_orden, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ estado: 'Pago fallido' }),
@@ -327,3 +328,4 @@ export default function Checkout() {
     </div>
   )
 }
+

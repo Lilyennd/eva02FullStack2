@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 // ================= CARRITO (equivale al carrito.js original) =================
 // Mismas funciones y mismo localStorage ('carrito'). Va en este archivo para no
@@ -66,42 +67,6 @@ export function vaciar() {
 }
 
 
-export async function pagar(carrito) {
-  if (carrito.length === 0) {
-    alert('Tu carrito está vacío.')
-    return carrito
-  }
-
-  const cantidades = {}
-  carrito.forEach((p) => {
-    cantidades[p.id_producto] = (cantidades[p.id_producto] || 0) + 1
-  })
-
-  let huboError = false
-  try {
-    for (const id in cantidades) {
-      const respuesta = await fetch('/api/productos/' + id + '/stock', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cantidad: cantidades[id] }),
-      })
-      if (!respuesta.ok) huboError = true
-    }
-
-    if (huboError) {
-      alert('Hubo un problema con el stock de uno o más productos.')
-      return carrito
-    }
-
-    alert('¡Compra realizada! Gracias por tu compra.')
-    return vaciar()
-  } catch (error) {
-    console.log('Error al pagar:', error)
-    alert('Hubo un problema al procesar el pago.')
-    return carrito
-  }
-}
-
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
 // BD: productos.en_oferta + productos.precio_oferta. Si está en oferta se cobra el precio de oferta.
@@ -163,7 +128,7 @@ export default function Productos() {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch('/api/productos')
+    apiFetch('/api/productos')
       .then((respuesta) => respuesta.json())
       .then(setProductos)
       .catch((err) => {

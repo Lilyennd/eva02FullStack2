@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { DatosCliente, formatearPrecio, TablaCompra } from './DatosCompra'
+import { apiFetch } from '../services/api'
 
 // Vista Pago correcto: boleta de la orden (GET /api/ordenes/:id)
 export default function PagoCorrecto() {
@@ -13,7 +14,7 @@ export default function PagoCorrecto() {
   useEffect(() => {
     if (!id) return
     let vigente = true
-    fetch('/api/ordenes/' + id)
+    apiFetch('/api/ordenes/' + id)
       .then((respuesta) => {
         if (respuesta.status === 404) throw new Error('404')
         return respuesta.json()

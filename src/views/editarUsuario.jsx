@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 
-const rolParaEdicion = (correo) =>
-  correo.endsWith('@profesor.duoc.cl') || correo.endsWith('@duocuc.cl') ? 1 : 2
+// Mismo criterio que el registro y que POST /api/usuarios:
+// @profesor.duoc.cl = 1 (Administrador) · @duocuc.cl = 2 (Vendedor) · @gmail.com = 3 (Cliente)
+export const rolParaEdicion = (correo) => {
+  const c = correo.trim().toLowerCase()
+  if (c.endsWith('@profesor.duoc.cl')) return 1
+  if (c.endsWith('@duocuc.cl')) return 2
+  return 3
+}
 
 export default function EditarUsuario() {
   const navigate = useNavigate()
@@ -12,6 +19,9 @@ export default function EditarUsuario() {
   const avisado = useRef(false)
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
+  // Datos que esta pantalla no edita pero que el PUT del backend sobrescribe:
+  // se guardan al cargar y se reenvían para no dejarlos en NULL.
+  const [otros, setOtros] = useState({ telefono: null, direccion: null, id_region: null, id_comuna: null })
 
   useEffect(() => {
     if (!idUsuario) {
@@ -24,7 +34,7 @@ export default function EditarUsuario() {
     }
 
     let vigente = true
-    fetch(`/api/usuarios/${idUsuario}`)
+    apiFetch(`/api/usuarios/${idUsuario}`)
       .then((respuesta) => {
         if (!respuesta.ok) throw new Error('No se pudo encontrar el usuario.')
         return respuesta.json()
@@ -36,6 +46,12 @@ export default function EditarUsuario() {
           nombre: usuario.nombre,
           apellidos: usuario.apellidos,
           correo: usuario.correo,
+        })
+        setOtros({
+          telefono: usuario.telefono ?? null,
+          direccion: usuario.direccion ?? null,
+          id_region: usuario.id_region ?? null,
+          id_comuna: usuario.id_comuna ?? null,
         })
       })
       .catch((error) => {
@@ -65,9 +81,10 @@ export default function EditarUsuario() {
       apellidos: datos.apellidos.trim(),
       correo,
       id_rol: rolParaEdicion(correo),
+      ...otros,
     }
 
-    fetch(`/api/usuarios/${idUsuario}`, {
+    apiFetch(`/api/usuarios/${idUsuario}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(cuerpo),

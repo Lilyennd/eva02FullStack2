@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { DatosCliente, formatearPrecio, TablaCompra } from './DatosCompra'
+import { apiFetch } from '../services/api'
 
 // Vista Pago con error.
 // Si la orden llegó a crearse (?id=...) se lee del servidor; si no, se usan los datos
@@ -54,7 +55,7 @@ export default function PagoError() {
     async function cargar() {
       if (id) {
         try {
-          const res = await fetch('/api/ordenes/' + id)
+          const res = await apiFetch('/api/ordenes/' + id)
           if (res.ok) {
             const orden = await res.json()
             if (!vigente) return

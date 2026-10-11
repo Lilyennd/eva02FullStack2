@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 // Antes venían de utils/validaciones y utils/imagenes
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
@@ -38,7 +39,7 @@ export default function Inventario() {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch('/api/productos')
+    apiFetch('/api/productos')
       .then((respuesta) => respuesta.json())
       .then(setProductos)
       .catch((err) => {

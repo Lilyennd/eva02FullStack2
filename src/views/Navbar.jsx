@@ -19,17 +19,20 @@ const esAdmin = (usuario) => !!usuario && (usuario.id_rol === 1 || usuario.id_ro
 function MenuAdmin() {
   return (
     <ul className="navbar-nav me-auto" id="menuAdmin" style={{ display: 'flex' }}>
-      <li className="nav-item"><Link className="nav-link" to="/home">Home</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/inventario">Inventario</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/nuevoProducto">Nuevo producto</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/admin">Dashboard</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/adminOrdenes">Órdenes</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/inventario">Productos</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/productosCriticos">Críticos</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/adminCategorias">Categorías</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/listarUsuarios">Usuarios</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/crearUsuario">Nuevo usuario</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/perfil">Perfil</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/home">Tienda</Link></li>
     </ul>
   )
 }
 
 
-function MenuComprador() {
+function MenuComprador({ conSesion }) {
   return (
     <ul className="navbar-nav me-auto align-items-center" id="menuComprador">
       <li className="nav-item"><Link className="nav-link" to="/home">Inicio</Link></li>
@@ -39,6 +42,7 @@ function MenuComprador() {
       <li className="nav-item"><Link className="nav-link" to="/nosotros">Nosotros</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/blogs">Blogs</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
+      {conSesion && <li className="nav-item"><Link className="nav-link" to="/perfil">Mi perfil</Link></li>}
     </ul>
   )
 }
@@ -82,7 +86,7 @@ function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            {admin ? <MenuAdmin /> : <MenuComprador />}
+            {admin ? <MenuAdmin /> : <MenuComprador conSesion={!!usuario} />}
 
             <div className="d-flex align-items-center mt-3 mt-lg-0">
               {}
