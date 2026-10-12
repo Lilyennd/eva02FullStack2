@@ -61,7 +61,7 @@ export default function Checkout() {
 
   const cambiar = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  // regiones + imágenes de los productos (el carrito solo guarda nombre, precio e id)
+  // regiones + imágenes de los productos
   useEffect(() => {
     apiFetch('/api/regiones')
       .then((r) => r.json())
@@ -194,8 +194,8 @@ export default function Checkout() {
   // ----- carrito vacío -----
   if (carrito.length === 0) {
     return (
-      <div className="background min-vh-100">
-        <div className="container my-5 text-center text-white">
+      <div className="background min-vh-100 py-5">
+        <div className="container text-center text-white">
           <h2 className="mb-3">Tu carrito está vacío</h2>
           <Link to="/productos" className="btn btn-light">Ver productos</Link>
         </div>
@@ -212,27 +212,47 @@ export default function Checkout() {
   }))
 
   return (
-    <div className="background min-vh-100">
-      <div className="container my-5">
+    /* Usamos py-4 en .background y eliminamos my-5 de .container para que el fondo se pegue al Navbar */
+    <div className="background min-vh-100 py-4">
+      <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-9">
             <div className="card shadow border-0 rounded-4">
               <div className="card-body p-4 p-md-5">
-                <div className="d-flex flex-wrap justify-content-between align-items-start mb-3">
-                  <div>
-                    <h3 className="fw-bold mb-1">Carrito de compra</h3>
-                    <p className="text-muted mb-0">Completa la siguiente información</p>
+
+                {/* --- Encabezado y Descripción del Módulo --- */}
+                <div className="border-bottom pb-3 mb-4">
+                  <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <div>
+                      <h2 className="fw-bold text-primary mb-1">
+                        📋 Detalles de la Compra y Resumen
+                      </h2>
+                      <p className="text-muted mb-0 fs-6">
+                        Revisa el listado de tus productos seleccionados y completa la información de envío para finalizar tu orden.
+                      </p>
+                    </div>
+                    <span className="badge bg-primary fs-5 px-3 py-2 mt-2 mt-md-0 shadow-sm">
+                      Total a pagar: ${formatearPrecio(total)}
+                    </span>
                   </div>
-                  <span className="badge bg-primary fs-6 mt-2 mt-md-0">
-                    Total a pagar: ${formatearPrecio(total)}
-                  </span>
+
+                  {/* Cuestión explicativa para el usuario */}
+                  <div className="alert alert-light border mt-3 mb-0 rounded-3">
+                    <small className="text-secondary d-block">
+                      💡 <strong>¿De qué se trata esta página?</strong> Aquí podrás verificar el detalle completo de tus joyas elegidas, ver la cantidad y el subtotal acumulado. Para confirmar la transacción, ingresa los datos personales del comprador y la dirección donde deseas recibir o retirar tu pedido.
+                    </small>
+                  </div>
                 </div>
 
+                {/* Tabla de Productos */}
+                <h5 className="fw-bold mb-3">Artículos seleccionados en tu Carrito</h5>
                 <TablaCompra filas={filas} />
 
+                {/* Formulario de Checkout */}
                 <form id="formCheckout" noValidate className={validado ? 'was-validated' : ''} onSubmit={pagar}>
-                  <h5 className="fw-bold">Información del cliente</h5>
-                  <p className="text-muted">Completa la siguiente información</p>
+                  <h5 className="fw-bold mt-4">Información del cliente</h5>
+                  <p className="text-muted small mb-3">Completa tus datos personales para la emisión de la boleta</p>
+                  
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <label htmlFor="nombre" className="form-label">Nombre <span className="text-danger">*</span></label>
@@ -248,27 +268,29 @@ export default function Checkout() {
                     </div>
                   </div>
                   <div className="mb-4">
-                    <label htmlFor="correo" className="form-label">Correo <span className="text-danger">*</span></label>
+                    <label htmlFor="correo" className="form-label">Correo electrónico <span className="text-danger">*</span></label>
                     <input type="email" className="form-control" id="correo" name="correo" maxLength="100"
                       placeholder="nombre@dominio.cl" value={form.correo} onChange={cambiar} required />
                     <div className="invalid-feedback">Ingresa un correo válido.</div>
                   </div>
 
                   <h5 className="fw-bold">Dirección de entrega de los productos</h5>
-                  <p className="text-muted">Ingrese dirección de forma detallada</p>
+                  <p className="text-muted small mb-3">Ingresa la dirección detallada para el envío</p>
+                  
                   <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label htmlFor="calle" className="form-label">Calle <span className="text-danger">*</span></label>
+                      <label htmlFor="calle" className="form-label">Calle y Número <span className="text-danger">*</span></label>
                       <input type="text" className="form-control" id="calle" name="calle" maxLength="150"
                         value={form.calle} onChange={cambiar} required />
                       <div className="invalid-feedback">Ingresa la calle.</div>
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label htmlFor="departamento" className="form-label">Departamento (opcional)</label>
+                      <label htmlFor="departamento" className="form-label">Departamento / Casa (opcional)</label>
                       <input type="text" className="form-control" id="departamento" name="departamento" maxLength="30"
-                        placeholder="Ej: 603" value={form.departamento} onChange={cambiar} />
+                        placeholder="Ej: Depto 603" value={form.departamento} onChange={cambiar} />
                     </div>
                   </div>
+                  
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <label htmlFor="region" className="form-label">Región <span className="text-danger">*</span></label>
@@ -292,15 +314,16 @@ export default function Checkout() {
                       <div className="invalid-feedback">Selecciona una comuna.</div>
                     </div>
                   </div>
+
                   <div className="mb-3">
                     <label htmlFor="indicaciones" className="form-label">Indicaciones para la entrega (opcional)</label>
                     <textarea className="form-control" id="indicaciones" name="indicaciones" rows="2" maxLength="255"
-                      placeholder="Ej: Entre calles, color del edificio, no tiene timbre."
+                      placeholder="Ej: Entre calles, depto con portón negro, no tiene timbre."
                       value={form.indicaciones} onChange={cambiar} />
                   </div>
 
                   <div className="mb-4">
-                    <label className="form-label d-block">Opción de entrega</label>
+                    <label className="form-label d-block fw-semibold">Opción de entrega</label>
                     <div className="form-check form-check-inline">
                       <input className="form-check-input" type="radio" name="entrega" id="entregaDespacho"
                         value="Despacho" checked={form.entrega === 'Despacho'} onChange={cambiar} />
@@ -313,19 +336,18 @@ export default function Checkout() {
                     </div>
                   </div>
 
-                  <div className="text-end">
-                    <button type="submit" className="btn btn-success btn-lg" id="btnPagarAhora" disabled={procesando}>
+                  <div className="text-end pt-3 border-top">
+                    <button type="submit" className="btn btn-success btn-lg px-4 fw-bold" id="btnPagarAhora" disabled={procesando}>
                       {procesando ? 'Procesando pago...' : 'Pagar ahora $' + formatearPrecio(total)}
                     </button>
                   </div>
                 </form>
+
               </div>
             </div>
           </div>
         </div>
       </div>
-      <br />
     </div>
   )
 }
-

@@ -5,7 +5,7 @@ import { apiFetch } from '../services/api'
 
 // Vista Pago con error.
 // Si la orden llegó a crearse (?id=...) se lee del servidor; si no, se usan los datos
-// que Checkout dejó guardados en sessionStorage ('checkoutError').
+// que Checkout o Carrito dejaron guardados en sessionStorage ('checkoutError').
 
 function leerRespaldo() {
   try {
@@ -15,11 +15,30 @@ function leerRespaldo() {
   }
 }
 
+// Datos de ejemplo por defecto en caso de acceder sin sesión previa
+const datosDemoDefecto = {
+  numero: '20261012-ERR01',
+  total: 990000,
+  cliente: {
+    nombre: 'Cliente',
+    apellidos: 'Prueba',
+    correo: 'cliente.prueba@ejemplo.cl',
+    calle: 'Av. Siempre Viva 123',
+    departamento: 'Depto 402',
+    region: 'Región Metropolitana de Santiago',
+    comuna: 'Santiago',
+    indicaciones: 'Sin indicaciones especiales',
+  },
+  filas: [
+    { nombre: 'Diamante Princesa 0.75ct', precio: 990000, cantidad: 1, subtotal: 990000 }
+  ],
+}
+
 // Convierte lo guardado por Checkout al mismo formato que la orden del servidor
 export function datosDesdeRespaldo(respaldo) {
   const d = respaldo.datos
   return {
-    numero: '',
+    numero: d.numero || '',
     total: respaldo.total,
     cliente: {
       nombre: d.nombre,
@@ -87,9 +106,9 @@ export default function PagoError() {
         }
       }
 
-      // sin orden en el servidor: se usa lo que guardó el checkout
       if (!vigente) return
-      if (respaldo) setDatos(datosDesdeRespaldo(respaldo))
+      // Si hay datos en respaldo los usa, si no muestra los datos de demo
+      setDatos(respaldo ? datosDesdeRespaldo(respaldo) : datosDemoDefecto)
       setCargando(false)
     }
 
@@ -101,34 +120,22 @@ export default function PagoError() {
     return <div className="background min-vh-100 text-white text-center pt-5">Cargando...</div>
   }
 
-  if (!datos) {
-    return (
-      <div className="background min-vh-100">
-        <div className="container my-5 text-center text-white">
-          <h2 className="mb-3">No hay un pago pendiente</h2>
-          <Link to="/productos" className="btn btn-light">Ir a productos</Link>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="background min-vh-100">
-      <div className="container my-5">
+    <div className="background min-vh-100 py-4">
+      <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-9">
             <div className="card shadow border-0 rounded-4">
               <div className="card-body p-4 p-md-5">
                 <h3 className="fw-bold text-danger mb-1">
-                  ✖ No se pudo realizar el pago<span id="numeroOrden">{datos.numero ? '. nro #' + datos.numero : ''}</span>
+                  ✖ No se pudo realizar el pago{datos.numero ? `. nro #${datos.numero}` : ''}
                 </h3>
                 <div className="alert alert-danger mt-3" role="alert" id="motivoError">
-                  {respaldo?.mensaje || 'El pago no pudo ser procesado.'}
+                  {respaldo?.mensaje || 'El pago no pudo ser procesado por la entidad bancaria.'}
                 </div>
 
-                <div className="text-center my-3">
-                  {/* el carrito sigue guardado: basta con volver al checkout */}
-                  <button className="btn btn-success" id="btnReintentar" onClick={() => navigate('/checkout')}>
+                <div className="text-center my-4">
+                  <button className="btn btn-success btn-lg px-4 fw-bold" id="btnReintentar" onClick={() => navigate('/checkout')}>
                     VOLVER A REALIZAR EL PAGO
                   </button>
                 </div>
@@ -136,7 +143,7 @@ export default function PagoError() {
                 <DatosCliente cliente={datos.cliente} />
                 <TablaCompra filas={datos.filas} conImagen={false} />
 
-                <div className="border rounded-3 p-3 text-center fw-bold fs-5 shadow-sm" id="totalError">
+                <div className="border rounded-3 p-3 text-center fw-bold fs-5 shadow-sm mt-3" id="totalError">
                   Total a pagar: ${formatearPrecio(datos.total)}
                 </div>
               </div>
@@ -144,7 +151,6 @@ export default function PagoError() {
           </div>
         </div>
       </div>
-      <br />
     </div>
   )
 }
