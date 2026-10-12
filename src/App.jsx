@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+
 import Navbar from './views/Navbar'
 import Footer from './views/Footer'
 
@@ -17,6 +18,8 @@ import ModificarProducto from './views/modificarProducto'
 import ListarUsuarios from './views/listarUsuarios'
 import CrearUsuario from './views/crearUsuario'
 import EditarUsuario from './views/editarUsuario'
+import DashboardAdmin from './views/homeAdmin'
+
 
 function Layout() {
   return (
@@ -50,6 +53,7 @@ function App() {
           <Route path="/listarUsuarios" element={<ListarUsuarios />} />
           <Route path="/crearUsuario" element={<CrearUsuario />} />
           <Route path="/editarUsuario" element={<EditarUsuario />} />
+          <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>
