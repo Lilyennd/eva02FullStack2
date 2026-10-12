@@ -460,3 +460,20 @@
 .footer_copyright p {
     margin: 0;
 }
+
+/* Boleta: al imprimir solo se ve la tarjeta de la compra */
+@media print {
+  .no-print,
+  nav.navbar,
+  footer,
+  .offcanvas {
+    display: none !important;
+  }
+  .background {
+    background: #fff !important;
+  }
+  .card {
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+}

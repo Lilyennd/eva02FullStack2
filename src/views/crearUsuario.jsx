@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 function determinarRol(correo) {
   const c = correo.trim().toLowerCase()
@@ -29,7 +30,7 @@ export default function CrearUsuario() {
   const [errorCorreo, setErrorCorreo] = useState('')
 
   useEffect(() => {
-    fetch('/api/regiones')
+    apiFetch('/api/regiones')
       .then((res) => res.json())
       .then(setRegiones)
       .catch((error) => console.error('Error cargando regiones:', error))
@@ -44,7 +45,7 @@ export default function CrearUsuario() {
     setRegion(r)
     setComuna(null)
     setComunas([])
-    fetch(`/api/comunas?regionId=${r.id_region}`)
+    apiFetch(`/api/comunas?regionId=${r.id_region}`)
       .then((res) => res.json())
       .then(setComunas)
       .catch((error) => console.error('Error cargando comunas:', error))
@@ -95,7 +96,7 @@ export default function CrearUsuario() {
     }
 
     try {
-      const respuesta = await fetch('/api/usuarios', {
+      const respuesta = await apiFetch('/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(usuario),

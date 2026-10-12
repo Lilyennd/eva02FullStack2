@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 export const rutaImagenBlog = (img) => {
   if (!img) return '/img/fondoaz.jpg'
@@ -15,7 +16,7 @@ export default function Blogs() {
 
   useEffect(() => {
     let vigente = true
-    fetch('/api/blogs')
+    apiFetch('/api/blogs')
       .then((res) => {
         if (!res.ok) throw new Error('Respuesta de red no ok')
         return res.json()

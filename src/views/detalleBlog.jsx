@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { rutaImagenBlog } from './blogs'
+import { apiFetch } from '../services/api'
 
 
 export default function DetalleBlog() {
@@ -14,7 +15,7 @@ export default function DetalleBlog() {
     if (!idBlog) return
 
     let vigente = true
-    fetch('/api/blogs/' + idBlog)
+    apiFetch('/api/blogs/' + idBlog)
       .then((respuesta) => {
         if (!respuesta.ok) throw new Error('Blog no encontrado (' + respuesta.status + ')')
         return respuesta.json()

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiFetch } from '../services/api'
 
 
 function rolDeUsuario(user) {
@@ -15,7 +16,7 @@ export default function ListarUsuarios() {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch('/api/usuarios')
+    apiFetch('/api/usuarios')
       .then((respuesta) => respuesta.json())
       .then(setUsuarios)
       .catch((err) => {
@@ -76,6 +77,12 @@ export default function ListarUsuarios() {
                             className="btn btn-warning btn-sm fw-bold"
                           >
                             Editar
+                          </Link>
+                          <Link
+                            to={`/historialCompras?id=${user.id_usuario}`}
+                            className="btn btn-outline-dark btn-sm fw-bold ms-2"
+                          >
+                            Historial
                           </Link>
                         </td>
                       </tr>

@@ -1,20 +1,18 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
-const IMAGENES_BASE = [
-  'diamante1.jpg', 'diamanterosa1.jpg', 'esmeralda1.jpg',
-  'ruby1.jpg', 'zafiro1.jpg', 'diamanterojo.jpg',
-]
+import { apiFetch } from '../services/api'
+import CamposProducto, { IMAGENES_PRODUCTO, useCatalogosProducto } from './CamposProducto'
 
 const productoVacio = {
   codigo_producto: '', nombre: '', descripcion: '', precio: '', id_categoria: '',
   stock: '', stock_critico: '', origen: '', imagen_principal: '',
   kilates: '', corte: '', claridad: '', color: '', certificado: '', peso_gramos: '',
+  en_oferta: false, precio_oferta: '',
 }
 
 export default function NuevoProducto() {
   const navigate = useNavigate()
-  const { categorias, imagenes } = useCatalogosProducto(IMAGENES_BASE)
+  const { categorias, imagenes } = useCatalogosProducto(IMAGENES_PRODUCTO)
   const [datos, setDatos] = useState(productoVacio)
 
   const handleChange = (e) => {
@@ -50,6 +48,11 @@ export default function NuevoProducto() {
       return
     }
 
+    if (datos.en_oferta && (datos.precio_oferta === '' || Number(datos.precio_oferta) >= Number(precio))) {
+      alert('El precio de oferta es obligatorio y debe ser menor al precio normal.')
+      return
+    }
+
     const nuevoProducto = {
       codigo_producto: codigo,
       nombre,
@@ -66,10 +69,12 @@ export default function NuevoProducto() {
       certificado: datos.certificado.trim() || null,
       peso_gramos: Number(datos.peso_gramos) || null,
       imagen_principal: datos.imagen_principal || null,
+      en_oferta: !!datos.en_oferta,
+      precio_oferta: datos.en_oferta ? Number(datos.precio_oferta) : null,
     }
 
     try {
-      const respuesta = await fetch('/api/productos', {
+      const respuesta = await apiFetch('/api/productos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nuevoProducto),

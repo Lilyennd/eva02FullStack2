@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { apiFetch } from '../services/api'
 
 const formularioVacio = { nombre: '', correo: '', comentario: '' }
 
@@ -22,7 +23,7 @@ export default function Contacto() {
       return
     }
 
-    fetch('/api/contacto', {
+    apiFetch('/api/contacto', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
