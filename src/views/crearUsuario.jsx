@@ -4,9 +4,9 @@ import { apiFetch } from '../services/api'
 
 function determinarRol(correo) {
   const c = correo.trim().toLowerCase()
-  if (c.endsWith('@profesor.duoc.cl')) return 1
-  if (c.endsWith('@duocuc.cl')) return 1
-  if (c.endsWith('@gmail.com')) return 2
+  if (c.endsWith('@profesor.duoc.cl')) return 2
+  if (c.endsWith('@duocuc.cl')) return 2
+  if (c.endsWith('@gmail.com')) return 1
   return null
 }
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ordenesApi } from '../services/api'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
-// Boleta de una orden para el administrador: GET /api/ordenes/:id
 export default function MostrarBoleta() {
+  const navigate = useNavigate()
   const [params] = useSearchParams()
   const id = params.get('id')
   const [orden, setOrden] = useState(null)
@@ -33,6 +33,7 @@ export default function MostrarBoleta() {
             <>
               <h3 className="fw-bold">Boleta N° {orden.numero_orden}</h3>
               <p className="mb-1"><b>Estado:</b> {orden.estado}</p>
+              <p className="mb-1"><b>Fecha:</b> {new Date(orden.fecha_orden).toLocaleDateString('es-CL')}</p>
               <p className="mb-1"><b>Cliente:</b> {orden.nombre_cliente} {orden.apellidos_cliente} ({orden.correo_cliente})</p>
               <p><b>Dirección:</b> {orden.calle}{orden.departamento ? ', ' + orden.departamento : ''}, {orden.nombre_comuna}, {orden.nombre_region}</p>
               <div className="table-responsive">
@@ -50,12 +51,14 @@ export default function MostrarBoleta() {
                   </tbody>
                 </table>
               </div>
+              {orden.descuento > 0 && <p className="text-end mb-1">Descuento: -${formatearPrecio(orden.descuento)}</p>}
+              {orden.costo_envio > 0 && <p className="text-end mb-1">Envío: ${formatearPrecio(orden.costo_envio)}</p>}
               <h4 className="text-end">Total: ${formatearPrecio(orden.total)}</h4>
             </>
           )}
           <div className="d-flex gap-2 mt-3">
             <button className="btn btn-danger" onClick={() => window.print()}>Imprimir boleta</button>
-            <Link to="/adminOrdenes" className="btn btn-outline-secondary">Volver</Link>
+            <button className="btn btn-outline-secondary" onClick={() => navigate(-1)}>Volver</button>
           </div>
         </div>
       </div>

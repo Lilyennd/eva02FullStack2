@@ -2,13 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
-
-function rolDeUsuario(user) {
-  const correo = user.correo ? user.correo.toLowerCase() : ''
-  if (correo.endsWith('@profesor.duoc.cl') || correo.endsWith('@duocuc.cl') || user.id_rol === 1) {
-    return { textoRol: 'Administrador / Vendedor', claseBadge: 'bg-dark' }
-  }
-  return { textoRol: 'Comprador', claseBadge: 'bg-secondary' }
+const ROLES = {
+  1: { textoRol: 'Administrador', claseBadge: 'bg-dark' },
+  2: { textoRol: 'Vendedor', claseBadge: 'bg-primary' },
+  3: { textoRol: 'Comprador', claseBadge: 'bg-secondary' },
 }
 
 export default function ListarUsuarios() {
@@ -17,7 +14,10 @@ export default function ListarUsuarios() {
 
   useEffect(() => {
     apiFetch('/api/usuarios')
-      .then((respuesta) => respuesta.json())
+      .then((respuesta) => {
+        if (!respuesta.ok) throw new Error('Error del servidor')
+        return respuesta.json()
+      })
       .then(setUsuarios)
       .catch((err) => {
         console.log('Error al traer los usuarios:', err)
@@ -28,12 +28,12 @@ export default function ListarUsuarios() {
   return (
     <div className="background min-vh-100">
       <div className="container my-5">
-        <h1
-          className="text-center mb-4 ; herotitulo"
-          style={{ color: 'white', fontSize: 'xx-large' }}
-        >
-          Lista de Usuarios Registrados
-        </h1>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1 className="mb-0 herotitulo" style={{ color: 'white', fontSize: 'xx-large' }}>
+            Lista de Usuarios Registrados
+          </h1>
+          <Link to="/crearUsuario" className="btn btn-light fw-bold">Nuevo usuario</Link>
+        </div>
         <div className="card shadow border-0 rounded-4 p-4">
           <div className="table-responsive">
             <table className="table table-striped align-middle">
@@ -63,7 +63,7 @@ export default function ListarUsuarios() {
                 {!error &&
                   usuarios &&
                   usuarios.map((user) => {
-                    const { textoRol, claseBadge } = rolDeUsuario(user)
+                    const { textoRol, claseBadge } = ROLES[user.id_rol] ?? ROLES[3]
                     return (
                       <tr key={user.id_usuario}>
                         <td>{user.run}</td>

@@ -1,19 +1,15 @@
 import { Navigate, Outlet } from 'react-router-dom'
+import { esAdmin, useUsuario } from '../services/sesion'
 
-export function leerUsuarioActual() {
-  try {
-    return JSON.parse(localStorage.getItem('usuarioActual'))
-  } catch {
-    return null
-  }
+
+export default function RutaAdmin() {
+  const usuario = useUsuario()
+  if (!esAdmin(usuario)) return <Navigate to="/login" replace />
+  return <Outlet />
 }
 
-// Administrador (1) y Vendedor (2), igual que en el Navbar
-export const esAdmin = (usuario) => !!usuario && (usuario.id_rol === 1 || usuario.id_rol === 2)
-
-// Protege las vistas de administración: si no hay sesión de admin, manda al login
-export default function RutaAdmin() {
-  const usuario = leerUsuarioActual()
-  if (!esAdmin(usuario)) return <Navigate to="/login" replace />
+export function RutaPrivada() {
+  const usuario = useUsuario()
+  if (!usuario) return <Navigate to="/login" replace />
   return <Outlet />
 }

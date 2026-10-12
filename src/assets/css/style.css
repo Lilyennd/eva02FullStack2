@@ -1,0 +1,82 @@
+/* ================= BOLETAS ================= */
+
+/* Lista de boletas (boletas.jsx) */
+.tabla-boletas {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+}
+.tabla-boletas th {
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 14px;
+}
+.cuadro-orden {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: #0d6efd;
+  border-radius: 3px;
+}
+.texto-gris {
+  color: #6c757d;
+}
+.enlace-azul {
+  color: #0d6efd;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Etiquetas de estado (en la lista y en el detalle) */
+.estado {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.estado-pendiente { background: #fff3cd; color: #997404; }
+.estado-pagada { background: #cfe2ff; color: #084298; }
+.estado-procesando { background: #cff4fc; color: #087990; }
+.estado-enviado { background: #cff4fc; color: #087990; }
+.estado-entregado { background: #d1e7dd; color: #0f5132; }
+.estado-pago-fallido { background: #f8d7da; color: #842029; }
+.estado-cancelado { background: #e2e3e5; color: #41464b; }
+
+/* Detalle de la boleta (detalleBoleta.jsx) */
+.boleta {
+  max-width: 800px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.boleta-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 12px;
+}
+.boleta-tabla th {
+  background: #f8f9fa;
+}
+.boleta-total {
+  text-align: right;
+  margin-top: 16px;
+  font-weight: bold;
+}
+.boleta-botones {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Al imprimir, los botones no salen en la hoja */
+@media print {
+  .no-imprimir {
+    display: none;
+  }
+}

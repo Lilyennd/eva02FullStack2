@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Offcanvas } from 'bootstrap'
 import { quitar, useCarrito, vaciar } from './productos'
@@ -12,7 +12,6 @@ function leerUsuario() {
     return null
   }
 }
-
 
 const esAdmin = (usuario) => !!usuario && (usuario.id_rol === 1 || usuario.id_rol === 2)
 
@@ -31,7 +30,6 @@ function MenuAdmin() {
   )
 }
 
-
 function MenuComprador({ conSesion }) {
   return (
     <ul className="navbar-nav me-auto align-items-center" id="menuComprador">
@@ -47,16 +45,26 @@ function MenuComprador({ conSesion }) {
   )
 }
 
-
 function Navbar() {
   const navigate = useNavigate()
   const carrito = useCarrito()
   const [, setRefrescar] = useState(0)
 
- 
+  // Escucha el aviso que dispara Login (u otras vistas) cuando cambia la sesión
+  useEffect(() => {
+    const refrescar = () => setRefrescar((n) => n + 1)
+    window.addEventListener('usuarioCambiado', refrescar)
+    window.addEventListener('storage', refrescar) // cambios desde otra pestaña
+    return () => {
+      window.removeEventListener('usuarioCambiado', refrescar)
+      window.removeEventListener('storage', refrescar)
+    }
+  }, [])
+
   const usuario = leerUsuario()
   const admin = esAdmin(usuario)
 
+  // Aquí no hace falta evento: el botón vive dentro del Navbar
   const cerrarSesion = () => {
     localStorage.removeItem('usuarioActual')
     setRefrescar((n) => n + 1)
@@ -89,7 +97,6 @@ function Navbar() {
             {admin ? <MenuAdmin /> : <MenuComprador conSesion={!!usuario} />}
 
             <div className="d-flex align-items-center mt-3 mt-lg-0">
-              {}
               {!admin && (
                 <button
                   className="btn btn-outline-dark position-relative me-3"

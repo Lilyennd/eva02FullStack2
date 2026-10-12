@@ -65,13 +65,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        <div className="row g-3">
-          {ACCESOS.map((a) => (
-            <div className="col-6 col-md-4" key={a.to}>
-              <Link to={a.to} className="btn btn-light w-100 py-3 fw-bold">{a.texto}</Link>
-            </div>
-          ))}
-        </div>
+      
       </div>
     </div>
   )

@@ -19,7 +19,6 @@ import ListarUsuarios from './views/listarUsuarios'
 import CrearUsuario from './views/crearUsuario'
 import EditarUsuario from './views/editarUsuario'
 import DashboardAdmin from './views/homeAdmin'
-
 import Categorias from './views/categorias'
 import Ofertas from './views/ofertas'
 import Checkout from './views/checkout'
@@ -33,6 +32,9 @@ import HistorialCompras from './views/historialCompras'
 import ProductosCriticos from './views/productosCriticos'
 import AdminCategorias from './views/adminCategorias'
 import Perfil from './views/perfil'
+import DetalleBoleta from './views/detalleBoleta'
+import Boletas from './views/boletas'
+import "./assets/css/style.css";
 
 function Layout() {
   return (
@@ -80,8 +82,11 @@ function App() {
             <Route path="/adminCategorias" element={<AdminCategorias />} />
             <Route path="/listarUsuarios" element={<ListarUsuarios />} />
             <Route path="/crearUsuario" element={<CrearUsuario />} />
+            <Route path="/boletas" element={<Boletas />} />
+            <Route path="/detalleBoleta" element={<DetalleBoleta />} />
+            <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
           </Route>
-          <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+
         </Route>
       </Routes>
     </BrowserRouter>

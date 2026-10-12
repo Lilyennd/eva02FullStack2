@@ -3,18 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCarrito, vaciar } from './productos'
 import { formatearPrecio, TablaCompra } from './DatosCompra'
 import { apiFetch } from '../services/api'
+import { useUsuario } from '../services/sesion'
 
-// checkout: resumen del carrito + datos del cliente + dirección de entrega.
-// crea la orden (POST /api/ordenes) y simula el pago marcándola como 'Pagada'
-// (PUT /api/ordenes/:id, que además descuenta el stock). Si algo falla -> /pagoError
-
-function leerUsuario() {
-  try {
-    return JSON.parse(localStorage.getItem('usuarioActual'))
-  } catch {
-    return null
-  }
-}
 
 // Cada click en "Agregar" es una unidad en el carrito: aquí se agrupan por producto
 export function agruparCarrito(carrito) {
@@ -36,7 +26,7 @@ export function agruparCarrito(carrito) {
 export default function Checkout() {
   const navigate = useNavigate()
   const carrito = useCarrito()
-  const usuario = leerUsuario()
+  const usuario = useUsuario()
 
   // ----- estado del formulario -----
   const [form, setForm] = useState({

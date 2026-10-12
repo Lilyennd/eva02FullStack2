@@ -48,8 +48,8 @@ export default function Login() {
 
       // Misma clave que usaba navbar.js
       localStorage.setItem('usuarioActual', JSON.stringify(data.usuario))
-      // Administrador (1) y Vendedor (2) van al panel; el cliente va a la tienda
-      navigate(data.usuario.id_rol === 1 || data.usuario.id_rol === 2 ? '/admin' : '/home')
+      window.dispatchEvent(new Event('usuarioCambiado'))
+      navigate(data.usuario.id_rol === 2 ? '/admin' : '/home')
     } catch (error) {
       console.error('Error de red:', error)
       setErrorPassword('No se pudo conectar con el servidor.')

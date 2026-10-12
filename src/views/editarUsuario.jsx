@@ -1,27 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { apiFetch } from '../services/api'
-
-
-// Mismo criterio que el registro y que POST /api/usuarios:
-// @profesor.duoc.cl = 1 (Administrador) · @duocuc.cl = 2 (Vendedor) · @gmail.com = 3 (Cliente)
-export const rolParaEdicion = (correo) => {
-  const c = correo.trim().toLowerCase()
-  if (c.endsWith('@profesor.duoc.cl')) return 1
-  if (c.endsWith('@duocuc.cl')) return 2
-  return 3
-}
+import { guardarUsuario, useUsuario } from '../services/sesion'
 
 export default function EditarUsuario() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const idUsuario = params.get('id')
   const avisado = useRef(false)
+  const sesion = useUsuario()
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
-  // Datos que esta pantalla no edita pero que el PUT del backend sobrescribe:
-  // se guardan al cargar y se reenvían para no dejarlos en NULL.
-  const [otros, setOtros] = useState({ telefono: null, direccion: null, id_region: null, id_comuna: null })
+  const [otros, setOtros] = useState({
+    telefono: null, direccion: null, id_region: null, id_comuna: null, id_rol: null,
+  })
 
   useEffect(() => {
     if (!idUsuario) {
@@ -52,6 +44,7 @@ export default function EditarUsuario() {
           direccion: usuario.direccion ?? null,
           id_region: usuario.id_region ?? null,
           id_comuna: usuario.id_comuna ?? null,
+          id_rol: usuario.id_rol ?? null,
         })
       })
       .catch((error) => {
@@ -74,14 +67,12 @@ export default function EditarUsuario() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    const correo = datos.correo.trim()
     const cuerpo = {
       run: datos.run.trim(),
       nombre: datos.nombre.trim(),
       apellidos: datos.apellidos.trim(),
-      correo,
-      id_rol: rolParaEdicion(correo),
-      ...otros,
+      correo: datos.correo.trim(),
+      ...otros, // incluye id_rol sin modificar
     }
 
     apiFetch(`/api/usuarios/${idUsuario}`, {
@@ -91,8 +82,17 @@ export default function EditarUsuario() {
     })
       .then((respuesta) => {
         if (respuesta.ok) {
+          // si editó su propio perfil, se actualiza la sesión guardada
+          if (sesion && String(sesion.id_usuario) === String(idUsuario)) {
+            guardarUsuario({
+              ...sesion,
+              nombre: cuerpo.nombre,
+              apellidos: cuerpo.apellidos,
+              correo: cuerpo.correo,
+            })
+          }
           alert('¡Usuario actualizado con éxito!')
-          navigate('/listarUsuarios')
+          navigate(sesion && sesion.id_rol === 3 ? '/perfil' : '/listarUsuarios')
         } else {
           return respuesta.json().then((data) => {
             alert(data.error || 'No se pudo actualizar el usuario.')
@@ -104,6 +104,8 @@ export default function EditarUsuario() {
         alert('Error al conectar con el servidor.')
       })
   }
+
+  const volverA = sesion && sesion.id_rol === 3 ? '/perfil' : '/listarUsuarios'
 
   return (
     <div className="background min-vh-100">
@@ -136,7 +138,7 @@ export default function EditarUsuario() {
                 </div>
                 <div className="d-flex gap-2 mt-4">
                   <button type="submit" className="btn btn-warning flex-fill fw-bold">Guardar Cambios</button>
-                  <Link to="/listarUsuarios" className="btn btn-outline-secondary flex-fill">Cancelar</Link>
+                  <Link to={volverA} className="btn btn-outline-secondary flex-fill">Cancelar</Link>
                 </div>
               </form>
             </div>
