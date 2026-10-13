@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { usuariosApi } from '../services/api'
-import { leerUsuarioActual } from './RutaAdmin'
+import { useUsuario } from '../services/sesion'
 
-// Perfil del usuario con sesión iniciada: GET /api/usuarios/:id
 export default function Perfil() {
-  const sesion = leerUsuarioActual()
+  const sesion = useUsuario() 
   const id = sesion ? sesion.id_usuario : null
   const [usuario, setUsuario] = useState(null)
   const [error, setError] = useState(id ? '' : 'Debes iniciar sesión.')
@@ -24,7 +23,7 @@ export default function Perfil() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="card shadow border-0 rounded-4 p-4 col-md-8 mx-auto">
           <h3 className="fw-bold mb-3">Mi perfil</h3>
           {error && <p className="text-danger">{error}</p>}

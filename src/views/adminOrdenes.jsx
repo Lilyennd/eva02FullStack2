@@ -5,7 +5,7 @@ import { ordenesApi } from '../services/api'
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 export const ESTADOS = ['Todos', 'Pendiente', 'Procesando', 'Pagada', 'Pago fallido', 'Enviado', 'Entregado', 'Cancelado']
 
-// Filtra la lista por estado y por texto (n° de orden o nombre del cliente)
+
 export function filtrarOrdenes(ordenes, estado, texto) {
   const t = texto.trim().toLowerCase()
   return ordenes.filter((o) => {
@@ -16,7 +16,6 @@ export function filtrarOrdenes(ordenes, estado, texto) {
   })
 }
 
-// Tabla reutilizable (también la usa el historial de compras)
 export function TablaOrdenes({ ordenes }) {
   if (ordenes.length === 0) return <p className="text-center mb-0">No hay órdenes para mostrar.</p>
   return (
@@ -48,7 +47,6 @@ export function TablaOrdenes({ ordenes }) {
   )
 }
 
-// Órdenes / Boletas del administrador: GET /api/ordenes
 export default function AdminOrdenes() {
   const [ordenes, setOrdenes] = useState([])
   const [error, setError] = useState('')
@@ -68,7 +66,7 @@ export default function AdminOrdenes() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Órdenes / Boletas</h1>
         <div className="card shadow border-0 rounded-4 p-4">
           <div className="row g-2 mb-3">

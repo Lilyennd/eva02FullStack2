@@ -5,7 +5,6 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
   const navigate = useNavigate()
   const total = carrito.reduce((suma, p) => suma + p.precio, 0)
 
-  // Cierra el panel de Bootstrap y limpia capas oscuras residuales
   const cerrarMenuCarrito = () => {
     const panel = document.getElementById('carritoLateral')
     if (panel) {
@@ -17,8 +16,6 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
     document.body.style.overflow = ''
     document.body.style.paddingRight = ''
   }
-
-  // Agrupa los productos del carrito para la simulación
   const agruparItems = (items) => {
     const agrupados = {}
     items.forEach((p, idx) => {
@@ -31,13 +28,11 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
     return Object.values(agrupados)
   }
 
-  // Cierra el menú y va a la ruta requerida
   const irARuta = (ruta) => {
     cerrarMenuCarrito()
     navigate(ruta)
   }
 
-  // Función para simular Pago Error con datos reales del carrito o de prueba
   const irAPagoErrorDemo = () => {
     cerrarMenuCarrito()
 
@@ -142,26 +137,25 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
             id="btnDetalles"
             onClick={() => irARuta('/checkout')}
           >
-            📋 Ver Detalles de la Compra
+            Detalles de la Compra
           </button>
 
           {/* Botones de Ejemplo / Prueba */}
           <div className="p-2 bg-light rounded border text-center">
-            <small className="text-muted d-block mb-2 font-monospace">Pruebas / Ejemplos de Respuesta:</small>
             <div className="d-flex gap-2">
               <button 
                 className="btn btn-sm btn-outline-success w-50" 
                 id="btnDemoCorrecto"
                 onClick={() => irARuta('/pagoCorrecto?id=1')}
               >
-                ✔ Pago Correcto
+                Pago Correcto
               </button>
               <button 
                 className="btn btn-sm btn-outline-danger w-50" 
                 id="btnDemoError"
                 onClick={irAPagoErrorDemo}
               >
-                ✖ Pago Error
+                Pago Error
               </button>
             </div>
           </div>

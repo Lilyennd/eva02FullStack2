@@ -50,7 +50,7 @@ export default function Inventario() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h1 className="text-center mb-0 ; herotitulo" style={{ color: '#f4f5fa' }}>
             Inventario de Productos

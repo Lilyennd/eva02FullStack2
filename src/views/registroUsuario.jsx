@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
-// Rol según el dominio del correo (1 Administrador, 2 Vendedor, 3 Cliente)
 function determinarRol(correo) {
   const c = correo.trim().toLowerCase()
   if (c.endsWith('@profesor.duoc.cl')) return 2

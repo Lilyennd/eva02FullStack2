@@ -32,8 +32,9 @@ export default function Contacto() {
         comentario: datos.comentario,
       }),
     })
-      .then((respuesta) => respuesta.json())
-      .then(() => {
+      .then((respuesta) => {
+        // si el servidor respondió con error, pasa al catch
+        if (!respuesta.ok) throw new Error('El servidor rechazó el mensaje')
         alert('¡Gracias! Tu mensaje fue enviado.')
         setDatos(formularioVacio)
       })
@@ -45,7 +46,7 @@ export default function Contacto() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="row justify-content-center align-items-center">
           <div className="col-md-6 col-lg-5">
             <div className="card shadow border-0 rounded-4">
@@ -56,7 +57,7 @@ export default function Contacto() {
                     fontFamily: "Cambria, Cochin, Georgia, Times, 'Times New Roman', serif",
                   }}
                 >
-                  Contactanos
+                  Contáctanos
                 </h3>
 
                 <form id="formContact" onSubmit={handleSubmit}>

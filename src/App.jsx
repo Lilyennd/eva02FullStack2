@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 
 import Navbar from './views/Navbar'
 import Footer from './views/Footer'
@@ -18,23 +18,21 @@ import ModificarProducto from './views/modificarProducto'
 import ListarUsuarios from './views/listarUsuarios'
 import CrearUsuario from './views/crearUsuario'
 import EditarUsuario from './views/editarUsuario'
-import DashboardAdmin from './views/homeAdmin'
 import Categorias from './views/categorias'
 import Ofertas from './views/ofertas'
 import Checkout from './views/checkout'
 import PagoCorrecto from './views/pagoCorrecto'
 import PagoError from './views/pagoError'
-import RutaAdmin from './views/RutaAdmin'
+import RutaAdmin, { RutaPrivada } from './views/RutaAdmin'
 import AdminDashboard from './views/adminDashboard'
 import AdminOrdenes from './views/adminOrdenes'
 import MostrarBoleta from './views/mostrarBoleta'
 import HistorialCompras from './views/historialCompras'
 import ProductosCriticos from './views/productosCriticos'
 import AdminCategorias from './views/adminCategorias'
+import Reportes from './views/reportes'
 import Perfil from './views/perfil'
-import DetalleBoleta from './views/detalleBoleta'
-import Boletas from './views/boletas'
-import "./assets/css/style.css";
+import './assets/css/style.css'
 
 function Layout() {
   return (
@@ -51,6 +49,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
+          {/* Vistas públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/nosotros" element={<Nosotros />} />
@@ -66,15 +65,19 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pagoCorrecto" element={<PagoCorrecto />} />
           <Route path="/pagoError" element={<PagoError />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/editarUsuario" element={<EditarUsuario />} />
-          <Route path="/historialCompras" element={<HistorialCompras />} />
 
-          {/* Vistas de administración: solo Administrador / Vendedor */}
+          {/* Solo con sesión iniciada (comprador o admin) */}
+          <Route element={<RutaPrivada />}>
+            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/editarUsuario" element={<EditarUsuario />} />
+            <Route path="/historialCompras" element={<HistorialCompras />} />
+            <Route path="/mostrarBoleta" element={<MostrarBoleta />} />
+          </Route>
+
+          {/* Solo administrador / vendedor (id_rol 2) */}
           <Route element={<RutaAdmin />}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/adminOrdenes" element={<AdminOrdenes />} />
-            <Route path="/mostrarBoleta" element={<MostrarBoleta />} />
             <Route path="/inventario" element={<Inventario />} />
             <Route path="/nuevoProducto" element={<NuevoProducto />} />
             <Route path="/modificarProducto" element={<ModificarProducto />} />
@@ -82,11 +85,11 @@ function App() {
             <Route path="/adminCategorias" element={<AdminCategorias />} />
             <Route path="/listarUsuarios" element={<ListarUsuarios />} />
             <Route path="/crearUsuario" element={<CrearUsuario />} />
-            <Route path="/boletas" element={<Boletas />} />
-            <Route path="/detalleBoleta" element={<DetalleBoleta />} />
-            <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+            <Route path="/reportes" element={<Reportes />} />
           </Route>
 
+          {/* Si la ruta no existe, vuelve al inicio */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>

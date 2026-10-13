@@ -22,7 +22,7 @@ export default function Ofertas() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Ofertas</h1>
         <p className="text-center text-white mb-4">Aprovecha nuestras gemas con precio especial.</p>
 

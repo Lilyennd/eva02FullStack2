@@ -27,7 +27,7 @@ export default function ListarUsuarios() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h1 className="mb-0 herotitulo" style={{ color: 'white', fontSize: 'xx-large' }}>
             Lista de Usuarios Registrados

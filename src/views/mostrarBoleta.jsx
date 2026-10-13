@@ -25,7 +25,7 @@ export default function MostrarBoleta() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="card shadow border-0 rounded-4 p-4">
           {error && <p className="text-danger">{error}</p>}
           {!error && !orden && <p>Cargando boleta...</p>}

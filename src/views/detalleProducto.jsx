@@ -47,7 +47,7 @@ export default function DetalleProducto() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="row g-5">
           <div className="col-12 col-md-6">
             {producto && (

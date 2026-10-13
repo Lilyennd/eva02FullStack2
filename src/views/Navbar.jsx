@@ -1,19 +1,8 @@
-import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Offcanvas } from 'bootstrap'
 import { quitar, useCarrito, vaciar } from './productos'
+import { cerrarSesion, esAdmin, useUsuario } from '../services/sesion'
 import CarritoLateral from './Carrito'
-
-// Misma clave de localStorage que usaba navbar.js
-function leerUsuario() {
-  try {
-    return JSON.parse(localStorage.getItem('usuarioActual'))
-  } catch {
-    return null
-  }
-}
-
-const esAdmin = (usuario) => !!usuario && (usuario.id_rol === 1 || usuario.id_rol === 2)
 
 function MenuAdmin() {
   return (
@@ -24,6 +13,7 @@ function MenuAdmin() {
       <li className="nav-item"><Link className="nav-link" to="/productosCriticos">Críticos</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/adminCategorias">Categorías</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/listarUsuarios">Usuarios</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/reportes">Reportes</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/perfil">Perfil</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/home">Tienda</Link></li>
     </ul>
@@ -48,26 +38,11 @@ function MenuComprador({ conSesion }) {
 function Navbar() {
   const navigate = useNavigate()
   const carrito = useCarrito()
-  const [, setRefrescar] = useState(0)
+  const usuario = useUsuario()   // usuario guardado en localStorage
+  const admin = esAdmin(usuario) // true solo si id_rol === 2
 
-  // Escucha el aviso que dispara Login (u otras vistas) cuando cambia la sesión
-  useEffect(() => {
-    const refrescar = () => setRefrescar((n) => n + 1)
-    window.addEventListener('usuarioCambiado', refrescar)
-    window.addEventListener('storage', refrescar) // cambios desde otra pestaña
-    return () => {
-      window.removeEventListener('usuarioCambiado', refrescar)
-      window.removeEventListener('storage', refrescar)
-    }
-  }, [])
-
-  const usuario = leerUsuario()
-  const admin = esAdmin(usuario)
-
-  // Aquí no hace falta evento: el botón vive dentro del Navbar
-  const cerrarSesion = () => {
-    localStorage.removeItem('usuarioActual')
-    setRefrescar((n) => n + 1)
+  const cerrar = () => {
+    cerrarSesion()
     navigate('/home')
   }
 
@@ -113,7 +88,7 @@ function Navbar() {
                 </button>
               )}
               {usuario ? (
-                <button className="btn btn-outline-danger" id="btnCerrarSesion" onClick={cerrarSesion}>
+                <button className="btn btn-outline-danger" id="btnCerrarSesion" onClick={cerrar}>
                   Cerrar sesión
                 </button>
               ) : (

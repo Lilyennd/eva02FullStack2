@@ -53,7 +53,7 @@ export default function AdminCategorias() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Categorías</h1>
         <div className="card shadow border-0 rounded-4 p-4">
           {mensaje.texto && <div className={`alert alert-${mensaje.tipo}`} id="mensajeCategoria">{mensaje.texto}</div>}

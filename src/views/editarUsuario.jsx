@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { apiFetch } from '../services/api'
-import { guardarUsuario, useUsuario } from '../services/sesion'
+import { esAdmin, guardarUsuario, useUsuario } from '../services/sesion'
 
 export default function EditarUsuario() {
   const navigate = useNavigate()
@@ -9,6 +9,9 @@ export default function EditarUsuario() {
   const idUsuario = params.get('id')
   const avisado = useRef(false)
   const sesion = useUsuario()
+
+  // admin vuelve a la lista de usuarios; comprador vuelve a su perfil
+  const volverA = esAdmin(sesion) ? '/listarUsuarios' : '/perfil'
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
   const [otros, setOtros] = useState({
@@ -21,7 +24,7 @@ export default function EditarUsuario() {
         avisado.current = true
         alert('No se especificó un usuario para editar.')
       }
-      navigate('/listarUsuarios')
+      navigate('/perfil')
       return
     }
 
@@ -51,7 +54,7 @@ export default function EditarUsuario() {
         if (!vigente) return
         console.log('Error al cargar:', error)
         alert('No se pudieron cargar los datos del usuario.')
-        navigate('/listarUsuarios')
+        navigate('/perfil')
       })
 
     return () => {
@@ -82,7 +85,6 @@ export default function EditarUsuario() {
     })
       .then((respuesta) => {
         if (respuesta.ok) {
-          // si editó su propio perfil, se actualiza la sesión guardada
           if (sesion && String(sesion.id_usuario) === String(idUsuario)) {
             guardarUsuario({
               ...sesion,
@@ -92,7 +94,7 @@ export default function EditarUsuario() {
             })
           }
           alert('¡Usuario actualizado con éxito!')
-          navigate(sesion && sesion.id_rol === 3 ? '/perfil' : '/listarUsuarios')
+          navigate(volverA)
         } else {
           return respuesta.json().then((data) => {
             alert(data.error || 'No se pudo actualizar el usuario.')
@@ -105,11 +107,9 @@ export default function EditarUsuario() {
       })
   }
 
-  const volverA = sesion && sesion.id_rol === 3 ? '/perfil' : '/listarUsuarios'
-
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-md-7">
             <div className="card shadow border-0 rounded-4 p-4">

@@ -44,7 +44,7 @@ export default function PagoCorrecto() {
   if (estado !== 'ok') {
     return (
       <div className="background min-vh-100">
-        <div className="container my-5 text-center text-white">
+        <div className="container py-5 text-center text-white">
           <h2 className="mb-3"><span className="text-warning">⚠</span> Boleta no disponible</h2>
           <p>{mensajes[estado]}</p>
           <Link to="/productos" className="btn btn-light">Ir a productos</Link>

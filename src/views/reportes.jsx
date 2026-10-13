@@ -46,7 +46,7 @@ export default function Reportes() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Reportes</h1>
         {error && <p className="text-danger text-center">{error}</p>}
 

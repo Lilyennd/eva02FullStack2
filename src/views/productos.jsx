@@ -2,11 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
-// ================= CARRITO (equivale al carrito.js original) =================
-// Mismas funciones y mismo localStorage ('carrito'). Va en este archivo para no
-// crear uno nuevo; App.jsx (panel lateral) y DetalleProducto.jsx lo importan de aquí.
-// El carrito vive en localStorage; useCarrito() lo lee y se actualiza solo,
-// así el Navbar (panel lateral) y las vistas siempre muestran lo mismo.
 
 const EVENTO_CARRITO = 'carrito-actualizado'
 
@@ -139,7 +134,7 @@ export default function Productos() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 ; herotitulo" style={{ color: 'white' }}>
           Nuestras gemas
         </h1>

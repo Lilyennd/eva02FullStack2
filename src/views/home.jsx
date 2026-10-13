@@ -143,7 +143,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container my-5">
+      <section className="container py-5">
         <p className="text-white mb-4">
           Explora nuestra colección de diamantes certificados y elige la pieza perfecta que refleje la belleza y el significado de tu amor.
         </p>

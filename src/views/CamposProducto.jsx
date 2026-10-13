@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { categoriasApi } from '../services/api'
 
-// Imágenes disponibles en el backend (public/img/productos). Una sola lista para Nuevo y Modificar.
+
 export const IMAGENES_PRODUCTO = [
   'diamante1.jpg', 'diamanterosa1.jpg', 'diamanterojo.jpg', 'diamond.jpg',
   'esmeralda1.jpg', 'ruby1.jpg', 'zafiro1.jpg', 'images.jpg',
 ]
 
-// Hook: carga las categorías desde el backend (GET /api/categorias)
-// y entrega la lista de imágenes disponibles en /public/img/productos.
 export function useCatalogosProducto(imagenesBase = []) {
   const [categorias, setCategorias] = useState([])
 
@@ -28,8 +26,7 @@ export function useCatalogosProducto(imagenesBase = []) {
   return { categorias, imagenes: imagenesBase }
 }
 
-// Campos del formulario de producto, compartidos por Nuevo y Modificar producto.
-// El id de cada input es la clave dentro de `datos` (handleChange usa e.target.id).
+
 export default function CamposProducto({
   datos,
   onChange,

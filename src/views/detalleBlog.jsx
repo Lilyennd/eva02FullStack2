@@ -50,7 +50,7 @@ export default function DetalleBlog() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8 bg-white p-4 rounded shadow-sm">
             <h1 id="detTitulo" className="mb-2">{titulo}</h1>

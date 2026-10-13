@@ -202,7 +202,6 @@ export default function Checkout() {
   }))
 
   return (
-    /* Usamos py-4 en .background y eliminamos my-5 de .container para que el fondo se pegue al Navbar */
     <div className="background min-vh-100 py-4">
       <div className="container">
         <div className="row justify-content-center">

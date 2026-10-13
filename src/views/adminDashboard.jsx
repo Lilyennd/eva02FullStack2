@@ -24,10 +24,10 @@ const ACCESOS = [
   { to: '/productosCriticos', texto: 'Productos críticos' },
   { to: '/adminCategorias', texto: 'Categorías' },
   { to: '/listarUsuarios', texto: 'Usuarios' },
+  { to: '/reportes', texto: 'Reportes' },
   { to: '/perfil', texto: 'Perfil' },
 ]
 
-// Dashboard del administrador: GET /api/dashboard (vista v_dashboard de la BD)
 export default function AdminDashboard() {
   const [resumen, setResumen] = useState(null)
   const [error, setError] = useState('')
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Dashboard</h1>
         {error && <p className="text-danger text-center">No se pudo cargar el resumen: {error}</p>}
         {!error && !resumen && <p className="text-center text-white">Cargando...</p>}
@@ -64,8 +64,6 @@ export default function AdminDashboard() {
               detalle="Formulario de contacto" />
           </div>
         )}
-
-      
       </div>
     </div>
   )

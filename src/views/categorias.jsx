@@ -8,12 +8,6 @@ export function TarjetaCategoria({ categoria, imagen, activa }) {
     <div className="col-6 col-md-4 col-lg-3">
       <Link to={`/categorias?id=${categoria.id_categoria}`} className="text-decoration-none">
         <div className={`card h-100 text-center shadow-sm ${activa ? 'border-primary border-3' : ''}`}>
-          <img
-            src={imagen ? `/img/productos/${imagen}` : '/img/fondoaz.jpg'}
-            className="card-img-top"
-            alt={categoria.nombre_categoria}
-            style={{ height: '120px', objectFit: 'cover' }}
-          />
           <div className="card-body p-2">
             <h6 className="card-title mb-0 text-dark">{categoria.nombre_categoria}</h6>
           </div>
@@ -60,7 +54,7 @@ export default function Categorias() {
 
   return (
     <div className="background min-vh-100">
-      <div className="container my-5">
+      <div className="container py-5">
         <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Categorías</h1>
 
         <div className="row g-3 justify-content-center" id="listaCategorias">
