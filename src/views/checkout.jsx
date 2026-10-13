@@ -6,7 +6,6 @@ import { apiFetch } from '../services/api'
 import { useUsuario } from '../services/sesion'
 
 
-// Cada click en "Agregar" es una unidad en el carrito: aquí se agrupan por producto
 export function agruparCarrito(carrito) {
   const agrupados = {}
   carrito.forEach((p) => {
@@ -28,7 +27,7 @@ export default function Checkout() {
   const carrito = useCarrito()
   const usuario = useUsuario()
 
-  // ----- estado del formulario -----
+
   const [form, setForm] = useState({
     nombre: usuario?.nombre || '',
     apellidos: usuario?.apellidos || '',
@@ -51,7 +50,7 @@ export default function Checkout() {
 
   const cambiar = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  // regiones + imágenes de los productos
+
   useEffect(() => {
     apiFetch('/api/regiones')
       .then((r) => r.json())
@@ -68,7 +67,7 @@ export default function Checkout() {
       .catch((err) => console.log('No se pudieron traer las imágenes:', err))
   }, [])
 
-  // comunas de la región elegida
+
   useEffect(() => {
     if (!idRegion) return
     let vigente = true
@@ -79,7 +78,7 @@ export default function Checkout() {
     return () => { vigente = false }
   }, [idRegion])
 
-  // si inició sesión, la dirección se rellena sola
+
   const idUsuario = usuario?.id_usuario
   useEffect(() => {
     if (!idUsuario) return
@@ -125,7 +124,7 @@ export default function Checkout() {
       items: items.map((i) => ({ id_producto: i.id_producto, cantidad: i.cantidad })),
     }
 
-    // se guarda por si el pago falla (lo usa PagoError)
+
     const respaldo = {
       mensaje: '',
       total,
@@ -140,7 +139,7 @@ export default function Checkout() {
 
     setProcesando(true)
     try {
-      // a) crear la orden (el servidor valida stock y precios)
+
       const resOrden = await apiFetch('/api/ordenes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -152,7 +151,6 @@ export default function Checkout() {
         return
       }
 
-      // b) pago simulado: la orden pasa a 'Pagada' y se descuenta el stock
       const resPago = await apiFetch('/api/ordenes/' + orden.id_orden, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -169,7 +167,6 @@ export default function Checkout() {
         return
       }
 
-      // c) todo bien: se vacía el carrito y se muestra la boleta
       sessionStorage.removeItem('checkoutError')
       vaciar()
       navigate('/pagoCorrecto?id=' + orden.id_orden)
@@ -181,7 +178,7 @@ export default function Checkout() {
     }
   }
 
-  // ----- carrito vacío -----
+
   if (carrito.length === 0) {
     return (
       <div className="background min-vh-100 py-5">
@@ -209,30 +206,7 @@ export default function Checkout() {
             <div className="card shadow border-0 rounded-4">
               <div className="card-body p-4 p-md-5">
 
-                {/* --- Encabezado y Descripción del Módulo --- */}
-                <div className="border-bottom pb-3 mb-4">
-                  <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
-                    <div>
-                      <h2 className="fw-bold text-primary mb-1">
-                        📋 Detalles de la Compra y Resumen
-                      </h2>
-                      <p className="text-muted mb-0 fs-6">
-                        Revisa el listado de tus productos seleccionados y completa la información de envío para finalizar tu orden.
-                      </p>
-                    </div>
-                    <span className="badge bg-primary fs-5 px-3 py-2 mt-2 mt-md-0 shadow-sm">
-                      Total a pagar: ${formatearPrecio(total)}
-                    </span>
-                  </div>
-
-                  {/* Cuestión explicativa para el usuario */}
-                  <div className="alert alert-light border mt-3 mb-0 rounded-3">
-                    <small className="text-secondary d-block">
-                      💡 <strong>¿De qué se trata esta página?</strong> Aquí podrás verificar el detalle completo de tus joyas elegidas, ver la cantidad y el subtotal acumulado. Para confirmar la transacción, ingresa los datos personales del comprador y la dirección donde deseas recibir o retirar tu pedido.
-                    </small>
-                  </div>
-                </div>
-
+               
                 {/* Tabla de Productos */}
                 <h5 className="fw-bold mb-3">Artículos seleccionados en tu Carrito</h5>
                 <TablaCompra filas={filas} />

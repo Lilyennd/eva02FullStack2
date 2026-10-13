@@ -38,15 +38,15 @@ function MenuComprador({ conSesion }) {
 function Navbar() {
   const navigate = useNavigate()
   const carrito = useCarrito()
-  const usuario = useUsuario()   // usuario guardado en localStorage
-  const admin = esAdmin(usuario) // true solo si id_rol === 2
+  const usuario = useUsuario()   
+  const admin = esAdmin(usuario) 
 
   const cerrar = () => {
     cerrarSesion()
     navigate('/home')
   }
 
-  // "Ir a pagar": cierra el panel del carrito y va al checkout
+  
   const irAPagar = () => {
     if (carrito.length === 0) {
       alert('Tu carrito está vacío.')

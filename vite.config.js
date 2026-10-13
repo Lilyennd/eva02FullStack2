@@ -1,43 +1,25 @@
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import babel from '@rolldown/plugin-babel'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] })
-  ],
+  plugins: [react()],
   test: {
-  environment: 'jsdom',
-  globals: true,
-  setupFiles: './src/test/setup.js',
-  include: ['src/test/**/*.test.{js,jsx}'],
-  coverage: {
-    provider: 'v8',
-    reporter: ['text', 'html'],
-    include: [
-      'src/services/api.js',
-      'src/views/home.jsx',
-      'src/views/nosotros.jsx',
-      'src/views/Footer.jsx',
-      'src/views/Navbar.jsx',
-      'src/views/Carrito.jsx',
-      'src/views/blogs.jsx',
-      'src/views/detalleBlog.jsx',
-      'src/views/contacto.jsx',
-      'src/views/productos.jsx',
-      'src/views/detalleProducto.jsx',
-      'src/views/categorias.jsx',
-      'src/views/ofertas.jsx',
-      'src/views/login.jsx',
-      'src/views/registroUsuario.jsx',
-      'src/views/checkout.jsx',
-      'src/views/pagoCorrecto.jsx',
-      'src/views/pagoError.jsx',
-      'src/views/DatosCompra.jsx',
-    ],
-  },
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test/setup.js',
+    // ESTA ES LA SOLUCIÓN AL CHOQUE ESM vs CJS
+    // Obliga a Vitest a procesar estas librerías juntas en el mismo formato
+    server: {
+      deps: {
+        inline: [
+          'react', 
+          'react-dom', 
+          'react-router', 
+          'react-router-dom', 
+          '@testing-library/react'
+        ]
+      }
+    }
   },
   server: {
     proxy: {
@@ -47,5 +29,4 @@ export default defineConfig({
       },
     },
   },
-})
-
+});

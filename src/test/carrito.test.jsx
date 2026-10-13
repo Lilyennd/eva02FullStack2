@@ -41,7 +41,7 @@ describe('Componente Carrito lateral (Cliente)', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ir a Pagar' }))
     expect(onPagar).toHaveBeenCalledTimes(1)
 
-    fireEvent.click(screen.getByRole('button', { name: /Ver Detalles de la Compra/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Detalles de la Compra/ }))
     expect(screen.getByTestId('ubicacion')).toHaveTextContent('/checkout')
   })
 })

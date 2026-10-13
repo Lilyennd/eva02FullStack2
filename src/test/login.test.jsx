@@ -8,7 +8,7 @@ vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
 
 describe('Vista Login (Cliente)', () => {
   it('debe validar el formulario, iniciar sesión y redirigir según el rol', async () => {
-    apiFetch.mockResolvedValue(respuesta({ usuario: { id_usuario: 3, nombre: 'Ana', id_rol: 3 } }))
+    apiFetch.mockResolvedValue(respuesta({ usuario: { id_usuario: 3, nombre: 'Ana', id_rol: 1 } }))
 
     renderConRuta(<Login />, '/login', '/login')
 
@@ -16,20 +16,17 @@ describe('Vista Login (Cliente)', () => {
     const password = screen.getByLabelText('Contraseña')
     const entrar = screen.getByRole('button', { name: 'Entrar' })
 
-    // 1) dominio no permitido: no llama al backend
     fireEvent.change(correo, { target: { value: 'ana@hotmail.com' } })
     fireEvent.change(password, { target: { value: 'abcd' } })
     fireEvent.click(entrar)
     expect(screen.getByText(/Correo no permitido/)).toBeInTheDocument()
     expect(apiFetch).not.toHaveBeenCalled()
 
-    // 2) contraseña muy corta
     fireEvent.change(correo, { target: { value: 'ana@gmail.com' } })
     fireEvent.change(password, { target: { value: 'ab' } })
     fireEvent.click(entrar)
     expect(screen.getByText('La contraseña debe tener entre 4 y 10 caracteres.')).toBeInTheDocument()
 
-    // 3) credenciales válidas: POST, sesión guardada y redirección al inicio
     fireEvent.change(password, { target: { value: 'abcd' } })
     fireEvent.click(entrar)
 
@@ -38,5 +35,16 @@ describe('Vista Login (Cliente)', () => {
     expect(url).toBe('/api/login')
     expect(JSON.parse(opciones.body)).toEqual({ correo: 'ana@gmail.com', password: 'abcd' })
     expect(JSON.parse(localStorage.getItem('usuarioActual')).nombre).toBe('Ana')
+  })
+    it('manda al administrador (id_rol 2) al panel /admin', async () => {
+    apiFetch.mockResolvedValue(respuesta({ usuario: { id_usuario: 1, nombre: 'Prof', id_rol: 2 } }))
+
+    renderConRuta(<Login />, '/login', '/login')
+
+    fireEvent.change(screen.getByLabelText('Correo Electrónico'), { target: { value: 'prof@profesor.duoc.cl' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'abcd' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }))
+
+    await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/admin'))
   })
 })

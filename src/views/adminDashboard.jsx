@@ -64,6 +64,14 @@ export default function AdminDashboard() {
               detalle="Formulario de contacto" />
           </div>
         )}
+
+        <div className="d-flex flex-wrap justify-content-center gap-2" id="accesosRapidos">
+          {ACCESOS.map((acceso) => (
+            <Link key={acceso.to} to={acceso.to} className="btn btn-outline-light">
+              {acceso.texto}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   )

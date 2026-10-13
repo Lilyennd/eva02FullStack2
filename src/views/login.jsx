@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
-// Solo estos dominios pueden entrar (antes venía de utils/validaciones)
+
 function correoPermitido(correo) {
   const c = correo.trim().toLowerCase()
   return c.endsWith('@profesor.duoc.cl') || c.endsWith('@duocuc.cl') || c.endsWith('@gmail.com')
@@ -46,7 +46,6 @@ export default function Login() {
         return
       }
 
-      // Misma clave que usaba navbar.js
       localStorage.setItem('usuarioActual', JSON.stringify(data.usuario))
       window.dispatchEvent(new Event('usuarioCambiado'))
       navigate(data.usuario.id_rol === 2 ? '/admin' : '/home')

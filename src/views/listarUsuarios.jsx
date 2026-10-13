@@ -3,9 +3,14 @@ import { Link } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
 const ROLES = {
-  1: { textoRol: 'Administrador', claseBadge: 'bg-dark' },
-  2: { textoRol: 'Vendedor', claseBadge: 'bg-primary' },
-  3: { textoRol: 'Comprador', claseBadge: 'bg-secondary' },
+  1: { textoRol: 'Comprador', claseBadge: 'bg-secondary' },
+  2: { textoRol: 'Administrador / Vendedor', claseBadge: 'bg-dark' },
+}
+
+function rolDelCorreo(correo) {
+  const c = (correo || '').trim().toLowerCase()
+  if (c.endsWith('@duocuc.cl') || c.endsWith('@profesor.duoc.cl')) return 2
+  return 1
 }
 
 export default function ListarUsuarios() {
@@ -63,7 +68,7 @@ export default function ListarUsuarios() {
                 {!error &&
                   usuarios &&
                   usuarios.map((user) => {
-                    const { textoRol, claseBadge } = ROLES[user.id_rol] ?? ROLES[3]
+                    const { textoRol, claseBadge } = ROLES[rolDelCorreo(user.correo)]
                     return (
                       <tr key={user.id_usuario}>
                         <td>{user.run}</td>

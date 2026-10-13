@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { usuariosApi } from '../services/api'
-import { useUsuario } from '../services/sesion'
+import { esAdmin, useUsuario } from '../services/sesion'
 
 export default function Perfil() {
-  const sesion = useUsuario() 
+  const sesion = useUsuario()
+  const admin = esAdmin(sesion)
   const id = sesion ? sesion.id_usuario : null
   const [usuario, setUsuario] = useState(null)
   const [error, setError] = useState(id ? '' : 'Debes iniciar sesión.')
@@ -35,7 +36,9 @@ export default function Perfil() {
               <p className="mb-3"><b>Teléfono:</b> {usuario.telefono || '—'}</p>
               <div className="d-flex gap-2">
                 <Link to={`/editarUsuario?id=${usuario.id_usuario}`} className="btn btn-warning">Editar datos</Link>
-                <Link to={`/historialCompras?id=${usuario.id_usuario}`} className="btn btn-outline-dark">Mis compras</Link>
+                {!admin && (
+                  <Link to={`/historialCompras?id=${usuario.id_usuario}`} className="btn btn-outline-dark">Mis compras</Link>
+                )}
               </div>
             </>
           )}

@@ -28,9 +28,29 @@ describe('Componente Navbar (Cliente)', () => {
     ;['Inicio', 'Productos', 'Categorías', 'Ofertas', 'Nosotros', 'Blogs', 'Contacto'].forEach((texto) => {
       expect(screen.getByRole('link', { name: texto })).toBeInTheDocument()
     })
-    expect(screen.getByText('2')).toBeInTheDocument() // contador del carrito
+    expect(screen.getByText('2')).toBeInTheDocument() 
     expect(screen.getByRole('link', { name: 'Iniciar sesión' })).toHaveAttribute('href', '/login')
     expect(screen.queryByRole('button', { name: 'Cerrar sesión' })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument()
+  })
+
+    it('comprador con sesión (id_rol 1): ve "Mi perfil" y NO el menú de admin', () => {
+    localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 1, id_rol: 1, nombre: 'Ana' }))
+
+    renderConRuta(<Navbar />, '/home', '/home')
+
+    expect(screen.getByRole('link', { name: 'Mi perfil' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument()
+  })
+
+  it('administrador (id_rol 2): ve el menú de admin y no ve el carrito', () => {
+    localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 2, id_rol: 2 }))
+
+    renderConRuta(<Navbar />, '/home', '/home')
+
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/admin')
+    expect(screen.getByRole('link', { name: 'Reportes' })).toHaveAttribute('href', '/reportes')
+    expect(screen.queryByRole('button', { name: /Carrito/ })).not.toBeInTheDocument()
   })
 })

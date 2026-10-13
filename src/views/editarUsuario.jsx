@@ -10,7 +10,7 @@ export default function EditarUsuario() {
   const avisado = useRef(false)
   const sesion = useUsuario()
 
-  // admin vuelve a la lista de usuarios; comprador vuelve a su perfil
+
   const volverA = esAdmin(sesion) ? '/listarUsuarios' : '/perfil'
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
@@ -75,7 +75,7 @@ export default function EditarUsuario() {
       nombre: datos.nombre.trim(),
       apellidos: datos.apellidos.trim(),
       correo: datos.correo.trim(),
-      ...otros, // incluye id_rol sin modificar
+      ...otros, 
     }
 
     apiFetch(`/api/usuarios/${idUsuario}`, {

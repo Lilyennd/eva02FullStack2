@@ -20,17 +20,15 @@ describe('Vista Productos (Cliente)', () => {
     expect(await screen.findByRole('heading', { name: 'Diamante Brillante' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Rubí Birmano' })).toBeInTheDocument()
     expect(apiFetch).toHaveBeenCalledWith('/api/productos')
-    expect(screen.getAllByText('Oferta')).toHaveLength(1) // solo el rubí está en oferta
+    expect(screen.getAllByText('Oferta')).toHaveLength(1) 
 
     const botones = screen.getAllByRole('button', { name: 'Agregar' })
 
-    // el rubí se guarda con su precio de oferta
     fireEvent.click(botones[1])
     expect(JSON.parse(localStorage.getItem('carrito'))).toEqual([
       { nombre: 'Rubí Birmano', precio: 990000, id_producto: 2 },
     ])
 
-    // el diamante tiene stock 1: tras agregarlo el botón queda deshabilitado
     fireEvent.click(botones[0])
     await waitFor(() => expect(botones[0]).toBeDisabled())
   })

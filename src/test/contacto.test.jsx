@@ -16,13 +16,11 @@ describe('Vista Contacto (Cliente)', () => {
     fireEvent.change(screen.getByLabelText('Nombre'), { target: { id: 'nombre', value: 'Ana Soto' } })
     fireEvent.change(screen.getByLabelText('Comentario'), { target: { id: 'comentario', value: 'Quiero cotizar una gema' } })
 
-    // 1) correo inválido: muestra el error y NO llama al backend
     fireEvent.change(screen.getByLabelText('Correo Electrónico'), { target: { id: 'correo', value: 'ana@dominio' } })
     fireEvent.click(screen.getByRole('button', { name: 'Enviar mensaje' }))
     expect(screen.getByText(/Ingresa un correo válido/)).toBeInTheDocument()
     expect(apiFetch).not.toHaveBeenCalled()
 
-    // 2) correo válido: envía el formulario y limpia los campos
     fireEvent.change(screen.getByLabelText('Correo Electrónico'), { target: { id: 'correo', value: 'ana@gmail.com' } })
     fireEvent.click(screen.getByRole('button', { name: 'Enviar mensaje' }))
 

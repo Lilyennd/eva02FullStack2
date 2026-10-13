@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import Categorias from '../views/categorias'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
@@ -25,5 +25,9 @@ describe('Vista Categorías (Cliente)', () => {
 
     expect(await screen.findByText('Diamante Rosa')).toBeInTheDocument()
     expect(screen.getByText('Rubí Birmano')).toBeInTheDocument()
+
+    const seccionDiamantes = screen.getByRole('heading', { level: 2, name: 'Diamantes' }).parentElement
+    expect(within(seccionDiamantes).getByText('Diamante Rosa')).toBeInTheDocument()
+    expect(within(seccionDiamantes).queryByText('Rubí Birmano')).not.toBeInTheDocument()
   })
 })

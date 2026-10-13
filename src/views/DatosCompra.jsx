@@ -1,7 +1,7 @@
 export const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
 
-// Campo de solo lectura (los datos grises de las figuras 7 y 8)
+
 function CampoLectura({ id, etiqueta, valor, columnas = 'col-md-6' }) {
   return (
     <div className={`${columnas} mb-3`}>
@@ -11,7 +11,7 @@ function CampoLectura({ id, etiqueta, valor, columnas = 'col-md-6' }) {
   )
 }
 
-// cliente = { nombre, apellidos, correo, calle, departamento, region, comuna, indicaciones, entrega? }
+
 export function DatosCliente({ cliente }) {
   return (
     <>
@@ -43,7 +43,7 @@ export function DatosCliente({ cliente }) {
   )
 }
 
-// filas = [{ nombre, imagen, precio, cantidad, subtotal }]
+
 export function TablaCompra({ filas, conImagen = true }) {
   return (
     <div className="table-responsive my-3">

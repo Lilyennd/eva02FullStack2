@@ -40,5 +40,16 @@ describe('Vista Checkout (Cliente)', () => {
     fireEvent.click(screen.getByRole('button', { name: /Pagar ahora/ }))
 
     await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/pagoCorrecto?id=99'))
+
+    const llamadaOrden = apiFetch.mock.calls.find(
+      ([url, opciones]) => url === '/api/ordenes' && opciones?.method === 'POST',
+    )
+    expect(JSON.parse(llamadaOrden[1].body).items).toEqual([
+      { id_producto: 1, cantidad: 1 },
+      { id_producto: 2, cantidad: 1 },
+    ])
+
+    const llamadaPago = apiFetch.mock.calls.find(([url]) => url === '/api/ordenes/99')
+    expect(JSON.parse(llamadaPago[1].body)).toEqual({ estado: 'Pagada' })
   })
 })

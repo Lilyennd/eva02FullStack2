@@ -3,9 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { DatosCliente, formatearPrecio, TablaCompra } from './DatosCompra'
 import { apiFetch } from '../services/api'
 
-// Vista Pago con error.
-// Si la orden llegó a crearse (?id=...) se lee del servidor; si no, se usan los datos
-// que Checkout o Carrito dejaron guardados en sessionStorage ('checkoutError').
 
 function leerRespaldo() {
   try {
@@ -15,7 +12,7 @@ function leerRespaldo() {
   }
 }
 
-// Datos de ejemplo por defecto en caso de acceder sin sesión previa
+
 const datosDemoDefecto = {
   numero: '20261012-ERR01',
   total: 990000,
@@ -34,7 +31,7 @@ const datosDemoDefecto = {
   ],
 }
 
-// Convierte lo guardado por Checkout al mismo formato que la orden del servidor
+
 export function datosDesdeRespaldo(respaldo) {
   const d = respaldo.datos
   return {

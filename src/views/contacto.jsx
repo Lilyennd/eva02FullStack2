@@ -33,7 +33,7 @@ export default function Contacto() {
       }),
     })
       .then((respuesta) => {
-        // si el servidor respondió con error, pasa al catch
+
         if (!respuesta.ok) throw new Error('El servidor rechazó el mensaje')
         alert('¡Gracias! Tu mensaje fue enviado.')
         setDatos(formularioVacio)

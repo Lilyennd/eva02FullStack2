@@ -3,7 +3,7 @@ import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { DatosCliente, formatearPrecio, TablaCompra } from './DatosCompra'
 import { apiFetch } from '../services/api'
 
-// Vista Pago correcto: boleta de la orden (GET /api/ordenes/:id)
+
 export default function PagoCorrecto() {
   const [params] = useSearchParams()
   const id = params.get('id')
@@ -53,7 +53,7 @@ export default function PagoCorrecto() {
     )
   }
 
-  // Si no está pagada, redirige a pagoError
+ 
   if (orden.estado !== 'Pagada') return <Navigate to={'/pagoError?id=' + id} replace />
 
   const cliente = {
@@ -89,7 +89,7 @@ export default function PagoCorrecto() {
   }
 
   return (
-    /* Se agrega py-4 a .background y se quita my-5 de .container para pegar el fondo azul al Navbar */
+
     <div className="background min-vh-100 py-4">
       <div className="container">
         <div className="row justify-content-center">

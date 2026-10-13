@@ -29,7 +29,7 @@ export default function Reportes() {
     }
   }, [])
 
-  // ventas agrupadas por estado
+
   const porEstado = {}
   ordenes.forEach((o) => {
     if (!porEstado[o.estado]) porEstado[o.estado] = { cantidad: 0, total: 0 }

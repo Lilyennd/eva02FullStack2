@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom'
 import { ordenesApi } from '../services/api'
 import { TablaOrdenes } from './adminOrdenes'
 
-// Historial de compras de un usuario: GET /api/ordenes?id_usuario=
 export default function HistorialCompras() {
   const [params] = useSearchParams()
   const id = params.get('id')

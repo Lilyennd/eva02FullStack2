@@ -1,10 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import RegistroUsuario from '../views/registroUsuario'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
 vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+
+const DIRECCION = 'Calle 1 #100'
 
 describe('Vista Registro de Usuario (Cliente)', () => {
   it('debe cargar regiones y comunas, registrar al usuario y redirigir al login', async () => {
@@ -16,19 +19,20 @@ describe('Vista Registro de Usuario (Cliente)', () => {
     })
 
     renderConRuta(<RegistroUsuario />, '/registroUsuario', '/registroUsuario')
-
-    // la comuna sigue bloqueada hasta elegir región
-    expect(screen.getByRole('button', { name: 'Selecciona una región primero' })).toBeDisabled()
-
+    expect(screen.getByLabelText('Comuna')).toBeDisabled()
     fireEvent.change(screen.getByLabelText('RUN'), { target: { id: 'run', value: '19011022K' } })
     fireEvent.change(screen.getByLabelText('Nombre'), { target: { id: 'nombre', value: 'Ana' } })
     fireEvent.change(screen.getByLabelText('Apellidos'), { target: { id: 'apellidos', value: 'Soto' } })
     fireEvent.change(screen.getByLabelText('Correo Electrónico'), { target: { id: 'correo', value: 'ana@gmail.com' } })
     fireEvent.change(screen.getByLabelText('Contraseña'), { target: { id: 'password', value: 'abcd' } })
-    fireEvent.change(screen.getByLabelText('Dirección'), { target: { id: 'direccion', value: 'Calle 1 #100' } })
+    fireEvent.change(screen.getByLabelText('Dirección'), { target: { id: 'direccion', value: DIRECCION } })
 
-    fireEvent.click(await screen.findByRole('link', { name: 'Región Metropolitana' }))
-    fireEvent.click(await screen.findByRole('link', { name: 'Cerrillos' }))
+    await screen.findByRole('option', { name: 'Región Metropolitana' })
+    await userEvent.selectOptions(screen.getByLabelText('Región'), 'Región Metropolitana')
+
+    await screen.findByRole('option', { name: 'Cerrillos' })
+    await userEvent.selectOptions(screen.getByLabelText('Comuna'), 'Cerrillos')
+
     fireEvent.click(screen.getByRole('button', { name: 'Registrar' }))
 
     await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/login'))
@@ -40,10 +44,10 @@ describe('Vista Registro de Usuario (Cliente)', () => {
       run: '19011022K',
       nombre: 'Ana',
       correo: 'ana@gmail.com',
-      id_rol: 2,
+      id_rol: 1,
       id_region: 1,
       id_comuna: 10,
-      direccion: 'Calle 1 #100',
+      direccion: DIRECCION,
     })
   })
 })
