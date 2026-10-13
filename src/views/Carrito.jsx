@@ -151,7 +151,7 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
                 Pago Correcto
               </button>
               <button 
-                className="btn btn-sm btn-outline-danger w-50" 
+                className="btn btn-sm btn-outline-success w-50" 
                 id="btnDemoError"
                 onClick={irAPagoErrorDemo}
               >

@@ -15,19 +15,31 @@ export default defineConfig({
   include: ['src/test/**/*.test.{js,jsx}'],
   coverage: {
     provider: 'v8',
-    reporter: ['text'],
+    reporter: ['text', 'html'],
     include: [
+      'src/services/api.js',
+      'src/views/home.jsx',
+      'src/views/nosotros.jsx',
+      'src/views/Footer.jsx',
+      'src/views/Navbar.jsx',
+      'src/views/Carrito.jsx',
+      'src/views/blogs.jsx',
+      'src/views/detalleBlog.jsx',
+      'src/views/contacto.jsx',
+      'src/views/productos.jsx',
+      'src/views/detalleProducto.jsx',
       'src/views/categorias.jsx',
       'src/views/ofertas.jsx',
+      'src/views/login.jsx',
+      'src/views/registroUsuario.jsx',
       'src/views/checkout.jsx',
       'src/views/pagoCorrecto.jsx',
       'src/views/pagoError.jsx',
-      ],
+      'src/views/DatosCompra.jsx',
+    ],
   },
   },
   server: {
-    // Las APIs se llaman directo al backend de Vercel (src/services/api.js).
-    // Solo las imágenes (/img/...) viven en el backend, así que se piden allá.
     proxy: {
       '/img': {
         target: 'https://eva01-full-stack2-eight.vercel.app',
