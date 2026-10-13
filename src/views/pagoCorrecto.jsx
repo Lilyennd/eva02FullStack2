@@ -9,7 +9,7 @@ export default function PagoCorrecto() {
   const id = params.get('id')
 
   const [orden, setOrden] = useState(null)
-  const [estado, setEstado] = useState(id ? 'cargando' : 'sinId') // cargando | ok | noEncontrada | error | sinId
+  const [estado, setEstado] = useState(id ? 'cargando' : 'sinId')
 
   useEffect(() => {
     if (!id) return
@@ -43,8 +43,8 @@ export default function PagoCorrecto() {
 
   if (estado !== 'ok') {
     return (
-      <div className="background min-vh-100">
-        <div className="container my-5 text-center text-white">
+      <div className="background min-vh-100 py-4">
+        <div className="container text-center text-white">
           <h2 className="mb-3"><span className="text-warning">⚠</span> Boleta no disponible</h2>
           <p>{mensajes[estado]}</p>
           <Link to="/productos" className="btn btn-light">Ir a productos</Link>
@@ -53,7 +53,7 @@ export default function PagoCorrecto() {
     )
   }
 
-  // si no está pagada, no corresponde mostrar la boleta
+  // Si no está pagada, redirige a pagoError
   if (orden.estado !== 'Pagada') return <Navigate to={'/pagoError?id=' + id} replace />
 
   const cliente = {
@@ -76,7 +76,6 @@ export default function PagoCorrecto() {
     subtotal: d.subtotal,
   }))
 
-  // abre el programa de correo con el resumen (no hay servicio de correo en el servidor)
   const enviarPorEmail = () => {
     let cuerpo = 'Gracias por tu compra en Splendor.\n\nOrden #' + orden.numero_orden + '\n\n'
     filas.forEach((f) => {
@@ -90,8 +89,9 @@ export default function PagoCorrecto() {
   }
 
   return (
-    <div className="background min-vh-100">
-      <div className="container my-5">
+    /* Se agrega py-4 a .background y se quita my-5 de .container para pegar el fondo azul al Navbar */
+    <div className="background min-vh-100 py-4">
+      <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-9">
             <div className="card shadow border-0 rounded-4">
@@ -123,7 +123,6 @@ export default function PagoCorrecto() {
           </div>
         </div>
       </div>
-      <br />
     </div>
   )
 }

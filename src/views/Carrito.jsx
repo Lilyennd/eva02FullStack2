@@ -147,7 +147,7 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
 
           {/* Botones de Ejemplo / Prueba */}
           <div className="p-2 bg-light rounded border text-center">
-            <small className="text-muted d-block mb-2 font-monospace">Pruebas / Ejemplos de Respuesta:</small>
+            <small className="text-muted d-block mb-2 font-monospace"></small>
             <div className="d-flex gap-2">
               <button 
                 className="btn btn-sm btn-outline-success w-50" 
@@ -157,7 +157,7 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
                 ✔ Pago Correcto
               </button>
               <button 
-                className="btn btn-sm btn-outline-danger w-50" 
+                className="btn btn-sm btn-outline-success w-50" 
                 id="btnDemoError"
                 onClick={irAPagoErrorDemo}
               >
