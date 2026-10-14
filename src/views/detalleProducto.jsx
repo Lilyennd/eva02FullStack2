@@ -6,14 +6,14 @@ import { apiFetch } from '../services/api'
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
 
-
 export default function DetalleProducto() {
   const [params] = useSearchParams()
-  const idProducto = params.get('id')
+  const idProducto = params.get('id') 
   const carrito = useCarrito()
 
   const [producto, setProducto] = useState(null)
   const [error, setError] = useState(false)
+
 
   useEffect(() => {
     if (!idProducto) return
@@ -37,6 +37,7 @@ export default function DetalleProducto() {
     }
   }, [idProducto])
 
+
   let nombre = 'Cargando...'
   if (!idProducto) nombre = 'Producto no encontrado'
   else if (error) nombre = 'Error al cargar el producto'
@@ -46,7 +47,7 @@ export default function DetalleProducto() {
   const hayStock = producto && producto.stock > 0
 
   return (
-    <div className="background min-vh-100">
+    <div className="bg-white min-vh-100">
       <div className="container py-5">
         <div className="row g-5">
           <div className="col-12 col-md-6">
@@ -55,7 +56,8 @@ export default function DetalleProducto() {
                 id="detImagen"
                 src={rutaImagenProducto(p.imagen_principal)}
                 alt={p.nombre}
-                className="img-fluid rounded"
+                className="img-fluid rounded shadow-sm border w-100"
+                style={{ maxHeight: '450px', objectFit: 'contain' }}
               />
             )}
           </div>

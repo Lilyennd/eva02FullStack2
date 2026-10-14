@@ -19,7 +19,7 @@ describe('Vista Dashboard del administrador', () => {
     expect(screen.getByText('Inventario: 40 unidades')).toBeInTheDocument()
     expect(screen.getByText('Nuevos (30 días): 2')).toBeInTheDocument()
 
-    // accesos rápidos (son enlaces)
+   
     expect(screen.getByRole('link', { name: 'Reportes' })).toHaveAttribute('href', '/reportes')
     expect(screen.getByRole('link', { name: 'Órdenes / Boletas' })).toHaveAttribute('href', '/adminOrdenes')
   })
