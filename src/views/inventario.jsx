@@ -20,7 +20,16 @@ export function TarjetaInventario({ producto }) {
           <h5 className="card-title">{producto.nombre}</h5>
           <p className="card-text text-muted mb-1">Stock: {producto.stock}</p>
           <p className="card-text text-muted">{producto.origen ? producto.origen : ''}</p>
-          <p className="card-text fw-bold">${formatearPrecio(producto.precio)}</p>
+          {producto.en_oferta && producto.precio_oferta ? (
+            <p className="card-text fw-bold">
+              <span className="text-muted text-decoration-line-through me-2">
+                ${formatearPrecio(producto.precio)}
+              </span>
+              <span className="text-danger">${formatearPrecio(producto.precio_oferta)}</span>
+            </p>
+          ) : (
+            <p className="card-text fw-bold">${formatearPrecio(producto.precio)}</p>
+          )}
           <Link
             to={`/modificarProducto?id=${producto.id_producto}`}
             className="btn btn-outline-dark mt-auto ; textbasico"

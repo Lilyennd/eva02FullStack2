@@ -14,7 +14,7 @@ vi.mock('bootstrap', () => ({
 }))
 
 describe('Componente Navbar (Cliente)', () => {
-  it('visitante: muestra el menú de la tienda, el contador del carrito y "Iniciar sesión"', () => {
+  it('visitante: muestra el menú de la tienda, el contador del carrito y "Iniciar sesión"',  async () =>  {
     localStorage.setItem(
       'carrito',
       JSON.stringify([
