@@ -18,7 +18,7 @@ describe('Vista Pago Correcto', () => {
   it('muestra la boleta de la orden pagada', async () => {
     apiFetch.mockResolvedValue({ status: 200, json: async () => orden })
 
-    renderConRuta(<PagoCorrecto />, '/pagoCorrecto?id=5', '/pagoCorrecto')
+    renderConRuta(<PagoCorrecto />, '/pagoCorrecto/5', '/pagoCorrecto')
 
     expect(await screen.findByText('#2026-0005')).toBeInTheDocument()
     expect(apiFetch).toHaveBeenCalledWith('/api/ordenes/5')

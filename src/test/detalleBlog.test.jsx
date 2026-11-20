@@ -19,7 +19,7 @@ describe('Vista Detalle de Blog (Cliente)', () => {
   it('debe pedir el blog según el id de la URL y mostrar su contenido', async () => {
     apiFetch.mockResolvedValue(respuesta(blog))
 
-    renderConRuta(<DetalleBlog />, '/detalleBlog?id=3', '/detalleBlog')
+    renderConRuta(<DetalleBlog />, '/blog/3', '/detalleBlog')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Historia del rubí' })).toBeInTheDocument()
     expect(screen.getByText('Resumen del artículo')).toBeInTheDocument()

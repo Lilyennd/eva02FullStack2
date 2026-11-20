@@ -1,23 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiFetch } from '../services/api'
+import { apiFetch, usuariosApi } from '../services/api'
+import { useUsuario } from '../services/sesion'
 
 const ROLES = {
-  1: { textoRol: 'Comprador', claseBadge: 'bg-secondary' },
-  2: { textoRol: 'Administrador / Vendedor', claseBadge: 'bg-dark' },
-}
-
-function rolDelCorreo(correo) {
-  const c = (correo || '').trim().toLowerCase()
-  if (c.endsWith('@duocuc.cl') || c.endsWith('@profesor.duoc.cl')) return 2
-  return 1
+  1: { textoRol: 'Cliente', claseBadge: 'bg-secondary' },
+  2: { textoRol: 'Administrador', claseBadge: 'bg-dark' },
+  3: { textoRol: 'Vendedor', claseBadge: 'bg-info text-dark' },
 }
 
 export default function ListarUsuarios() {
+  const usuarioActual = useUsuario()
   const [usuarios, setUsuarios] = useState(null)
   const [error, setError] = useState(false)
 
-  useEffect(() => {
+  const cargar = () => {
     apiFetch('/api/usuarios')
       .then((respuesta) => {
         if (!respuesta.ok) throw new Error('Error del servidor')
@@ -28,7 +25,26 @@ export default function ListarUsuarios() {
         console.log('Error al traer los usuarios:', err)
         setError(true)
       })
+  }
+
+  useEffect(() => {
+    cargar()
   }, [])
+
+  const handleEliminar = async (id, nombre) => {
+    if (usuarioActual && usuarioActual.id_usuario === id) {
+      alert('No puedes eliminar tu propia cuenta.')
+      return
+    }
+    if (!window.confirm(`¿Estás seguro de desactivar al usuario "${nombre}"?`)) return
+    try {
+      await usuariosApi.eliminar(id)
+      alert('Usuario desactivado correctamente.')
+      cargar()
+    } catch (err) {
+      alert(err.message || 'Error al eliminar usuario.')
+    }
+  }
 
   return (
     <div className="background min-vh-100">
@@ -68,27 +84,37 @@ export default function ListarUsuarios() {
                 {!error &&
                   usuarios &&
                   usuarios.map((user) => {
-                    const { textoRol, claseBadge } = ROLES[rolDelCorreo(user.correo)]
+                    const infoRol = ROLES[user.id_rol] || ROLES[1]
+                    const esPropiaCuenta = usuarioActual && usuarioActual.id_usuario === user.id_usuario
                     return (
                       <tr key={user.id_usuario}>
                         <td>{user.run}</td>
                         <td>{user.nombre}</td>
                         <td>{user.apellidos}</td>
                         <td>{user.correo}</td>
-                        <td><span className={`badge ${claseBadge}`}>{textoRol}</span></td>
+                        <td><span className={`badge ${infoRol.claseBadge}`}>{infoRol.textoRol}</span></td>
                         <td>
                           <Link
-                            to={`/editarUsuario?id=${user.id_usuario}`}
+                           to={`/historialCompras/${user.id_usuario}`}
                             className="btn btn-warning btn-sm fw-bold"
                           >
                             Editar
                           </Link>
                           <Link
-                            to={`/historialCompras?id=${user.id_usuario}`}
+                            to={`/historialCompras/${user.id_usuario}`}
                             className="btn btn-outline-dark btn-sm fw-bold ms-2"
                           >
                             Historial
                           </Link>
+                          {!esPropiaCuenta && (
+                            <button
+                              type="button"
+                              className="btn btn-outline-danger btn-sm fw-bold ms-2"
+                              onClick={() => handleEliminar(user.id_usuario, `${user.nombre} ${user.apellidos}`)}
+                            >
+                              Eliminar
+                            </button>
+                          )}
                         </td>
                       </tr>
                     )

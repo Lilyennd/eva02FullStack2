@@ -5,7 +5,6 @@ import { formatearPrecio, TablaCompra } from './DatosCompra'
 import { apiFetch } from '../services/api'
 import { useUsuario } from '../services/sesion'
 
-
 export function agruparCarrito(carrito) {
   const agrupados = {}
   carrito.forEach((p) => {
@@ -26,7 +25,6 @@ export default function Checkout() {
   const navigate = useNavigate()
   const carrito = useCarrito()
   const usuario = useUsuario()
-
 
   const [form, setForm] = useState({
     nombre: usuario?.nombre || '',
@@ -50,7 +48,6 @@ export default function Checkout() {
 
   const cambiar = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-
   useEffect(() => {
     apiFetch('/api/regiones')
       .then((r) => r.json())
@@ -67,7 +64,6 @@ export default function Checkout() {
       .catch((err) => console.log('No se pudieron traer las imágenes:', err))
   }, [])
 
-
   useEffect(() => {
     if (!idRegion) return
     let vigente = true
@@ -78,7 +74,6 @@ export default function Checkout() {
     return () => { vigente = false }
   }, [idRegion])
 
-
   const idUsuario = usuario?.id_usuario
   useEffect(() => {
     if (!idUsuario) return
@@ -86,7 +81,13 @@ export default function Checkout() {
       .then((r) => (r.ok ? r.json() : null))
       .then((u) => {
         if (!u) return
-        setForm((anterior) => ({ ...anterior, calle: u.direccion || '' }))
+        setForm((anterior) => ({
+          ...anterior,
+          nombre: u.nombre || anterior.nombre,
+          apellidos: u.apellidos || anterior.apellidos,
+          correo: u.correo || anterior.correo,
+          calle: u.direccion || anterior.calle,
+        }))
         if (u.id_region) setIdRegion(String(u.id_region))
         if (u.id_comuna) setIdComuna(String(u.id_comuna))
       })
@@ -102,6 +103,12 @@ export default function Checkout() {
   const pagar = async (e) => {
     e.preventDefault()
 
+    if (!usuario) {
+      alert('Debes iniciar sesión para realizar tu compra.')
+      navigate('/login')
+      return
+    }
+
     if (!e.currentTarget.checkValidity()) {
       setValidado(true)
       return
@@ -116,14 +123,12 @@ export default function Checkout() {
       correo: form.correo.trim(),
       calle: form.calle.trim(),
       departamento: form.departamento.trim(),
-      id_region: idRegion,
-      id_comuna: idComuna,
+      id_region: Number(idRegion),
+      id_comuna: Number(idComuna),
       indicaciones: form.indicaciones.trim(),
       opcion_entrega: form.entrega,
-      id_usuario: usuario ? usuario.id_usuario : null,
       items: items.map((i) => ({ id_producto: i.id_producto, cantidad: i.cantidad })),
     }
-
 
     const respaldo = {
       mensaje: '',
@@ -134,12 +139,11 @@ export default function Checkout() {
     const irAError = (mensaje, idOrden) => {
       respaldo.mensaje = mensaje
       sessionStorage.setItem('checkoutError', JSON.stringify(respaldo))
-      navigate(idOrden ? '/pagoError?id=' + idOrden : '/pagoError')
+      navigate(idOrden ? '/pagoError/' + idOrden : '/pagoError')
     }
 
     setProcesando(true)
     try {
-
       const resOrden = await apiFetch('/api/ordenes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -169,7 +173,7 @@ export default function Checkout() {
 
       sessionStorage.removeItem('checkoutError')
       vaciar()
-      navigate('/pagoCorrecto?id=' + orden.id_orden)
+      navigate('/pagoCorrecto/' + orden.id_orden)
     } catch (err) {
       console.log('Error en el pago:', err)
       irAError('No se pudo conectar con el servidor.')
@@ -178,6 +182,21 @@ export default function Checkout() {
     }
   }
 
+  // Obligatorio iniciar sesión para comprar (Rúbrica de Seguridad)
+  if (!usuario) {
+    return (
+      <div className="background min-vh-100 py-5">
+        <div className="container text-center text-white py-5">
+          <h2 className="mb-3">Inicia sesión para realizar tu compra</h2>
+          <p className="mb-4">Para emitir tu boleta y gestionar el despacho necesitas tener una cuenta activa.</p>
+          <div className="d-flex justify-content-center gap-3">
+            <Link to="/login" className="btn btn-primary px-4">Iniciar sesión</Link>
+            <Link to="/registroUsuario" className="btn btn-outline-light px-4">Registrarse</Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (carrito.length === 0) {
     return (
@@ -206,7 +225,6 @@ export default function Checkout() {
             <div className="card shadow border-0 rounded-4">
               <div className="card-body p-4 p-md-5">
 
-               
                 {/* Tabla de Productos */}
                 <h5 className="fw-bold mb-3">Artículos seleccionados en tu Carrito</h5>
                 <TablaCompra filas={filas} />

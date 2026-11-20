@@ -22,7 +22,7 @@ describe('Vista Órdenes del administrador', () => {
 
     expect(await screen.findByText('A-001')).toBeInTheDocument()
     expect(screen.getByText('B-002')).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: 'Ver boleta' })[0]).toHaveAttribute('href', '/mostrarBoleta?id=1')
+    expect(screen.getAllByRole('link', { name: 'Ver boleta' })[0]).toHaveAttribute('href', '/mostrarBoleta/1')
 
     await user.selectOptions(screen.getByRole('combobox'), 'Pagada')
     expect(screen.getByText('A-001')).toBeInTheDocument()

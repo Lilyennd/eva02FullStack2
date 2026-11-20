@@ -23,7 +23,7 @@ describe('Vista Blogs (Cliente)', () => {
     expect(apiFetch).toHaveBeenCalledWith('/api/blogs')
 
     const enlaces = screen.getAllByRole('link', { name: 'Detalles' })
-    expect(enlaces[0]).toHaveAttribute('href', '/detalleBlog?id=1')
-    expect(enlaces[1]).toHaveAttribute('href', '/detalleBlog?id=2')
+    expect(enlaces[0]).toHaveAttribute('href', '/blog/1')
+    expect(enlaces[1]).toHaveAttribute('href', '/blog/2')
   })
 })

@@ -15,7 +15,7 @@ describe('Vista Editar Usuario', () => {
   it('si la URL no trae id, avisa y manda al perfil sin pedir nada al servidor', async () => {
     const alerta = vi.spyOn(globalThis, 'alert').mockImplementation(() => {})
 
-    renderConRuta(<EditarUsuario />, '/editarUsuario', '/editarUsuario') // sin ?id=
+    renderConRuta(<EditarUsuario />, '/editarUsuario', '/editarUsuario') 
 
     await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/perfil'))
     expect(alerta).toHaveBeenCalledWith('No se especificó un usuario para editar.')
@@ -26,12 +26,12 @@ describe('Vista Editar Usuario', () => {
     apiFetch.mockResolvedValue(respuesta(usuario))
 
     localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 1, id_rol: 1 }))
-    const { unmount } = renderConRuta(<EditarUsuario />, '/editarUsuario?id=1', '/editarUsuario')
+    const { unmount } = renderConRuta(<EditarUsuario />, '/editarUsuario/1', '/editarUsuario')
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/perfil')
     unmount() 
 
     localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 2, id_rol: 2 }))
-    renderConRuta(<EditarUsuario />, '/editarUsuario?id=1', '/editarUsuario')
+    renderConRuta(<EditarUsuario />, '/editarUsuario/1', '/editarUsuario')
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/listarUsuarios')
   })
 })

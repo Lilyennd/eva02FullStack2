@@ -17,7 +17,7 @@ describe('Vista Productos Críticos', () => {
     expect(await screen.findByText('Diamante Azul')).toBeInTheDocument()
     expect(screen.getByText('DIA-01')).toBeInTheDocument()
     expect(screen.getByText('Diamantes')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Reponer' })).toHaveAttribute('href', '/modificarProducto?id=1')
+    expect(screen.getByRole('link', { name: 'Reponer' })).toHaveAttribute('href', '/modificarProducto/1')
   })
 
   it('muestra un mensaje si no hay productos críticos', async () => {

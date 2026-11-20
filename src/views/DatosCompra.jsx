@@ -1,5 +1,9 @@
+import { urlImagen } from '../services/api'
+
 export const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
-const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
+const rutaImagenProducto = (img) => urlImagen(img, 'productos')
+
+
 
 
 function CampoLectura({ id, etiqueta, valor, columnas = 'col-md-6' }) {

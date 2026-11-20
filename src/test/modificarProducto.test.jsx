@@ -24,7 +24,7 @@ describe('Vista Modificar Producto', () => {
       Promise.resolve(opciones?.method === 'PUT' ? respuesta({}) : respuesta([producto])),
     )
 
-    renderConRuta(<ModificarProducto />, '/modificarProducto?id=1', '/modificarProducto')
+    renderConRuta(<ModificarProducto />, '/modificarProducto/1', '/modificarProducto')
 
 
     const nombre = screen.getByLabelText('Nombre *')

@@ -6,7 +6,7 @@ import { apiFetch } from '../services/api'
 export function TarjetaCategoria({ categoria, imagen, activa }) {
   return (
     <div className="col-6 col-md-4 col-lg-3">
-      <Link to={`/categorias?id=${categoria.id_categoria}`} className="text-decoration-none">
+      <Link to={`/categorias/${categoria.id_categoria}`} className="text-decoration-none">
         <div className={`card h-100 text-center shadow-sm ${activa ? 'border-primary border-3' : ''}`}>
           <div className="card-body p-2">
             <h6 className="card-title mb-0 text-dark">{categoria.nombre_categoria}</h6>

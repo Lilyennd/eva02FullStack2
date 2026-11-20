@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { DatosCliente, formatearPrecio, TablaCompra } from './DatosCompra'
 import { apiFetch } from '../services/api'
 
 
 export default function PagoCorrecto() {
-  const [params] = useSearchParams()
-  const id = params.get('id')
+  // Lee el id de /pagoCorrecto/12
+  const { id } = useParams()
 
   const [orden, setOrden] = useState(null)
   const [estado, setEstado] = useState(id ? 'cargando' : 'sinId')
 
+  // Pide la orden al backend para mostrar la boleta
   useEffect(() => {
     if (!id) return
     let vigente = true
@@ -53,8 +54,8 @@ export default function PagoCorrecto() {
     )
   }
 
- 
-  if (orden.estado !== 'Pagada') return <Navigate to={'/pagoError?id=' + id} replace />
+  // Si la orden no quedó pagada, se muestra la pantalla de error de pago
+  if (orden.estado !== 'Pagada') return <Navigate to={'/pagoError/' + id} replace />
 
   const cliente = {
     nombre: orden.nombre_cliente,
@@ -89,7 +90,6 @@ export default function PagoCorrecto() {
   }
 
   return (
-
     <div className="background min-vh-100 py-4">
       <div className="container">
         <div className="row justify-content-center">

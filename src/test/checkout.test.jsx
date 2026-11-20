@@ -39,7 +39,7 @@ describe('Vista Checkout (Cliente)', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Pagar ahora/ }))
 
-    await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/pagoCorrecto?id=99'))
+    await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/pagoCorrecto/99'))
 
     const llamadaOrden = apiFetch.mock.calls.find(
       ([url, opciones]) => url === '/api/ordenes' && opciones?.method === 'POST',

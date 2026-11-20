@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../services/api'
+import { guardarUsuario } from '../services/sesion'
 
-
+// Revisa que el correo termine en uno de los dominios permitidos
 function correoPermitido(correo) {
   const c = correo.trim().toLowerCase()
   return c.endsWith('@profesor.duoc.cl') || c.endsWith('@duocuc.cl') || c.endsWith('@gmail.com')
@@ -15,6 +16,76 @@ export default function Login() {
   const [errorCorreo, setErrorCorreo] = useState('')
   const [errorPassword, setErrorPassword] = useState('')
 
+  // Según el rol del usuario, lo manda a una página distinta
+  const redirigirSegunRol = (rol) => {
+    if (rol === 2) {
+      navigate('/admin')       // Administrador
+    } else if (rol === 3) {
+      navigate('/inventario')  // Vendedor
+    } else {
+      navigate('/home')        // Cliente
+    }
+  }
+
+  // Integración de Google Identity Services
+  useEffect(() => {
+    const inicializarGoogle = () => {
+      if (window.google?.accounts?.id) {
+        // Le dice a Google cuál es tu app (el ID viene del .env)
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          callback: handleGoogleResponse,
+        })
+
+        const divBoton = document.getElementById('googleBtnDiv')
+        if (divBoton) {
+          // Mide cuánto espacio hay disponible dentro de la tarjeta
+          const anchoDisponible = divBoton.parentElement.clientWidth
+          // Google acepta botones de 200 a 400 px, usamos máximo 320
+          const ancho = Math.min(320, Math.max(200, anchoDisponible))
+
+          // Dibuja el botón de Google con ese ancho
+          window.google.accounts.id.renderButton(divBoton, {
+            theme: 'outline',
+            size: 'large',
+            width: ancho,
+            text: 'signin_with',
+          })
+        }
+      }
+    }
+
+    // Si el script de Google ya cargó, inicia de inmediato; si no, espera 1 segundo
+    if (window.google?.accounts?.id) {
+      inicializarGoogle()
+    } else {
+      const timer = setTimeout(inicializarGoogle, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  // Se ejecuta cuando Google devuelve el token: lo manda al backend para validarlo
+  const handleGoogleResponse = async (response) => {
+    try {
+      const res = await apiFetch('/api/login/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: response.credential }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setErrorPassword(data.error || 'Error al iniciar sesión con Google')
+        return
+      }
+      guardarUsuario(data.usuario, data.token)
+      redirigirSegunRol(data.usuario.id_rol)
+    } catch (err) {
+      console.error('Error Google Auth:', err)
+      setErrorPassword('No se pudo conectar con el servidor de autenticación.')
+    }
+  }
+
+  // Login normal con correo y contraseña
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorCorreo('')
@@ -46,9 +117,9 @@ export default function Login() {
         return
       }
 
-      localStorage.setItem('usuarioActual', JSON.stringify(data.usuario))
-      window.dispatchEvent(new Event('usuarioCambiado'))
-      navigate(data.usuario.id_rol === 2 ? '/admin' : '/home')
+      // Guarda usuario y token JWT
+      guardarUsuario(data.usuario, data.token)
+      redirigirSegunRol(data.usuario.id_rol)
     } catch (error) {
       console.error('Error de red:', error)
       setErrorPassword('No se pudo conectar con el servidor.')
@@ -58,7 +129,7 @@ export default function Login() {
   return (
     <div className="background min-vh-100">
       <div className="container">
-        <div className="row justify-content-center align-items-center min-vh-100">
+        <div className="row justify-content-center align-items-center min-vh-100 py-4">
           <div className="col-md-5">
             <div className="card shadow border-0 rounded-4">
               <div className="card-body p-4 p-md-5">
@@ -95,6 +166,15 @@ export default function Login() {
                   <button type="submit" className="btn btn-primary w-100 py-2 mt-2">Entrar</button>
                 </form>
 
+                <div className="text-center my-3">
+                  <span className="text-muted small">o inicia sesión con</span>
+                </div>
+
+                {/* Botón oficial de Google Identity Services */}
+                <div className="d-flex justify-content-center mb-3 overflow-hidden">
+                  <div id="googleBtnDiv"></div>
+                </div>
+
                 <p className="text-center mt-3 mb-0">
                   ¿No tienes cuenta? <Link to="/registroUsuario">Regístrate</Link>
                 </p>
@@ -107,4 +187,3 @@ export default function Login() {
     </div>
   )
 }
-

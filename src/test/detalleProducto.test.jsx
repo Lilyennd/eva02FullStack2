@@ -24,7 +24,7 @@ describe('Vista Detalle de Producto (Cliente)', () => {
   it('debe mostrar el producto del id de la URL con su oferta y agregarlo al carrito', async () => {
     apiFetch.mockResolvedValue(respuesta(producto))
 
-    renderConRuta(<DetalleProducto />, '/detalleProducto?id=2', '/detalleProducto')
+    renderConRuta(<DetalleProducto />, '/detalleProducto/2', '/detalleProducto')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Rubí Birmano' })).toBeInTheDocument()
     expect(apiFetch).toHaveBeenCalledWith('/api/productos/2')

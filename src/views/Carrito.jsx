@@ -146,7 +146,7 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
               <button 
                 className="btn btn-sm btn-outline-success w-50" 
                 id="btnDemoCorrecto"
-                onClick={() => irARuta('/pagoCorrecto?id=1')}
+                onClick={() => irARuta('/pagoCorrecto/1')}
               >
                 Pago Correcto
               </button>

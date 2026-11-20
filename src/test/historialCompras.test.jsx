@@ -12,10 +12,10 @@ describe('Vista Historial de Compras', () => {
       { id_orden: 7, numero_orden: '2026-0007', estado: 'Pagada', nombre_cliente: 'Ana', apellidos_cliente: 'Soto', fecha_orden: '2026-10-01T12:00:00', total: 2500 },
     ])
 
-    renderConRuta(<HistorialCompras />, '/historialCompras?id=3', '/historialCompras')
+    renderConRuta(<HistorialCompras />, '/historialCompras/3', '/historialCompras')
 
     expect(await screen.findByText('2026-0007')).toBeInTheDocument()
     expect(ordenesApi.listar).toHaveBeenCalledWith('3') 
-    expect(screen.getByRole('link', { name: 'Ver boleta' })).toHaveAttribute('href', '/mostrarBoleta?id=7')
+    expect(screen.getByRole('link', { name: 'Ver boleta' })).toHaveAttribute('href', '/mostrarBoleta/7')
   })
 })

@@ -21,7 +21,7 @@ describe('Vista Mostrar Boleta', () => {
     ordenesApi.obtener.mockResolvedValue(orden)
     const imprimir = vi.spyOn(window, 'print').mockImplementation(() => {})
 
-    renderConRuta(<MostrarBoleta />, '/mostrarBoleta?id=5', '/mostrarBoleta')
+    renderConRuta(<MostrarBoleta />, '/mostrarBoleta/5', '/mostrarBoleta')
 
     expect(await screen.findByRole('heading', { name: 'Boleta N° 2026-0005' })).toBeInTheDocument()
     expect(ordenesApi.obtener).toHaveBeenCalledWith('5')

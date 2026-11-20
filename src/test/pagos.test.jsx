@@ -24,7 +24,7 @@ describe('Vista Pago Correcto (Cliente)', () => {
   it('debe cargar y mostrar el resumen de la orden pagada exitosamente', async () => {
     apiFetch.mockResolvedValue(respuesta(orden))
 
-    renderConRuta(<PagoCorrecto />, '/pagoCorrecto?id=7')
+    renderConRuta(<PagoCorrecto />, '/pagoCorrecto/7')
 
     expect(await screen.findByText('#20261012-0007')).toBeInTheDocument()
     expect(screen.getByText(/Total pagado: \$2\.500/)).toBeInTheDocument()

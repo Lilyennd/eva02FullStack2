@@ -2,20 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
-function determinarRol(correo) {
-  const c = correo.trim().toLowerCase()
-  if (c.endsWith('@profesor.duoc.cl')) return 2
-  if (c.endsWith('@duocuc.cl')) return 2
-  if (c.endsWith('@gmail.com')) return 1
-  return null
-}
-
 function validarRun(run) {
   return /^[0-9]{6,8}[0-9kK]$/.test(run.trim())
 }
 
 const datosVacios = {
-  run: '', nombre: '', apellidos: '', correo: '', password: '', telefono: '', direccion: '',
+  run: '', nombre: '', apellidos: '', correo: '', password: '', telefono: '', direccion: '', id_rol: 1,
 }
 
 export default function CrearUsuario() {
@@ -27,7 +19,6 @@ export default function CrearUsuario() {
   const [region, setRegion] = useState(null)
   const [comuna, setComuna] = useState(null)
   const [errorRun, setErrorRun] = useState('')
-  const [errorCorreo, setErrorCorreo] = useState('')
 
   useEffect(() => {
     apiFetch('/api/regiones')
@@ -66,14 +57,6 @@ export default function CrearUsuario() {
     setComuna(comunas.find((x) => String(x.id_comuna) === e.target.value) || null)
   }
 
-  const validarCorreoAlSalir = () => {
-    setErrorCorreo(
-      determinarRol(datos.correo) === null
-        ? 'Solo se permiten correos @gmail.com, @duocuc.cl o @profesor.duoc.cl.'
-        : ''
-    )
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -85,12 +68,6 @@ export default function CrearUsuario() {
       return
     }
     setErrorRun('')
-
-    const rol = determinarRol(correo)
-    if (rol === null) {
-      setErrorCorreo('Correo no permitido. Usa @gmail.com, @duocuc.cl o @profesor.duoc.cl.')
-      return
-    }
 
     if (!region || !comuna) {
       alert('Selecciona región y comuna.')
@@ -104,7 +81,7 @@ export default function CrearUsuario() {
       correo,
       password: datos.password,
       telefono: datos.telefono.trim() || null,
-      id_rol: rol,
+      id_rol: Number(datos.id_rol),
       id_region: Number(region.id_region),
       id_comuna: Number(comuna.id_comuna),
       direccion: datos.direccion.trim(),
@@ -195,11 +172,22 @@ export default function CrearUsuario() {
                       required
                       value={datos.correo}
                       onChange={handleChange}
-                      onBlur={validarCorreoAlSalir}
                     />
-                    <div className={`form-text${errorCorreo ? ' text-danger' : ''}`} id="error-correo">
-                      {errorCorreo}
-                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="id_rol" className="form-label">Rol del Usuario</label>
+                    <select
+                      id="id_rol"
+                      className="form-select"
+                      value={datos.id_rol}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value={1}>Cliente</option>
+                      <option value={2}>Administrador</option>
+                      <option value={3}>Vendedor</option>
+                    </select>
                   </div>
 
                   <div className="mb-3">

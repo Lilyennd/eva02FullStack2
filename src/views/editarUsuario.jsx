@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 import { esAdmin, guardarUsuario, useUsuario } from '../services/sesion'
 
 export default function EditarUsuario() {
   const navigate = useNavigate()
-  const [params] = useSearchParams()
-  const idUsuario = params.get('id')
+  // Lee el id de /editarUsuario/5
+  const { id: idUsuario } = useParams()
   const avisado = useRef(false)
   const sesion = useUsuario()
 
-
+  // Admin vuelve a la lista de usuarios; el resto vuelve a su perfil
   const volverA = esAdmin(sesion) ? '/listarUsuarios' : '/perfil'
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
@@ -18,6 +18,7 @@ export default function EditarUsuario() {
     telefono: null, direccion: null, id_region: null, id_comuna: null, id_rol: null,
   })
 
+  // Al cargar, trae los datos del usuario a editar
   useEffect(() => {
     if (!idUsuario) {
       if (!avisado.current) {

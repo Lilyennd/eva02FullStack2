@@ -2,14 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 
-function determinarRol(correo) {
-  const c = correo.trim().toLowerCase()
-  if (c.endsWith('@profesor.duoc.cl')) return 2
-  if (c.endsWith('@duocuc.cl')) return 2
-  if (c.endsWith('@gmail.com')) return 1
-  return null
-}
-
 function validarRun(run) {
   return /^[0-9]{6,8}[0-9kK]$/.test(run.trim())
 }
@@ -27,7 +19,6 @@ export default function RegistroUsuario() {
   const [idRegion, setIdRegion] = useState('')
   const [idComuna, setIdComuna] = useState('')
   const [errorRun, setErrorRun] = useState('')
-  const [errorCorreo, setErrorCorreo] = useState('')
 
   useEffect(() => {
     apiFetch('/api/regiones')
@@ -53,14 +44,6 @@ export default function RegistroUsuario() {
       .catch((error) => console.error('Error cargando comunas:', error))
   }
 
-  const validarCorreoAlSalir = () => {
-    setErrorCorreo(
-      determinarRol(datos.correo) === null
-        ? 'Solo se permiten correos @gmail.com, @duocuc.cl o @profesor.duoc.cl.'
-        : ''
-    )
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -73,17 +56,12 @@ export default function RegistroUsuario() {
     }
     setErrorRun('')
 
-    const rol = determinarRol(correo)
-    if (rol === null) {
-      setErrorCorreo('Correo no permitido. Usa @gmail.com, @duocuc.cl o @profesor.duoc.cl.')
-      return
-    }
-
     if (!idRegion || !idComuna) {
       alert('Selecciona región y comuna.')
       return
     }
 
+    // Registro público: siempre asigna rol CLIENTE (1)
     const usuario = {
       run,
       nombre: datos.nombre.trim(),
@@ -91,7 +69,7 @@ export default function RegistroUsuario() {
       correo,
       password: datos.password,
       telefono: datos.telefono.trim() || null,
-      id_rol: rol,
+      id_rol: 1,
       id_region: Number(idRegion),
       id_comuna: Number(idComuna),
       direccion: datos.direccion.trim(),
@@ -106,7 +84,7 @@ export default function RegistroUsuario() {
       const data = await respuesta.json()
 
       if (respuesta.ok) {
-        alert('¡Usuario registrado con éxito!')
+        alert('¡Usuario registrado con éxito! Ya puedes iniciar sesión.')
         navigate('/login')
       } else {
         alert(data.error || 'Error al registrar')
@@ -124,7 +102,7 @@ export default function RegistroUsuario() {
           <div className="col-md-7 col-lg-6">
             <div className="card shadow border-0 rounded-4">
               <div className="card-body p-4 p-md-5">
-                <h3 className="card-title text-center mb-4 fw-bold">Crear Usuario</h3>
+                <h3 className="card-title text-center mb-4 fw-bold">Crear Cuenta</h3>
 
                 <form id="formRegistroUsuario" onSubmit={handleSubmit}>
                   <div className="mb-3">
@@ -182,11 +160,7 @@ export default function RegistroUsuario() {
                       required
                       value={datos.correo}
                       onChange={handleChange}
-                      onBlur={validarCorreoAlSalir}
                     />
-                    <div className={`form-text${errorCorreo ? ' text-danger' : ''}`} id="error-correo">
-                      {errorCorreo}
-                    </div>
                   </div>
 
                   <div className="mb-3">
@@ -270,7 +244,7 @@ export default function RegistroUsuario() {
                   </div>
 
                   <button type="submit" className="btn btn-primary w-100 py-2 mt-3">
-                    Registrar
+                    Registrarse
                   </button>
                 </form>
 

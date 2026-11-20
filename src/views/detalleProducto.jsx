@@ -1,24 +1,31 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { agregar, precioFinal, useCarrito } from './productos'
-import { apiFetch } from '../services/api'
+import { apiFetch, urlImagen } from '../services/api'
+import { esStaff, useUsuario } from '../services/sesion'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
-const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
+const rutaImagenProducto = (img) => urlImagen(img, 'productos')
 
 export default function DetalleProducto() {
-  const [params] = useSearchParams()
-  const idProducto = params.get('id') 
+  // Lee el id desde la dirección: /producto/1 -> id = "1"
+  const { id: idProducto } = useParams()
   const carrito = useCarrito()
+  const usuario = useUsuario()
+  const staff = esStaff(usuario)
 
   const [producto, setProducto] = useState(null)
   const [error, setError] = useState(false)
 
-
+  // Cada vez que cambia el id, pide el producto al backend
   useEffect(() => {
     if (!idProducto) return
 
+    // Evita actualizar la pantalla si ya se cambió de producto
     let vigente = true
+    setProducto(null)
+    setError(false)
+
     apiFetch('/api/productos/' + idProducto)
       .then((respuesta) => {
         if (!respuesta.ok) throw new Error('Producto no encontrado (' + respuesta.status + ')')
@@ -37,7 +44,7 @@ export default function DetalleProducto() {
     }
   }, [idProducto])
 
-
+  // Texto del título según el estado
   let nombre = 'Cargando...'
   if (!idProducto) nombre = 'Producto no encontrado'
   else if (error) nombre = 'Error al cargar el producto'
@@ -84,16 +91,19 @@ export default function DetalleProducto() {
               <li className="list-group-item"><strong>Certificado:</strong> <span id="detCertificado">{producto ? p.certificado || '-' : ''}</span></li>
               <li className="list-group-item"><strong>Stock disponible:</strong> <span id="detStock">{producto ? p.stock : ''}</span></li>
             </ul>
-            <button
-              className="btn btn-dark btn-lg"
-              id="btnAgregarDetalle"
-              disabled={producto ? !hayStock : false}
-              onClick={() => {
-                if (hayStock) agregar(carrito, p.nombre, precioFinal(p), p.id_producto, p.stock)
-              }}
-            >
-              {producto && !hayStock ? 'Sin stock' : 'Agregar al carrito'}
-            </button>
+
+            {!staff && (
+              <button
+                className="btn btn-dark btn-lg"
+                id="btnAgregarDetalle"
+                disabled={producto ? !hayStock : false}
+                onClick={() => {
+                  if (hayStock) agregar(carrito, p.nombre, precioFinal(p), p.id_producto, p.stock)
+                }}
+              >
+                {producto && !hayStock ? 'Sin stock' : 'Agregar al carrito'}
+              </button>
+            )}
           </div>
         </div>
       </div>

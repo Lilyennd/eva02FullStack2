@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiFetch } from '../services/api'
+import { apiFetch, urlImagen } from '../services/api'
 
 
 const EVENTO_CARRITO = 'carrito-actualizado'
 
+// Lee el carrito guardado en el navegador (si no hay nada, devuelve una lista vacía)
 export function leerCarrito() {
   try {
     return JSON.parse(localStorage.getItem('carrito')) || []
@@ -13,6 +14,7 @@ export function leerCarrito() {
   }
 }
 
+// Guarda el carrito y avisa a las demás partes de la página que cambió
 function guardarCarrito(carrito) {
   localStorage.setItem('carrito', JSON.stringify(carrito))
   window.dispatchEvent(new Event(EVENTO_CARRITO)) 
@@ -35,6 +37,7 @@ export function useCarrito() {
   return carrito
 }
 
+// Cuenta cuántas unidades de un producto hay en el carrito
 export function contarEnCarrito(carrito, id_producto) {
   return carrito.filter((p) => p.id_producto === id_producto).length
 }
@@ -67,7 +70,7 @@ const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 // BD: productos.en_oferta + productos.precio_oferta. Si está en oferta se cobra el precio de oferta.
 export const precioFinal = (producto) =>
   producto.en_oferta && producto.precio_oferta ? Number(producto.precio_oferta) : Number(producto.precio)
-const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
+const rutaImagenProducto = (img) => urlImagen(img, 'productos')
 
 
 export function TarjetaProducto({ producto, deshabilitado, onAgregar }) {
@@ -96,8 +99,9 @@ export function TarjetaProducto({ producto, deshabilitado, onAgregar }) {
           </p>
 
           <div className="mt-auto d-flex gap-2">
+            {/* Lleva a /producto/1, /producto/2, etc. (coincide con la ruta de App.jsx) */}
             <Link
-              to={`/detalleProducto?id=${producto.id_producto}`}
+              to={`/producto/${producto.id_producto}`}
               className="btn btn-outline-dark flex-fill"
             >
               Ver detalle
@@ -122,6 +126,7 @@ export default function Productos() {
   const [productos, setProductos] = useState([])
   const [error, setError] = useState(false)
 
+  // Al cargar la página, pide la lista de productos al backend
   useEffect(() => {
     apiFetch('/api/productos')
       .then((respuesta) => respuesta.json())
@@ -157,5 +162,3 @@ export default function Productos() {
     </div>
   )
 }
-
-

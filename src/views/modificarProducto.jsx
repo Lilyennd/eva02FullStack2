@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { apiFetch } from '../services/api'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { apiFetch, subirImagen } from '../services/api'
 import CamposProducto, { IMAGENES_PRODUCTO, useCatalogosProducto } from './CamposProducto'
-
-
 
 const productoVacio = {
   codigo_producto: '', nombre: '', descripcion: '', precio: '', id_categoria: '',
@@ -14,13 +12,16 @@ const productoVacio = {
 
 export default function ModificarProducto() {
   const navigate = useNavigate()
-  const [params] = useSearchParams()
-  const idInicial = params.get('id')
+  // Lee el id de /modificarProducto/3 (si entras sin id, queda undefined)
+  const { id: idInicial } = useParams()
   const { categorias, imagenes } = useCatalogosProducto(IMAGENES_PRODUCTO)
   const [listaProductos, setListaProductos] = useState([])
   const [idSeleccionado, setIdSeleccionado] = useState('')
   const [datos, setDatos] = useState(productoVacio)
+  // Imagen nueva elegida por el usuario (si no elige ninguna, queda null)
+  const [archivo, setArchivo] = useState(null)
 
+  // Al cargar, trae todos los productos y, si venía un id, deja ese seleccionado
   useEffect(() => {
     let vigente = true
     apiFetch('/api/productos')
@@ -36,15 +37,17 @@ export default function ModificarProducto() {
     return () => {
       vigente = false
     }
-  }, [])
+  }, [idInicial])
 
   const handleChange = (e) => {
     const { id, value } = e.target
     setDatos((prev) => ({ ...prev, [id]: value }))
   }
 
+  // Rellena el formulario con los datos del producto elegido
   const seleccionar = (id, lista) => {
     setIdSeleccionado(id)
+    setArchivo(null)
 
     const elegido = lista.find((p) => String(p.id_producto) === String(id))
     if (elegido) {
@@ -85,6 +88,18 @@ export default function ModificarProducto() {
       return
     }
 
+    // 1) Si se eligió una imagen nueva, se sube primero; si no, se conserva la actual
+    let imagen = datos.imagen_principal || null
+    if (archivo) {
+      try {
+        imagen = await subirImagen('productos', archivo)
+      } catch (err) {
+        alert('No se pudo subir la imagen: ' + err.message)
+        return
+      }
+    }
+
+    // 2) Se actualiza el producto con esa imagen
     const paqueteDatos = {
       nombre: datos.nombre,
       descripcion: datos.descripcion || null,
@@ -99,7 +114,7 @@ export default function ModificarProducto() {
       color: datos.color || null,
       certificado: datos.certificado || null,
       peso_gramos: Number(datos.peso_gramos) || null,
-      imagen_principal: datos.imagen_principal || null,
+      imagen_principal: imagen,
       en_oferta: !!datos.en_oferta,
       precio_oferta: datos.en_oferta ? Number(datos.precio_oferta) : null,
     }
@@ -153,6 +168,19 @@ export default function ModificarProducto() {
                     imagenes={imagenes}
                     stepPrecio="100000"
                   />
+
+                  {/* Cambiar la imagen: si no eliges ninguna, se conserva la actual */}
+                  <div className="mb-3">
+                    <label htmlFor="archivoImagen" className="form-label">Subir imagen nueva (opcional)</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      id="archivoImagen"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={(e) => setArchivo(e.target.files[0] || null)}
+                    />
+                    <div className="form-text">JPG, PNG o WEBP, máximo 5 MB. Si no eliges ninguna, se mantiene la actual.</div>
+                  </div>
 
                   <div className="d-flex gap-2 mt-3">
                     <button type="submit" className="btn btn-dark flex-fill py-2">Modificar Producto</button>

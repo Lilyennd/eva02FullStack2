@@ -22,8 +22,8 @@ describe('Vista Listar Usuarios', () => {
     expect(screen.getByText('Comprador')).toBeInTheDocument()                 
     expect(screen.getByText('Administrador / Vendedor')).toBeInTheDocument()  
 
-    expect(screen.getAllByRole('link', { name: 'Editar' })[0]).toHaveAttribute('href', '/editarUsuario?id=1')
-    expect(screen.getAllByRole('link', { name: 'Historial' })[1]).toHaveAttribute('href', '/historialCompras?id=2')
+    expect(screen.getAllByRole('link', { name: 'Editar' })[0]).toHaveAttribute('href', '/editarUsuario/1')
+    expect(screen.getAllByRole('link', { name: 'Historial' })[1]).toHaveAttribute('href', '/historialCompras/2')
     expect(screen.getByRole('link', { name: 'Nuevo usuario' })).toHaveAttribute('href', '/crearUsuario')
   })
 })

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiFetch } from '../services/api'
+import { apiFetch, productosApi, urlImagen } from '../services/api'
+import { esAdmin, useUsuario } from '../services/sesion'
 
-// Antes venían de utils/validaciones y utils/imagenes
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
-const rutaImagenProducto = (img) => (img ? `/img/productos/${img}` : '/img/fondoaz.jpg')
+const rutaImagenProducto = (img) => urlImagen(img, 'productos')
 
-export function TarjetaInventario({ producto }) {
+export function TarjetaInventario({ producto, admin, onEliminar }) {
   return (
     <div className="col-12 col-sm-6 col-lg-4">
-      <div className="card h-100">
+      <div className="card h-100 shadow-sm">
         <img
           src={rutaImagenProducto(producto.imagen_principal)}
           className="card-img-top"
@@ -18,6 +18,7 @@ export function TarjetaInventario({ producto }) {
         />
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">{producto.nombre}</h5>
+          <p className="card-text text-muted mb-1">Código: {producto.codigo_producto}</p>
           <p className="card-text text-muted mb-1">Stock: {producto.stock}</p>
           <p className="card-text text-muted">{producto.origen ? producto.origen : ''}</p>
           {producto.en_oferta && producto.precio_oferta ? (
@@ -30,13 +31,34 @@ export function TarjetaInventario({ producto }) {
           ) : (
             <p className="card-text fw-bold">${formatearPrecio(producto.precio)}</p>
           )}
-          <Link
-            to={`/modificarProducto?id=${producto.id_producto}`}
-            className="btn btn-outline-dark mt-auto ; textbasico"
-            style={{ backgroundColor: '#263869', borderColor: '#3f4d7a' }}
-          >
-            Modificar
-          </Link>
+
+          <div className="mt-auto d-flex gap-2">
+            {admin ? (
+              <>
+                <Link
+                  to={`/modificarProducto/${producto.id_producto}`}
+                  className="btn btn-outline-dark flex-fill"
+                  style={{ backgroundColor: '#263869', borderColor: '#3f4d7a', color: 'white' }}
+                >
+                  Modificar
+                </Link>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger"
+                  onClick={() => onEliminar(producto.id_producto, producto.nombre)}
+                >
+                  Eliminar
+                </button>
+              </>
+            ) : (
+              <Link
+                to={`/producto/${producto.id_producto}`}
+                className="btn btn-outline-secondary w-100"
+              >
+                Ver detalle
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -44,10 +66,12 @@ export function TarjetaInventario({ producto }) {
 }
 
 export default function Inventario() {
+  const usuario = useUsuario()
+  const admin = esAdmin(usuario)
   const [productos, setProductos] = useState([])
   const [error, setError] = useState(false)
 
-  useEffect(() => {
+  const cargar = () => {
     apiFetch('/api/productos')
       .then((respuesta) => respuesta.json())
       .then(setProductos)
@@ -55,33 +79,55 @@ export default function Inventario() {
         console.log('Error al traer los productos:', err)
         setError(true)
       })
+  }
+
+  useEffect(() => {
+    cargar()
   }, [])
+
+  const handleEliminar = async (id, nombre) => {
+    if (!window.confirm(`¿Estás seguro de desactivar el producto "${nombre}"?`)) return
+    try {
+      await productosApi.eliminar(id)
+      alert('Producto eliminado correctamente.')
+      cargar()
+    } catch (err) {
+      alert(err.message || 'Error al eliminar el producto.')
+    }
+  }
 
   return (
     <div className="background min-vh-100">
       <div className="container py-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
-          <h1 className="text-center mb-0 ; herotitulo" style={{ color: '#f4f5fa' }}>
+          <h1 className="text-center mb-0 herotitulo" style={{ color: '#f4f5fa' }}>
             Inventario de Productos
           </h1>
-          <Link
-            to="/nuevoProducto"
-            className="btn btn-dark ; "
-            style={{
-              backgroundColor: '#f4f5fa',
-              borderColor: '#f5f5fa',
-              color: 'rgb(24, 24, 68)',
-              fontFamily: "Cambria, Cochin, Georgia, Times, 'Times New Roman', serif",
-            }}
-          >
-            Agregar Nuevo Producto
-          </Link>
+          {admin && (
+            <Link
+              to="/nuevoProducto"
+              className="btn btn-dark"
+              style={{
+                backgroundColor: '#f4f5fa',
+                borderColor: '#f5f5fa',
+                color: 'rgb(24, 24, 68)',
+                fontFamily: "Cambria, Cochin, Georgia, Times, 'Times New Roman', serif",
+              }}
+            >
+              Agregar Nuevo Producto
+            </Link>
+          )}
         </div>
         <div className="row g-4" id="listaProductos">
           {error && <p className="text-danger">No se pudieron cargar los productos.</p>}
           {!error &&
             productos.map((producto) => (
-              <TarjetaInventario key={producto.id_producto} producto={producto} />
+              <TarjetaInventario
+                key={producto.id_producto}
+                producto={producto}
+                admin={admin}
+                onEliminar={handleEliminar}
+              />
             ))}
         </div>
       </div>

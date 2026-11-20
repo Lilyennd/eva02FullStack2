@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { apiFetch } from '../services/api'
+import { apiFetch, subirImagen } from '../services/api'
 import CamposProducto, { IMAGENES_PRODUCTO, useCatalogosProducto } from './CamposProducto'
 
 const productoVacio = {
@@ -14,6 +14,8 @@ export default function NuevoProducto() {
   const navigate = useNavigate()
   const { categorias, imagenes } = useCatalogosProducto(IMAGENES_PRODUCTO)
   const [datos, setDatos] = useState(productoVacio)
+  // Archivo de imagen elegido por el usuario (si no elige ninguno, queda null)
+  const [archivo, setArchivo] = useState(null)
 
   const handleChange = (e) => {
     const { id, value } = e.target
@@ -53,6 +55,18 @@ export default function NuevoProducto() {
       return
     }
 
+    // 1) Si se eligió un archivo, se sube primero y se usa la ruta que devuelve el backend
+    let imagen = datos.imagen_principal || null
+    if (archivo) {
+      try {
+        imagen = await subirImagen('productos', archivo)
+      } catch (err) {
+        alert('No se pudo subir la imagen: ' + err.message)
+        return
+      }
+    }
+
+    // 2) Se crea el producto con esa imagen
     const nuevoProducto = {
       codigo_producto: codigo,
       nombre,
@@ -68,7 +82,7 @@ export default function NuevoProducto() {
       color: datos.color.trim() || null,
       certificado: datos.certificado.trim() || null,
       peso_gramos: Number(datos.peso_gramos) || null,
-      imagen_principal: datos.imagen_principal || null,
+      imagen_principal: imagen,
       en_oferta: !!datos.en_oferta,
       precio_oferta: datos.en_oferta ? Number(datos.precio_oferta) : null,
     }
@@ -110,6 +124,20 @@ export default function NuevoProducto() {
                     conCodigo
                     stepPrecio="0.01"
                   />
+
+                  {/* Subir una imagen propia (tiene prioridad sobre la del desplegable) */}
+                  <div className="mb-3">
+                    <label htmlFor="archivoImagen" className="form-label">Subir imagen (opcional)</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      id="archivoImagen"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={(e) => setArchivo(e.target.files[0] || null)}
+                    />
+                    <div className="form-text">JPG, PNG o WEBP, máximo 5 MB.</div>
+                  </div>
+
                   <div className="d-flex gap-2 mt-3">
                     <button type="submit" className="btn btn-dark flex-fill py-2">Guardar producto</button>
                     <Link to="/inventario" className="btn btn-outline-secondary flex-fill py-2 text-center">Cancelar</Link>

@@ -22,7 +22,7 @@ describe('Vista Inventario', () => {
     expect(screen.getByText('Stock: 3')).toBeInTheDocument()
     expect(apiFetch).toHaveBeenCalledWith('/api/productos')
 
-    expect(screen.getAllByRole('link', { name: 'Modificar' })[0]).toHaveAttribute('href', '/modificarProducto?id=1')
+    expect(screen.getAllByRole('link', { name: 'Modificar' })[0]).toHaveAttribute('href', '/modificarProducto/1')
     expect(screen.getByRole('link', { name: 'Agregar Nuevo Producto' })).toHaveAttribute('href', '/nuevoProducto')
   })
 })

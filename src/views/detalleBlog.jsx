@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { rutaImagenBlog } from './blogs'
 import { apiFetch } from '../services/api'
 
 
 export default function DetalleBlog() {
-  const [params] = useSearchParams()
-  const idBlog = params.get('id')
+  // Lee el id de /blog/1
+  const { id: idBlog } = useParams()
 
   const [blog, setBlog] = useState(null)
   const [error, setError] = useState(false)
 
+  // Pide el blog al backend cada vez que cambia el id
   useEffect(() => {
     if (!idBlog) return
 
     let vigente = true
+    setBlog(null)
+    setError(false)
+
     apiFetch('/api/blogs/' + idBlog)
       .then((respuesta) => {
         if (!respuesta.ok) throw new Error('Blog no encontrado (' + respuesta.status + ')')
@@ -70,7 +74,6 @@ export default function DetalleBlog() {
                   style={{ maxHeight: '400px', objectFit: 'cover' }}
                 />
                 <p id="detResumen" className="lead text-muted">{blog.descripcion_corta}</p>
-                {}
                 <div
                   id="detContenido"
                   className="mt-4 lh-lg fs-5"

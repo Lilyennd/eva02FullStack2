@@ -35,7 +35,7 @@ export function TablaOrdenes({ ordenes }) {
               <td><span className="badge bg-dark">{o.estado}</span></td>
               <td>${formatearPrecio(o.total)}</td>
               <td>
-                <Link to={`/mostrarBoleta?id=${o.id_orden}`} className="btn btn-sm btn-outline-dark">
+                <Link to={`/mostrarBoleta/${o.id_orden}`} className="btn btn-sm btn-outline-dark">
                   Ver boleta
                 </Link>
               </td>

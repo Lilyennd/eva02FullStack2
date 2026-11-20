@@ -42,7 +42,7 @@ export default function ProductosCriticos() {
                       <td><span className="badge bg-danger">{p.stock}</span></td>
                       <td>{p.stock_critico}</td>
                       <td>
-                        <Link to={`/modificarProducto?id=${p.id_producto}`} className="btn btn-sm btn-warning">Reponer</Link>
+                        <Link to={`/modificarProducto/${p.id_producto}`} className="btn btn-sm btn-warning">Reponer</Link>
                       </td>
                     </tr>
                   ))}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { categoriasApi } from '../services/api'
 
-// Nueva categoría / Editar categoría: GET, POST y PUT /api/categorias
+// Gestión de Categorías: GET, POST, PUT y DELETE /api/categorias
 export default function AdminCategorias() {
   const [categorias, setCategorias] = useState([])
   const [nombre, setNombre] = useState('')
@@ -51,6 +51,17 @@ export default function AdminCategorias() {
     setMensaje({ tipo: '', texto: '' })
   }
 
+  const eliminar = async (id, nombreCat) => {
+    if (!window.confirm(`¿Seguro que deseas eliminar la categoría "${nombreCat}"?`)) return
+    try {
+      await categoriasApi.eliminar(id)
+      setMensaje({ tipo: 'success', texto: `Categoría "${nombreCat}" eliminada.` })
+      cargar()
+    } catch (err) {
+      setMensaje({ tipo: 'danger', texto: err.message })
+    }
+  }
+
   return (
     <div className="background min-vh-100">
       <div className="container py-5">
@@ -77,8 +88,11 @@ export default function AdminCategorias() {
           <ul className="list-group" id="listaCategorias">
             {categorias.map((c) => (
               <li key={c.id_categoria} className="list-group-item d-flex justify-content-between align-items-center">
-                {c.nombre_categoria}
-                <button className="btn btn-sm btn-warning" onClick={() => editar(c)}>Editar</button>
+                <span>{c.nombre_categoria}</span>
+                <div>
+                  <button className="btn btn-sm btn-warning me-2" onClick={() => editar(c)}>Editar</button>
+                  <button className="btn btn-sm btn-outline-danger" onClick={() => eliminar(c.id_categoria, c.nombre_categoria)}>Eliminar</button>
+                </div>
               </li>
             ))}
           </ul>

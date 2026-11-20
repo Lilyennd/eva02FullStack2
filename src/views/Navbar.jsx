@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Offcanvas } from 'bootstrap'
 import { quitar, useCarrito, vaciar } from './productos'
-import { cerrarSesion, esAdmin, useUsuario } from '../services/sesion'
+import { cerrarSesion, esAdmin, esVendedor, esStaff, useUsuario } from '../services/sesion'
 import CarritoLateral from './Carrito'
 
 function MenuAdmin() {
@@ -16,6 +16,15 @@ function MenuAdmin() {
       <li className="nav-item"><Link className="nav-link" to="/reportes">Reportes</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/perfil">Perfil</Link></li>
       <li className="nav-item"><Link className="nav-link" to="/home">Tienda</Link></li>
+    </ul>
+  )
+}
+
+function MenuVendedor() {
+  return (
+    <ul className="navbar-nav me-auto" id="menuVendedor" style={{ display: 'flex' }}>
+      <li className="nav-item"><Link className="nav-link" to="/inventario">Productos</Link></li>
+      <li className="nav-item"><Link className="nav-link" to="/adminOrdenes">Órdenes</Link></li>
     </ul>
   )
 }
@@ -39,14 +48,15 @@ function Navbar() {
   const navigate = useNavigate()
   const carrito = useCarrito()
   const usuario = useUsuario()   
-  const admin = esAdmin(usuario) 
+  const admin = esAdmin(usuario)
+  const vendedor = esVendedor(usuario)
+  const staff = esStaff(usuario)
 
   const cerrar = () => {
     cerrarSesion()
     navigate('/home')
   }
 
-  
   const irAPagar = () => {
     if (carrito.length === 0) {
       alert('Tu carrito está vacío.')
@@ -69,10 +79,10 @@ function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            {admin ? <MenuAdmin /> : <MenuComprador conSesion={!!usuario} />}
+            {admin ? <MenuAdmin /> : vendedor ? <MenuVendedor /> : <MenuComprador conSesion={!!usuario} />}
 
             <div className="d-flex align-items-center mt-3 mt-lg-0">
-              {!admin && (
+              {!staff && (
                 <button
                   className="btn btn-outline-dark position-relative me-3"
                   type="button"
@@ -101,7 +111,7 @@ function Navbar() {
         </div>
       </nav>
 
-      {!admin && (
+      {!staff && (
         <CarritoLateral
           carrito={carrito}
           onQuitar={(i) => quitar(carrito, i)}

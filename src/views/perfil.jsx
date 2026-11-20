@@ -35,9 +35,9 @@ export default function Perfil() {
               <p className="mb-1"><b>Correo:</b> {usuario.correo}</p>
               <p className="mb-3"><b>Teléfono:</b> {usuario.telefono || '—'}</p>
               <div className="d-flex gap-2">
-                <Link to={`/editarUsuario?id=${usuario.id_usuario}`} className="btn btn-warning">Editar datos</Link>
+              <Link to={`/editarUsuario/${usuario.id_usuario}`} className="btn btn-warning">Editar datos</Link>
                 {!admin && (
-                  <Link to={`/historialCompras?id=${usuario.id_usuario}`} className="btn btn-outline-dark">Mis compras</Link>
+                <Link to={`/historialCompras/${usuario.id_usuario}`} className="btn btn-outline-dark">Mis compras</Link>
                 )}
               </div>
             </>

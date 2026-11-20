@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiFetch } from '../services/api'
+import { apiFetch, API_URL } from '../services/api'
 
+// Decide dónde está la imagen del blog
 export const rutaImagenBlog = (img) => {
   if (!img) return '/img/fondoaz.jpg'
+  // Imagen subida desde el formulario: vive en el backend
+  if (img.startsWith('/uploads/')) return API_URL + '/api/v1' + img
   if (/^(https?:)?\/\//.test(img) || img.startsWith('/')) return img
   if (img.startsWith('img/')) return '/' + img
   return '/img/' + img
@@ -14,6 +17,7 @@ export default function Blogs() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(false)
 
+  // Al cargar la página, pide la lista de blogs al backend
   useEffect(() => {
     let vigente = true
     apiFetch('/api/blogs')
@@ -68,7 +72,7 @@ export default function Blogs() {
                 {/* La BD devuelve descripcion_corta (antes se leía "resumen") */}
                 <p className="card-text">{blog.descripcion_corta}</p>
                 <Link
-                  to={`/detalleBlog?id=${blog.id_blog}`}
+                  to={`/blog/${blog.id_blog}`}
                   className="btn btn-info"
                   style={{
                     background: 'linear-gradient(rgb(59, 67, 116), rgb(17, 17, 95))',

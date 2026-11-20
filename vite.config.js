@@ -7,8 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.js',
-    // ESTA ES LA SOLUCIÓN AL CHOQUE ESM vs CJS
-    // Obliga a Vitest a procesar estas librerías juntas en el mismo formato
+
     server: {
       deps: {
         inline: [
@@ -22,11 +21,10 @@ export default defineConfig({
     }
   },
   server: {
-    proxy: {
-      '/img': {
-        target: 'https://eva01-full-stack2-eight.vercel.app',
-        changeOrigin: true,
-      },
+    // OneDrive no avisa bien de los cambios: Vite revisa los archivos cada 300 ms
+    watch: {
+      usePolling: true,
+      interval: 300,
     },
   },
 });

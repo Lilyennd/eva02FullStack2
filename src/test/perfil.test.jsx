@@ -22,8 +22,8 @@ describe('Vista Perfil', () => {
     expect(screen.getByText('19011022K')).toBeInTheDocument()
     expect(screen.getByText('ana@gmail.com')).toBeInTheDocument()
 
-    expect(screen.getByRole('link', { name: 'Editar datos' })).toHaveAttribute('href', '/editarUsuario?id=1')
-    expect(screen.getByRole('link', { name: 'Mis compras' })).toHaveAttribute('href', '/historialCompras?id=1')
+    expect(screen.getByRole('link', { name: 'Editar datos' })).toHaveAttribute('href', '/editarUsuario/1')
+    expect(screen.getByRole('link', { name: 'Mis compras' })).toHaveAttribute('href', '/historialCompras?/1')
   })
 
   it('sin sesión muestra el aviso "Debes iniciar sesión."', () => {
