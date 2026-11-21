@@ -4,8 +4,10 @@
 // =====================================================================
 const env = import.meta.env || {}
 
-// URL del backend local (Spring Boot) o variable de entorno
-export const API_URL = (env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '')
+// Backend en el VPS 
+export const API_URL = (env.VITE_API_URL || 'http://186.64.113.33:8008').replace(/\/$/, '')
+// Backend local 
+// export const API_URL = (env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '')
 
 // fetch automático anteponiendo API_URL, agregando Authorization Bearer y versionando a /api/v1/
 export function apiFetch(ruta, opciones = {}) {
