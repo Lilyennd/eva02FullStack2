@@ -12,6 +12,7 @@ function MenuAdmin() {
       <li className="nav-item"><NavLink className="nav-link" to="/inventario">Productos</NavLink></li>
       <li className="nav-item"><NavLink className="nav-link" to="/productosCriticos">Críticos</NavLink></li>
       <li className="nav-item"><NavLink className="nav-link" to="/adminCategorias">Categorías</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/adminContactos">Mensajes</NavLink></li>
       <li className="nav-item"><NavLink className="nav-link" to="/gestionBlogs">Blogs</NavLink></li>
       <li className="nav-item"><NavLink className="nav-link" to="/listarUsuarios">Usuarios</NavLink></li>
       <li className="nav-item"><NavLink className="nav-link" to="/reportes">Reportes</NavLink></li>

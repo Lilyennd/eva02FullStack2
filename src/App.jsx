@@ -33,6 +33,7 @@ import MostrarBoleta from './views/mostrarBoleta'
 import HistorialCompras from './views/historialCompras'
 import ProductosCriticos from './views/productosCriticos'
 import AdminCategorias from './views/adminCategorias'
+import AdminContactos from './views/adminContactos'
 import Reportes from './views/reportes'
 import Perfil from './views/perfil'
 import './assets/css/style.css'
@@ -99,6 +100,7 @@ function App() {
             <Route path="/modificarProducto/:id" element={<ModificarProducto />} />
             <Route path="/productosCriticos" element={<ProductosCriticos />} />
             <Route path="/adminCategorias" element={<AdminCategorias />} />
+            <Route path="/adminContactos" element={<AdminContactos />} />
             <Route path="/gestionBlogs" element={<GestionBlogs />} />
             <Route path="/nuevoBlog" element={<NuevoBlog />} />
             <Route path="/modificarBlog" element={<ModificarBlog />} />

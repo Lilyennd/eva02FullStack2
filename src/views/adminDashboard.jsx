@@ -4,16 +4,19 @@ import { dashboardApi } from '../services/api'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
-export function TarjetaResumen({ titulo, valor, detalle, clase }) {
+export function TarjetaResumen({ titulo, valor, detalle, clase, to }) {
+  const card = (
+    <div className={`card text-white h-100 ${clase}`}>
+      <div className="card-body">
+        <h6 className="card-subtitle mb-2">{titulo}</h6>
+        <h2 className="card-title">{valor}</h2>
+        <small>{detalle}</small>
+      </div>
+    </div>
+  )
   return (
     <div className="col-12 col-sm-6 col-lg-4">
-      <div className={`card text-white h-100 ${clase}`}>
-        <div className="card-body">
-          <h6 className="card-subtitle mb-2">{titulo}</h6>
-          <h2 className="card-title">{valor}</h2>
-          <small>{detalle}</small>
-        </div>
-      </div>
+      {to ? <Link to={to} className="text-decoration-none">{card}</Link> : card}
     </div>
   )
 }
@@ -23,6 +26,7 @@ const ACCESOS = [
   { to: '/inventario', texto: 'Productos' },
   { to: '/productosCriticos', texto: 'Productos críticos' },
   { to: '/adminCategorias', texto: 'Categorías' },
+  { to: '/adminContactos', texto: 'Mensajes de contacto' },
   { to: '/listarUsuarios', texto: 'Usuarios' },
   { to: '/reportes', texto: 'Reportes' },
   { to: '/perfil', texto: 'Perfil' },
@@ -62,6 +66,8 @@ export default function AdminDashboard() {
               detalle="Stock igual o bajo el mínimo" />
             <TarjetaResumen titulo="Mensajes sin leer" valor={resumen.mensajes_sin_leer} clase="bg-secondary"
               detalle="Formulario de contacto" />
+            <TarjetaResumen titulo="Mensajes sin leer" valor={resumen.mensajes_sin_leer} clase="bg-secondary"
+              detalle="Ver bandeja de contacto" to="/adminContactos" />
           </div>
         )}
 

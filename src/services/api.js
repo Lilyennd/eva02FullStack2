@@ -124,3 +124,11 @@ export const blogsApi = {
 export const dashboardApi = {
   resumen: () => pedirJson('/api/dashboard'),
 }
+
+// ------------------------------ CONTACTOS ------------------------------
+export const contactoApi = {
+  listar: () => pedirJson('/api/contacto'),
+  enviar: (mensaje) => pedirJson('/api/contacto', conCuerpo('POST', mensaje)),
+  marcarLeido: (id) => pedirJson('/api/contacto/' + id + '/leido', { method: 'PUT' }),
+  eliminar: (id) => pedirJson('/api/contacto/' + id, { method: 'DELETE' }),
+}
