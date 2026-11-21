@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { agregar, contarEnCarrito, precioFinal, TarjetaProducto, useCarrito } from './productos'
 import { apiFetch } from '../services/api'
 
@@ -18,8 +18,9 @@ export function TarjetaCategoria({ categoria, imagen, activa }) {
 }
 
 export default function Categorias() {
+  const { id } = useParams()
   const [params] = useSearchParams()
-  const idSeleccionada = params.get('id')
+  const idSeleccionada = id || params.get('id')
   const carrito = useCarrito()
 
   const [categorias, setCategorias] = useState([])
@@ -44,7 +45,9 @@ export default function Categorias() {
   }, [])
 
   const imagenDeCategoria = (idCategoria) => {
-    const primero = productos.find((p) => p.id_categoria === idCategoria && p.imagen_principal)
+    const primero = productos.find(
+      (p) => String(p.id_categoria) === String(idCategoria) && p.imagen_principal
+    )
     return primero ? primero.imagen_principal : ''
   }
 
@@ -82,7 +85,9 @@ export default function Categorias() {
 
           {!error &&
             categoriasAMostrar.map((categoria) => {
-              const deEstaCategoria = productos.filter((p) => p.id_categoria === categoria.id_categoria)
+              const deEstaCategoria = productos.filter(
+                (p) => String(p.id_categoria) === String(categoria.id_categoria)
+              )
               return (
                 <div key={categoria.id_categoria}>
                   <h2 className="text-white mt-5 mb-3">{categoria.nombre_categoria}</h2>
