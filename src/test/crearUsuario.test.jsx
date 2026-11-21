@@ -5,10 +5,10 @@ import CrearUsuario from '../views/crearUsuario'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 describe('Vista Crear Usuario (admin)', () => {
-  it('crea un usuario con correo Duoc como rol 2 y vuelve a la lista', async () => {
+  it('crea un usuario con correo Duoc y rol Administrador (2) y vuelve a la lista', async () => {
     const user = userEvent.setup()
     const alerta = vi.spyOn(globalThis, 'alert').mockImplementation(() => {})
     apiFetch.mockImplementation((url) => {
@@ -33,6 +33,7 @@ describe('Vista Crear Usuario (admin)', () => {
     await user.selectOptions(screen.getByLabelText('Región'), 'Región Metropolitana')
     await screen.findByRole('option', { name: 'Cerrillos' })
     await user.selectOptions(screen.getByLabelText('Comuna'), 'Cerrillos')
+    await user.selectOptions(screen.getByLabelText('Rol del Usuario'), 'Administrador')
     await user.click(screen.getByRole('button', { name: 'Registrar Usuario' }))
 
     await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/listarUsuarios'))

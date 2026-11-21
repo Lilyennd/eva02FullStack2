@@ -4,7 +4,7 @@ import Contacto from '../views/contacto'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 describe('Vista Contacto (Cliente)', () => {
   it('debe validar el correo y enviar el mensaje al backend con datos válidos', async () => {

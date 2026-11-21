@@ -5,7 +5,7 @@ import RegistroUsuario from '../views/registroUsuario'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const DIRECCION = 'Calle 1 #100'
 
@@ -33,10 +33,10 @@ describe('Vista Registro de Usuario (Cliente)', () => {
     await screen.findByRole('option', { name: 'Cerrillos' })
     await userEvent.selectOptions(screen.getByLabelText('Comuna'), 'Cerrillos')
 
-    fireEvent.click(screen.getByRole('button', { name: 'Registrar' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Registrarse' }))
 
     await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/login'))
-    expect(alerta).toHaveBeenCalledWith('¡Usuario registrado con éxito!')
+    expect(alerta).toHaveBeenCalledWith('¡Usuario registrado con éxito! Ya puedes iniciar sesión.')
 
     const llamadaPost = apiFetch.mock.calls.find(([, opciones]) => opciones?.method === 'POST')
     expect(llamadaPost[0]).toBe('/api/usuarios')

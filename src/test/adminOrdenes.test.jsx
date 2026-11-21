@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import AdminOrdenes from '../views/adminOrdenes'
 import { ordenesApi } from '../services/api'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({
+vi.mock('../services/api', () => ({ urlImagen: (img) => img,
   ordenesApi: {
     listar: vi.fn(),
     cambiarEstado: vi.fn(),
@@ -41,7 +41,7 @@ describe('Vista Órdenes del administrador', () => {
     expect(screen.queryByText('B-002')).not.toBeInTheDocument()
 
     // Filtrar por texto
-    await user.selectOptions(filtroEstado, 'Todos')
+    fireEvent.change(filtroEstado, { target: { value: '' } })
     await user.type(screen.getByRole('textbox'), 'luis')
     expect(screen.getByText('B-002')).toBeInTheDocument()
     expect(screen.queryByText('A-001')).not.toBeInTheDocument()

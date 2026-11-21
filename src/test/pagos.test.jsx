@@ -4,7 +4,7 @@ import PagoCorrecto from '../views/pagoCorrecto'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const orden = {
   id_orden: 7,
@@ -24,7 +24,7 @@ describe('Vista Pago Correcto (Cliente)', () => {
   it('debe cargar y mostrar el resumen de la orden pagada exitosamente', async () => {
     apiFetch.mockResolvedValue(respuesta(orden))
 
-    renderConRuta(<PagoCorrecto />, '/pagoCorrecto/7')
+    renderConRuta(<PagoCorrecto />, '/pagoCorrecto/7', '/pagoCorrecto/:id')
 
     expect(await screen.findByText('#20261012-0007')).toBeInTheDocument()
     expect(screen.getByText(/Total pagado: \$2\.500/)).toBeInTheDocument()

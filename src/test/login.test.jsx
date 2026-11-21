@@ -4,7 +4,7 @@ import Login from '../views/login'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 describe('Vista Login (Cliente)', () => {
   it('debe validar el formulario, iniciar sesión y redirigir según el rol', async () => {

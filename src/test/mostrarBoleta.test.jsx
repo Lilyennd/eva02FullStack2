@@ -5,7 +5,7 @@ import MostrarBoleta from '../views/mostrarBoleta'
 import { ordenesApi } from '../services/api'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({ ordenesApi: { obtener: vi.fn() } }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, ordenesApi: { obtener: vi.fn() } }))
 
 const orden = {
   id_orden: 5, numero_orden: '2026-0005', estado: 'Pagada', fecha_orden: '2026-10-01T12:00:00',
@@ -21,7 +21,7 @@ describe('Vista Mostrar Boleta', () => {
     ordenesApi.obtener.mockResolvedValue(orden)
     const imprimir = vi.spyOn(window, 'print').mockImplementation(() => {})
 
-    renderConRuta(<MostrarBoleta />, '/mostrarBoleta/5', '/mostrarBoleta')
+    renderConRuta(<MostrarBoleta />, '/mostrarBoleta/5', '/mostrarBoleta/:id')
 
     expect(await screen.findByRole('heading', { name: 'Boleta N° 2026-0005' })).toBeInTheDocument()
     expect(ordenesApi.obtener).toHaveBeenCalledWith('5')

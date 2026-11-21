@@ -4,7 +4,7 @@ import AdminDashboard from '../views/adminDashboard'
 import { dashboardApi } from '../services/api'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({ dashboardApi: { resumen: vi.fn() } }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, dashboardApi: { resumen: vi.fn() } }))
 
 describe('Vista Dashboard del administrador', () => {
   it('muestra las tarjetas de resumen y los accesos rápidos', async () => {

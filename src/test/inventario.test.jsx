@@ -4,7 +4,7 @@ import Inventario from '../views/inventario'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const productos = [
   { id_producto: 1, nombre: 'Diamante Azul', stock: 3, origen: 'Sudáfrica', precio: 2500000 },
@@ -13,6 +13,7 @@ const productos = [
 
 describe('Vista Inventario', () => {
   it('lista los productos con su stock y enlaza a modificar y a nuevo producto', async () => {
+    localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 2, id_rol: 2 }))
     apiFetch.mockResolvedValue(respuesta(productos))
 
     renderConRuta(<Inventario />, '/inventario', '/inventario')

@@ -4,7 +4,7 @@ import Reportes from '../views/reportes'
 import { apiFetch, ordenesApi } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({
+vi.mock('../services/api', () => ({ urlImagen: (img) => img,
   apiFetch: vi.fn(),
   ordenesApi: { listar: vi.fn() },
 }))
@@ -26,7 +26,7 @@ describe('Vista Reportes', () => {
     expect(await screen.findByText('$3.800.000')).toBeInTheDocument()
     expect(screen.getByText('5')).toBeInTheDocument()
     expect(screen.getAllByText('$500.000')).toHaveLength(2)
-    expect(screen.getByText('Pendiente')).toBeInTheDocument()
-    expect(screen.getByText('$100.000')).toBeInTheDocument()
+    expect(screen.getAllByText('Pendiente')).toHaveLength(2)
+    expect(screen.getAllByText('$100.000')).toHaveLength(2)
   })
 })

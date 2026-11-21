@@ -4,7 +4,7 @@ import ListarUsuarios from '../views/listarUsuarios'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const usuarios = [
   { id_usuario: 1, run: '19011022K', nombre: 'Ana', apellidos: 'Soto', correo: 'ana@gmail.com', id_rol: 1 },
@@ -19,8 +19,8 @@ describe('Vista Listar Usuarios', () => {
 
     expect(await screen.findByText('ana@gmail.com')).toBeInTheDocument()
     expect(screen.getByText('prof@profesor.duoc.cl')).toBeInTheDocument()
-    expect(screen.getByText('Comprador')).toBeInTheDocument()                 
-    expect(screen.getByText('Administrador / Vendedor')).toBeInTheDocument()  
+    expect(screen.getByText('Cliente')).toBeInTheDocument()                 
+    expect(screen.getByText('Administrador')).toBeInTheDocument()  
 
     expect(screen.getAllByRole('link', { name: 'Editar' })[0]).toHaveAttribute('href', '/editarUsuario/1')
     expect(screen.getAllByRole('link', { name: 'Historial' })[1]).toHaveAttribute('href', '/historialCompras/2')

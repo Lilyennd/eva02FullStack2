@@ -3,7 +3,7 @@ import { screen, fireEvent } from '@testing-library/react'
 import PagoError from '../views/pagoError'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const respaldo = {
   mensaje: 'Stock insuficiente',

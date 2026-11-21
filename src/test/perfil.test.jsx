@@ -4,7 +4,7 @@ import Perfil from '../views/perfil'
 import { usuariosApi } from '../services/api'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({ usuariosApi: { obtener: vi.fn() } }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, usuariosApi: { obtener: vi.fn() } }))
 
 describe('Vista Perfil', () => {
   it('muestra los datos del usuario con sesión y enlaza a editar y a sus compras', async () => {
@@ -23,7 +23,7 @@ describe('Vista Perfil', () => {
     expect(screen.getByText('ana@gmail.com')).toBeInTheDocument()
 
     expect(screen.getByRole('link', { name: 'Editar datos' })).toHaveAttribute('href', '/editarUsuario/1')
-    expect(screen.getByRole('link', { name: 'Mis compras' })).toHaveAttribute('href', '/historialCompras?/1')
+    expect(screen.getByRole('link', { name: 'Mis compras' })).toHaveAttribute('href', '/historialCompras/1')
   })
 
   it('sin sesión muestra el aviso "Debes iniciar sesión."', () => {

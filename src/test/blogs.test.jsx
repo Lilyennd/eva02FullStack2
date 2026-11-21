@@ -4,7 +4,7 @@ import Blogs from '../views/blogs'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const blogs = [
   { id_blog: 1, titulo: 'Cómo elegir un diamante', descripcion_corta: 'Las 4 Cs explicadas', imagen: 'blog1.jpg' },

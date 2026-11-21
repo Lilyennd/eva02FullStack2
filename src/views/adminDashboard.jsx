@@ -65,8 +65,6 @@ export default function AdminDashboard() {
             <TarjetaResumen titulo="Productos críticos" valor={resumen.productos_criticos} clase="bg-danger"
               detalle="Stock igual o bajo el mínimo" />
             <TarjetaResumen titulo="Mensajes sin leer" valor={resumen.mensajes_sin_leer} clase="bg-secondary"
-              detalle="Formulario de contacto" />
-            <TarjetaResumen titulo="Mensajes sin leer" valor={resumen.mensajes_sin_leer} clase="bg-secondary"
               detalle="Ver bandeja de contacto" to="/adminContactos" />
           </div>
         )}

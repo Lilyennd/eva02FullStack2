@@ -5,7 +5,7 @@ import AdminCategorias from '../views/adminCategorias'
 import { categoriasApi } from '../services/api'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({
+vi.mock('../services/api', () => ({ urlImagen: (img) => img,
   categoriasApi: { listar: vi.fn(), crear: vi.fn(), actualizar: vi.fn() },
 }))
 

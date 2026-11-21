@@ -4,7 +4,7 @@ import Categorias from '../views/categorias'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const categorias = [
   { id_categoria: 1, nombre_categoria: 'Diamantes' },

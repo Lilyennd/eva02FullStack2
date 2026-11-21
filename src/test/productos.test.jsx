@@ -4,7 +4,7 @@ import Productos from '../views/productos'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const productos = [
   { id_producto: 1, nombre: 'Diamante Brillante', origen: 'Sudáfrica', precio: 2500000, en_oferta: 0, stock: 1 },

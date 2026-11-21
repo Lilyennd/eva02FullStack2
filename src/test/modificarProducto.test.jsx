@@ -5,7 +5,7 @@ import ModificarProducto from '../views/modificarProducto'
 import { apiFetch, categoriasApi } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({
+vi.mock('../services/api', () => ({ urlImagen: (img) => img,
   apiFetch: vi.fn(),
   categoriasApi: { listar: vi.fn() },
 }))
@@ -24,10 +24,10 @@ describe('Vista Modificar Producto', () => {
       Promise.resolve(opciones?.method === 'PUT' ? respuesta({}) : respuesta([producto])),
     )
 
-    renderConRuta(<ModificarProducto />, '/modificarProducto/1', '/modificarProducto')
+    renderConRuta(<ModificarProducto />, '/modificarProducto/1', '/modificarProducto/:id')
 
 
-    const nombre = screen.getByLabelText('Nombre *')
+    const nombre = await screen.findByLabelText('Nombre *')
     await waitFor(() => expect(nombre).toHaveValue('Diamante Azul'))
 
     await user.clear(nombre)

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { ordenesApi } from '../services/api'
 import { TablaOrdenes } from './adminOrdenes'
 
 export default function HistorialCompras() {
   const [params] = useSearchParams()
-  const id = params.get('id')
+  const { id: idRuta } = useParams()
+  const id = idRuta || params.get('id')
   const [ordenes, setOrdenes] = useState([])
   const [error, setError] = useState(id ? '' : 'No se indicó el usuario.')
 

@@ -95,7 +95,7 @@ export default function ListarUsuarios() {
                         <td><span className={`badge ${infoRol.claseBadge}`}>{infoRol.textoRol}</span></td>
                         <td>
                           <Link
-                           to={`/historialCompras/${user.id_usuario}`}
+                            to={`/editarUsuario/${user.id_usuario}`}
                             className="btn btn-warning btn-sm fw-bold"
                           >
                             Editar

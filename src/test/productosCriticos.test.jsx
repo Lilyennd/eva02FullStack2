@@ -4,7 +4,7 @@ import ProductosCriticos from '../views/productosCriticos'
 import { productosApi } from '../services/api'
 import { renderConRuta } from './utils'
 
-vi.mock('../services/api', () => ({ productosApi: { criticos: vi.fn() } }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, productosApi: { criticos: vi.fn() } }))
 
 describe('Vista Productos Críticos', () => {
   it('lista los productos con stock bajo y enlaza a reponerlos', async () => {

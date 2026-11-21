@@ -4,7 +4,7 @@ import DetalleProducto from '../views/detalleProducto'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const producto = {
   id_producto: 2,
@@ -24,7 +24,7 @@ describe('Vista Detalle de Producto (Cliente)', () => {
   it('debe mostrar el producto del id de la URL con su oferta y agregarlo al carrito', async () => {
     apiFetch.mockResolvedValue(respuesta(producto))
 
-    renderConRuta(<DetalleProducto />, '/detalleProducto/2', '/detalleProducto')
+    renderConRuta(<DetalleProducto />, '/detalleProducto/2', '/detalleProducto/:id')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Rubí Birmano' })).toBeInTheDocument()
     expect(apiFetch).toHaveBeenCalledWith('/api/productos/2')
@@ -39,3 +39,4 @@ describe('Vista Detalle de Producto (Cliente)', () => {
     ])
   })
 })
+

@@ -4,7 +4,7 @@ import DetalleBlog from '../views/detalleBlog'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const blog = {
   id_blog: 3,
@@ -19,7 +19,7 @@ describe('Vista Detalle de Blog (Cliente)', () => {
   it('debe pedir el blog según el id de la URL y mostrar su contenido', async () => {
     apiFetch.mockResolvedValue(respuesta(blog))
 
-    renderConRuta(<DetalleBlog />, '/blog/3', '/detalleBlog')
+    renderConRuta(<DetalleBlog />, '/blog/3', '/blog/:id')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Historia del rubí' })).toBeInTheDocument()
     expect(screen.getByText('Resumen del artículo')).toBeInTheDocument()

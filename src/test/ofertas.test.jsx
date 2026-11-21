@@ -4,7 +4,7 @@ import Ofertas from '../views/ofertas'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const ofertas = [
   { id_producto: 2, nombre: 'Diamante Rosa', precio: 2800000, precio_oferta: 2400000, en_oferta: 1, stock: 4 },

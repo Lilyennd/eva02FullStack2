@@ -4,7 +4,7 @@ import EditarUsuario from '../views/editarUsuario'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const usuario = {
   id_usuario: 1, run: '19011022K', nombre: 'Ana', apellidos: 'Soto', correo: 'ana@gmail.com',
@@ -22,16 +22,16 @@ describe('Vista Editar Usuario', () => {
     expect(apiFetch).not.toHaveBeenCalled()
   })
 
-  it('el botón Cancelar vuelve a /perfil si es comprador y a /listarUsuarios si es admin', () => {
+  it('el botón Cancelar vuelve a /perfil si es comprador y a /listarUsuarios si es admin', async () => {
     apiFetch.mockResolvedValue(respuesta(usuario))
 
     localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 1, id_rol: 1 }))
-    const { unmount } = renderConRuta(<EditarUsuario />, '/editarUsuario/1', '/editarUsuario')
-    expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/perfil')
+    const { unmount } = renderConRuta(<EditarUsuario />, '/editarUsuario/1', '/editarUsuario/:id')
+    expect(await screen.findByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/perfil')
     unmount() 
 
     localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 2, id_rol: 2 }))
-    renderConRuta(<EditarUsuario />, '/editarUsuario/1', '/editarUsuario')
-    expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/listarUsuarios')
+    renderConRuta(<EditarUsuario />, '/editarUsuario/1', '/editarUsuario/:id')
+    expect(await screen.findByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/listarUsuarios')
   })
 })

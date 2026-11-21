@@ -4,7 +4,7 @@ import Checkout from '../views/checkout'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ apiFetch: vi.fn() }))
+vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
 
 const carrito = [
   { id_producto: 1, nombre: 'Diamante', precio: 1000 },
@@ -13,6 +13,7 @@ const carrito = [
 
 beforeEach(() => {
   vi.spyOn(console, 'log').mockImplementation(() => {})
+  localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 1, nombre: 'Ana', id_rol: 1 }))
   localStorage.setItem('carrito', JSON.stringify(carrito))
   apiFetch.mockImplementation((url, opciones) => {
     if (url.startsWith('/api/regiones')) return Promise.resolve(respuesta([{ id_region: 1, nombre_region: 'Metropolitana' }]))
