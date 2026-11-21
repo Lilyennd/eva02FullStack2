@@ -3,15 +3,12 @@ import { Link, useParams } from 'react-router-dom'
 import { rutaImagenBlog } from './blogs'
 import { apiFetch } from '../services/api'
 
-
 export default function DetalleBlog() {
-  // Lee el id de /blog/1
   const { id: idBlog } = useParams()
 
   const [blog, setBlog] = useState(null)
   const [error, setError] = useState(false)
 
-  // Pide el blog al backend cada vez que cambia el id
   useEffect(() => {
     if (!idBlog) return
 
@@ -43,14 +40,30 @@ export default function DetalleBlog() {
   else if (blog) titulo = blog.titulo || 'Sin título'
 
   let fecha = ''
-  if (blog && blog.fecha_publicacion) {
-    const fechaObj = new Date(blog.fecha_publicacion)
+  const fechaRaw = blog?.fechaPublicacion || blog?.fecha_publicacion
+  if (fechaRaw) {
+    const fechaObj = new Date(fechaRaw)
     if (!isNaN(fechaObj)) {
       fecha =
         'Publicado el ' +
         fechaObj.toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' })
     }
   }
+
+  const resumen =
+    blog?.descripcionCorta ||
+    blog?.descripcion_corta ||
+    blog?.resumen ||
+    ''
+
+  const contenidoCompleto =
+    blog?.descripcionLarga ||
+    blog?.descripcion_larga ||
+    blog?.detalle?.descripcionLarga ||
+    blog?.detalle?.descripcion_larga ||
+    blog?.contenidoHtml ||
+    blog?.contenido_html ||
+    ''
 
   return (
     <div className="background min-vh-100">
@@ -73,13 +86,13 @@ export default function DetalleBlog() {
                   className="img-fluid rounded my-3 w-100"
                   style={{ maxHeight: '400px', objectFit: 'cover' }}
                 />
-                <p id="detResumen" className="lead text-muted">{blog.descripcion_corta}</p>
+                {resumen && <p id="detResumen" className="lead text-muted">{resumen}</p>}
                 <div
                   id="detContenido"
                   className="mt-4 lh-lg fs-5"
                   dangerouslySetInnerHTML={{
                     __html:
-                      blog.descripcion_larga ||
+                      contenidoCompleto ||
                       '<p class="text-muted">Este artículo aún no tiene contenido.</p>',
                   }}
                 />

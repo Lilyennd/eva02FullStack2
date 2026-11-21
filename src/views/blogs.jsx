@@ -26,7 +26,7 @@ export default function Blogs() {
         return res.json()
       })
       .then((data) => {
-        if (vigente) setBlogs(data)
+        if (vigente) setBlogs(Array.isArray(data) ? data : [])
       })
       .catch((err) => {
         console.log('Error al traer los blogs:', err)
@@ -51,41 +51,45 @@ export default function Blogs() {
         <p className="text-white">Aún no hay blogs publicados.</p>
       )}
 
-      {blogs.map((blog) => (
-        <div className="card mb-3" style={{ maxWidth: '640px' }} key={blog.id_blog}>
-          <div className="row g-0">
-            <div className="col-md-4">
-              <img
-                src={rutaImagenBlog(blog.imagen)}
-                onError={(e) => {
-                  e.currentTarget.onerror = null
-                  e.currentTarget.src = '/img/fondoaz.jpg'
-                }}
-                style={{ height: '100%', objectFit: 'cover' }}
-                className="img-fluid rounded-start"
-                alt={blog.titulo}
-              />
-            </div>
-            <div className="col-md-8">
-              <div className="card-body">
-                <h5 className="card-title">{blog.titulo}</h5>
-                {/* La BD devuelve descripcion_corta (antes se leía "resumen") */}
-                <p className="card-text">{blog.descripcion_corta}</p>
-                <Link
-                  to={`/blog/${blog.id_blog}`}
-                  className="btn btn-info"
-                  style={{
-                    background: 'linear-gradient(rgb(59, 67, 116), rgb(17, 17, 95))',
-                    color: 'white',
+      {blogs.map((blog) => {
+        const id = blog.idBlog ?? blog.id_blog
+        const resumen = blog.descripcionCorta || blog.descripcion_corta || ''
+
+        return (
+          <div className="card mb-3" style={{ maxWidth: '640px' }} key={id}>
+            <div className="row g-0">
+              <div className="col-md-4">
+                <img
+                  src={rutaImagenBlog(blog.imagen)}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null
+                    e.currentTarget.src = '/img/fondoaz.jpg'
                   }}
-                >
-                  Detalles
-                </Link>
+                  style={{ height: '100%', objectFit: 'cover' }}
+                  className="img-fluid rounded-start"
+                  alt={blog.titulo}
+                />
+              </div>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title">{blog.titulo}</h5>
+                  <p className="card-text">{resumen}</p>
+                  <Link
+                    to={`/blog/${id}`}
+                    className="btn btn-info"
+                    style={{
+                      background: 'linear-gradient(rgb(59, 67, 116), rgb(17, 17, 95))',
+                      color: 'white',
+                    }}
+                  >
+                    Detalles
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
       <br />
     </div>
   )

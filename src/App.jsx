@@ -15,6 +15,9 @@ import RegistroUsuario from './views/registroUsuario'
 import Inventario from './views/inventario'
 import NuevoProducto from './views/nuevoProducto'
 import ModificarProducto from './views/modificarProducto'
+import GestionBlogs from './views/gestionBlogs'
+import NuevoBlog from './views/nuevoBlog'
+import ModificarBlog from './views/modificarBlog'
 import ListarUsuarios from './views/listarUsuarios'
 import CrearUsuario from './views/crearUsuario'
 import EditarUsuario from './views/editarUsuario'
@@ -96,6 +99,9 @@ function App() {
             <Route path="/modificarProducto/:id" element={<ModificarProducto />} />
             <Route path="/productosCriticos" element={<ProductosCriticos />} />
             <Route path="/adminCategorias" element={<AdminCategorias />} />
+            <Route path="/gestionBlogs" element={<GestionBlogs />} />
+            <Route path="/nuevoBlog" element={<NuevoBlog />} />
+            <Route path="/modificarBlog" element={<ModificarBlog />} />
             <Route path="/listarUsuarios" element={<ListarUsuarios />} />
             <Route path="/crearUsuario" element={<CrearUsuario />} />
             <Route path="/reportes" element={<Reportes />} />

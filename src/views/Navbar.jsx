@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Offcanvas } from 'bootstrap'
 import { quitar, useCarrito, vaciar } from './productos'
 import { cerrarSesion, esAdmin, esVendedor, esStaff, useUsuario } from '../services/sesion'
@@ -7,15 +7,16 @@ import CarritoLateral from './Carrito'
 function MenuAdmin() {
   return (
     <ul className="navbar-nav me-auto" id="menuAdmin" style={{ display: 'flex' }}>
-      <li className="nav-item"><Link className="nav-link" to="/admin">Dashboard</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/adminOrdenes">Órdenes</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/inventario">Productos</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/productosCriticos">Críticos</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/adminCategorias">Categorías</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/listarUsuarios">Usuarios</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/reportes">Reportes</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/perfil">Perfil</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/home">Tienda</Link></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/admin">Dashboard</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/adminOrdenes">Órdenes</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/inventario">Productos</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/productosCriticos">Críticos</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/adminCategorias">Categorías</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/gestionBlogs">Blogs</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/listarUsuarios">Usuarios</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/reportes">Reportes</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/perfil">Perfil</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/home">Tienda</NavLink></li>
     </ul>
   )
 }
@@ -23,8 +24,8 @@ function MenuAdmin() {
 function MenuVendedor() {
   return (
     <ul className="navbar-nav me-auto" id="menuVendedor" style={{ display: 'flex' }}>
-      <li className="nav-item"><Link className="nav-link" to="/inventario">Productos</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/adminOrdenes">Órdenes</Link></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/inventario">Productos</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/adminOrdenes">Órdenes</NavLink></li>
     </ul>
   )
 }
@@ -32,14 +33,14 @@ function MenuVendedor() {
 function MenuComprador({ conSesion }) {
   return (
     <ul className="navbar-nav me-auto align-items-center" id="menuComprador">
-      <li className="nav-item"><Link className="nav-link" to="/home">Inicio</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/productos">Productos</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/categorias">Categorías</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/nosotros">Nosotros</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/blogs">Blogs</Link></li>
-      <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
-      {conSesion && <li className="nav-item"><Link className="nav-link" to="/perfil">Mi perfil</Link></li>}
+      <li className="nav-item"><NavLink className="nav-link" to="/home">Inicio</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/productos">Productos</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/categorias">Categorías</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/ofertas">Ofertas</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/nosotros">Nosotros</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/blogs">Blogs</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/contacto">Contacto</NavLink></li>
+      {conSesion && <li className="nav-item"><NavLink className="nav-link" to="/perfil">Mi perfil</NavLink></li>}
     </ul>
   )
 }
@@ -47,7 +48,7 @@ function MenuComprador({ conSesion }) {
 function Navbar() {
   const navigate = useNavigate()
   const carrito = useCarrito()
-  const usuario = useUsuario()   
+  const usuario = useUsuario()
   const admin = esAdmin(usuario)
   const vendedor = esVendedor(usuario)
   const staff = esStaff(usuario)
@@ -65,6 +66,9 @@ function Navbar() {
     const panel = document.getElementById('carritoLateral')
     const instancia = panel && Offcanvas.getInstance(panel)
     if (instancia) instancia.hide()
+    document.body.style.overflow = ''
+    document.body.style.paddingRight = ''
+    document.querySelectorAll('.offcanvas-backdrop').forEach((el) => el.remove())
     navigate('/checkout')
   }
 

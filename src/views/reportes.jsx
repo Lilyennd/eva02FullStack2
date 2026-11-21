@@ -149,12 +149,14 @@ export default function Reportes() {
   return (
     <div className="background min-vh-100">
       <div className="container py-5">
-        <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Reportes</h1>
+       <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Reportes</h1>
 
         {/* Encabezado que solo se ve al imprimir */}
-        <div className="solo-impresion">
-          <h2>Reporte de ventas e inventario - Splendor</h2>
-          <p>
+        <div className="solo-impresion text-center mb-4">
+          <h2 className="h4 fw-bold mb-1" style={{ color: 'white' }}>
+            Reporte de ventas e inventario - Splendor
+          </h2>
+          <p className="mb-0" style={{ color: '#e2e8f0' }}>
             {textoPeriodo}. Emitido el {new Date().toLocaleDateString('es-CL')}
           </p>
         </div>

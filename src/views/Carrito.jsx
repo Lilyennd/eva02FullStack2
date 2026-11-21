@@ -5,17 +5,49 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
   const navigate = useNavigate()
   const total = carrito.reduce((suma, p) => suma + p.precio, 0)
 
-  const cerrarMenuCarrito = () => {
+  const limpiarBloqueoScroll = () => {
+    document.querySelectorAll('.offcanvas-backdrop, .modal-backdrop').forEach((el) => el.remove())
+    document.body.classList.remove('modal-open', 'offcanvas-open')
+    document.body.style.overflow = ''
+    document.body.style.paddingRight = ''
+    document.body.removeAttribute('data-bs-overflow')
+    document.body.removeAttribute('data-bs-padding-right')
+    document.documentElement.style.overflow = ''
+  }
+
+  const cerrarYEjecutar = (accion) => {
     const panel = document.getElementById('carritoLateral')
-    if (panel) {
+
+    if (!panel || !panel.classList.contains('show')) {
+      limpiarBloqueoScroll()
+      accion()
+      return
+    }
+
+    let ejecutado = false
+    const finalizar = () => {
+      if (ejecutado) return
+      ejecutado = true
+      panel.removeEventListener('hidden.bs.offcanvas', finalizar)
+      limpiarBloqueoScroll()
+      accion()
+    }
+
+    panel.addEventListener('hidden.bs.offcanvas', finalizar, { once: true })
+
+    // Usa el botón nativo data-bs-dismiss para cerrar con la misma instancia que abrió el offcanvas
+    const btnCerrar = panel.querySelector('[data-bs-dismiss="offcanvas"]')
+    if (btnCerrar) {
+      btnCerrar.click()
+    } else {
       const instancia = Offcanvas.getInstance(panel) || new Offcanvas(panel)
       instancia.hide()
     }
-    document.querySelectorAll('.offcanvas-backdrop, .modal-backdrop').forEach((el) => el.remove())
-    document.body.classList.remove('modal-open')
-    document.body.style.overflow = ''
-    document.body.style.paddingRight = ''
+
+    // Respaldo por si la transición CSS no dispara el evento
+    setTimeout(finalizar, 320)
   }
+
   const agruparItems = (items) => {
     const agrupados = {}
     items.forEach((p, idx) => {
@@ -29,13 +61,10 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
   }
 
   const irARuta = (ruta) => {
-    cerrarMenuCarrito()
-    navigate(ruta)
+    cerrarYEjecutar(() => navigate(ruta))
   }
 
   const irAPagoErrorDemo = () => {
-    cerrarMenuCarrito()
-
     const itemsDemo = carrito.length > 0
       ? agruparItems(carrito)
       : [{ id_producto: 1, nombre: 'Diamante Princesa 0.75ct', precio: 990000, cantidad: 1 }]
@@ -59,22 +88,22 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
     }
 
     sessionStorage.setItem('checkoutError', JSON.stringify(respaldoDemo))
-    navigate('/pagoError')
+    irARuta('/pagoError')
   }
 
   return (
-    <div 
-      className="offcanvas offcanvas-end" 
-      tabIndex={-1} 
-      id="carritoLateral" 
+    <div
+      className="offcanvas offcanvas-end"
+      tabIndex={-1}
+      id="carritoLateral"
       aria-labelledby="carritoLabel"
     >
       <div className="offcanvas-header border-bottom">
         <h5 className="offcanvas-title fw-bold" id="carritoLabel">Tu Carrito 🛒</h5>
-        <button 
-          type="button" 
-          className="btn-close" 
-          data-bs-dismiss="offcanvas" 
+        <button
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="offcanvas"
           aria-label="Cerrar"
         ></button>
       </div>
@@ -91,8 +120,8 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
                 </div>
                 <span>
                   ${producto.precio.toLocaleString('es-CL')}
-                  <button 
-                    className="btn btn-sm btn-outline-danger ms-2" 
+                  <button
+                    className="btn btn-sm btn-outline-danger ms-2"
                     onClick={() => onQuitar(index)}
                     title="Quitar producto"
                   >
@@ -112,46 +141,43 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
             </h4>
           </div>
 
-          <button 
-            id="btnVaciar" 
-            className="btn btn-outline-danger w-100 mb-2" 
+          <button
+            id="btnVaciar"
+            className="btn btn-outline-danger w-100 mb-2"
             onClick={onVaciar}
             disabled={carrito.length === 0}
           >
             Vaciar Carrito
           </button>
 
-          <button 
-            className="btn btn-success w-100 mb-2 fw-bold" 
-            id="btnPagar" 
-            onClick={() => {
-              cerrarMenuCarrito()
-              onPagar()
-            }}
+          <button
+            className="btn btn-success w-100 mb-2 fw-bold"
+            id="btnPagar"
+            disabled={carrito.length === 0}
+            onClick={() => cerrarYEjecutar(onPagar)}
           >
             Ir a Pagar
           </button>
 
-          <button 
-            className="btn btn-info text-white w-100 mb-3 fw-semibold" 
+          <button
+            className="btn btn-info text-white w-100 mb-3 fw-semibold"
             id="btnDetalles"
             onClick={() => irARuta('/checkout')}
           >
             Detalles de la Compra
           </button>
 
-          {/* Botones de Ejemplo / Prueba */}
           <div className="p-2 bg-light rounded border text-center">
             <div className="d-flex gap-2">
-              <button 
-                className="btn btn-sm btn-outline-success w-50" 
+              <button
+                className="btn btn-sm btn-outline-success w-50"
                 id="btnDemoCorrecto"
                 onClick={() => irARuta('/pagoCorrecto/1')}
               >
                 Pago Correcto
               </button>
-              <button 
-                className="btn btn-sm btn-outline-success w-50" 
+              <button
+                className="btn btn-sm btn-outline-success w-50"
                 id="btnDemoError"
                 onClick={irAPagoErrorDemo}
               >
@@ -159,7 +185,6 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
