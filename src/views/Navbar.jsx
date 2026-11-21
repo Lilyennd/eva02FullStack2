@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Offcanvas } from 'bootstrap'
 import { quitar, useCarrito, vaciar } from './productos'
@@ -53,6 +54,13 @@ function Navbar() {
   const admin = esAdmin(usuario)
   const vendedor = esVendedor(usuario)
   const staff = esStaff(usuario)
+  const [terminoBusqueda, setTerminoBusqueda] = useState('')
+
+  const buscarProductos = (e) => {
+    e.preventDefault()
+    const consulta = terminoBusqueda.trim()
+    navigate(consulta ? `/productos?q=${encodeURIComponent(consulta)}` : '/productos')
+  }
 
   const cerrar = () => {
     cerrarSesion()
@@ -87,6 +95,21 @@ function Navbar() {
             {admin ? <MenuAdmin /> : vendedor ? <MenuVendedor /> : <MenuComprador conSesion={!!usuario} />}
 
             <div className="d-flex align-items-center mt-3 mt-lg-0">
+              {!staff && (
+                <form className="d-flex me-3" role="search" onSubmit={buscarProductos}>
+                  <input
+                    className="form-control form-control-sm me-2"
+                    type="search"
+                    placeholder="Buscar gemas..."
+                    aria-label="Buscar en catálogo"
+                    value={terminoBusqueda}
+                    onChange={(e) => setTerminoBusqueda(e.target.value)}
+                  />
+                  <button className="btn btn-sm btn-outline-dark" type="submit">
+                    Buscar
+                  </button>
+                </form>
+              )}
               {!staff && (
                 <button
                   className="btn btn-outline-dark position-relative me-3"

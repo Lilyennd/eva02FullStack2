@@ -69,6 +69,7 @@ export default function Inventario() {
   const usuario = useUsuario()
   const admin = esAdmin(usuario)
   const [productos, setProductos] = useState([])
+  const [busqueda, setBusqueda] = useState('')
   const [error, setError] = useState(false)
 
   const cargar = () => {
@@ -96,6 +97,15 @@ export default function Inventario() {
     }
   }
 
+  const termino = busqueda.trim().toLowerCase()
+  const productosFiltrados = !termino
+    ? productos
+    : productos.filter((p) =>
+        `${p.nombre || ''} ${p.codigo_producto || ''} ${p.origen || ''}`
+          .toLowerCase()
+          .includes(termino)
+      )
+
   return (
     <div className="background min-vh-100">
       <div className="container py-5">
@@ -118,10 +128,28 @@ export default function Inventario() {
             </Link>
           )}
         </div>
+
+        <div className="mb-4">
+          <input
+            type="search"
+            id="buscadorInventario"
+            className="form-control"
+            aria-label="Buscar en inventario"
+            placeholder="Buscar en inventario por nombre, código u origen..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
+
         <div className="row g-4" id="listaProductos">
           {error && <p className="text-danger">No se pudieron cargar los productos.</p>}
+          {!error && productos.length > 0 && productosFiltrados.length === 0 && (
+            <p className="text-center text-white">
+              No se encontraron productos en inventario para "{busqueda}".
+            </p>
+          )}
           {!error &&
-            productos.map((producto) => (
+            productosFiltrados.map((producto) => (
               <TarjetaInventario
                 key={producto.id_producto}
                 producto={producto}

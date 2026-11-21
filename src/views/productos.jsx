@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { apiFetch, urlImagen } from '../services/api'
 
 
@@ -72,6 +72,25 @@ export const precioFinal = (producto) =>
   producto.en_oferta && producto.precio_oferta ? Number(producto.precio_oferta) : Number(producto.precio)
 const rutaImagenProducto = (img) => urlImagen(img, 'productos')
 
+// Filtra productos por nombre, origen, corte, color o descripción (insensible a tildes y mayúsculas)
+const normalizar = (texto) =>
+  String(texto || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+
+export function filtrarProductos(productos, busqueda) {
+  const t = normalizar(busqueda)
+  if (!t) return productos
+  return productos.filter((p) => {
+    const textoProducto = [p.nombre, p.origen, p.corte, p.color, p.descripcion]
+      .map(normalizar)
+      .join(' ')
+    return textoProducto.includes(t)
+  })
+}
+
 
 export function TarjetaProducto({ producto, deshabilitado, onAgregar }) {
   return (
@@ -123,8 +142,15 @@ export function TarjetaProducto({ producto, deshabilitado, onAgregar }) {
 
 export default function Productos() {
   const carrito = useCarrito()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [productos, setProductos] = useState([])
+  const [busqueda, setBusqueda] = useState(() => searchParams.get('q') || '')
   const [error, setError] = useState(false)
+
+  // Sincroniza si se busca desde la barra superior (Navbar)
+  useEffect(() => {
+    setBusqueda(searchParams.get('q') || '')
+  }, [searchParams])
 
   // Al cargar la página, pide la lista de productos al backend
   useEffect(() => {
@@ -137,16 +163,58 @@ export default function Productos() {
       })
   }, [])
 
+  const cambiarBusqueda = (valor) => {
+    setBusqueda(valor)
+    if (valor.trim()) {
+      setSearchParams({ q: valor }, { replace: true })
+    } else {
+      setSearchParams({}, { replace: true })
+    }
+  }
+
+  const productosFiltrados = filtrarProductos(productos, busqueda)
+
   return (
     <div className="background min-vh-100">
       <div className="container py-5">
-        <h1 className="text-center mb-4 ; herotitulo" style={{ color: 'white' }}>
+        <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>
           Nuestras gemas
         </h1>
+
+        <div className="row justify-content-center mb-4">
+          <div className="col-12 col-md-8 col-lg-6">
+            <div className="input-group">
+              <input
+                type="search"
+                id="buscadorProductos"
+                className="form-control"
+                aria-label="Buscar productos"
+                placeholder="Buscar gema por nombre, origen, corte o color..."
+                value={busqueda}
+                onChange={(e) => cambiarBusqueda(e.target.value)}
+              />
+              {busqueda && (
+                <button
+                  type="button"
+                  className="btn btn-light"
+                  onClick={() => cambiarBusqueda('')}
+                >
+                  Limpiar
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className="row g-4" id="listaProductos">
           {error && <p className="text-danger">No se pudieron cargar los productos.</p>}
+          {!error && productos.length > 0 && productosFiltrados.length === 0 && (
+            <p className="text-center text-white">
+              No se encontraron gemas que coincidan con "{busqueda}".
+            </p>
+          )}
           {!error &&
-            productos.map((producto) => (
+            productosFiltrados.map((producto) => (
               <TarjetaProducto
                 key={producto.id_producto}
                 producto={producto}
