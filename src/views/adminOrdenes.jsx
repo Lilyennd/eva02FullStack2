@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ordenesApi } from '../services/api'
+import { esVendedor, useUsuario } from '../services/sesion'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
@@ -87,6 +88,8 @@ export function TablaOrdenes({ ordenes, onCambiarEstado, actualizandoId }) {
 }
 
 export default function AdminOrdenes() {
+  // El backend solo permite cambiar el estado a ADMIN (y CLIENTE sobre sus órdenes); el vendedor solo consulta
+  const puedeCambiarEstado = !esVendedor(useUsuario())
   const [ordenes, setOrdenes] = useState([])
   const [error, setError] = useState('')
   const [mensaje, setMensaje] = useState({ tipo: '', texto: '' })
@@ -181,7 +184,7 @@ export default function AdminOrdenes() {
           ) : (
             <TablaOrdenes
               ordenes={filtrarOrdenes(ordenes, estado, texto)}
-              onCambiarEstado={handleCambiarEstado}
+              onCambiarEstado={puedeCambiarEstado ? handleCambiarEstado : undefined}
               actualizandoId={actualizandoId}
             />
           )}

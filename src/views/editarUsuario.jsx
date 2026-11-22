@@ -11,7 +11,10 @@ export default function EditarUsuario() {
   const sesion = useUsuario()
 
   // Admin vuelve a la lista de usuarios; el resto vuelve a su perfil
-  const volverA = esAdmin(sesion) ? '/listarUsuarios' : '/perfil'
+  const admin = esAdmin(sesion)
+  const volverA = admin ? '/listarUsuarios' : '/perfil'
+  // Un admin no puede cambiarse el rol a sí mismo (se quedaría sin acceso)
+  const esPropiaCuenta = !!sesion && String(sesion.id_usuario) === String(idUsuario)
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
   const [otros, setOtros] = useState({
@@ -137,6 +140,22 @@ export default function EditarUsuario() {
                   <input type="email" className="form-control" id="correo" required
                     value={datos.correo} onChange={handleChange} />
                 </div>
+                {admin && (
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="id_rol">Rol del usuario</label>
+                    <select
+                      className="form-select"
+                      id="id_rol"
+                      value={otros.id_rol ?? 1}
+                      disabled={esPropiaCuenta}
+                      onChange={(e) => setOtros((prev) => ({ ...prev, id_rol: Number(e.target.value) }))}
+                    >
+                      <option value={1}>Cliente</option>
+                      <option value={2}>Administrador</option>
+                      <option value={3}>Vendedor</option>
+                    </select>
+                  </div>
+                )}
                 <div className="d-flex gap-2 mt-4">
                   <button type="submit" className="btn btn-warning flex-fill fw-bold">Guardar Cambios</button>
                   <Link to={volverA} className="btn btn-outline-secondary flex-fill">Cancelar</Link>

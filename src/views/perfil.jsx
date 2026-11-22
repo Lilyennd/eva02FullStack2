@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { usuariosApi } from '../services/api'
-import { esAdmin, useUsuario } from '../services/sesion'
+import { esStaff, useUsuario } from '../services/sesion'
 
 export default function Perfil() {
   const sesion = useUsuario()
-  const admin = esAdmin(sesion)
+  const admin = esStaff(sesion)
   const id = sesion ? sesion.id_usuario : null
   const [usuario, setUsuario] = useState(null)
   const [error, setError] = useState(id ? '' : 'Debes iniciar sesión.')

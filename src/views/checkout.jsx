@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCarrito, vaciar } from './productos'
 import { formatearPrecio, TablaCompra } from './DatosCompra'
 import { apiFetch } from '../services/api'
-import { useUsuario } from '../services/sesion'
+import { esVendedor, useUsuario } from '../services/sesion'
 
 export function agruparCarrito(carrito) {
   const agrupados = {}
@@ -108,6 +108,7 @@ export default function Checkout() {
       navigate('/login')
       return
     }
+    if (esVendedor(usuario)) return
 
     if (!e.currentTarget.checkValidity()) {
       setValidado(true)
@@ -180,6 +181,19 @@ export default function Checkout() {
     } finally {
       setProcesando(false)
     }
+  }
+
+  // El backend solo permite crear órdenes (POST /ordenes) a CLIENTE y ADMIN; el vendedor no compra
+  if (esVendedor(usuario)) {
+    return (
+      <div className="background min-vh-100 py-5">
+        <div className="container text-center text-white py-5">
+          <h2 className="mb-3">Tu perfil de vendedor no puede realizar compras</h2>
+          <p className="mb-4">Solo los clientes pueden emitir órdenes de compra.</p>
+          <Link to="/inventario" className="btn btn-light px-4">Ir a inventario</Link>
+        </div>
+      </div>
+    )
   }
 
   // Obligatorio iniciar sesión para comprar (Rúbrica de Seguridad)

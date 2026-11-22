@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { esStaff, useUsuario } from '../services/sesion'
 
 const enlaces = [
   { to: '/home', texto: 'Inicio' },
@@ -33,6 +34,13 @@ const redes = [
 ]
 
 function Footer() {
+  const usuario = useUsuario()
+  // Staff (admin/vendedor): sin enlaces de la tienda. Cliente con sesión: sin registro ni inicio de sesión.
+  const mostrarNavegacion = !esStaff(usuario)
+  const enlacesVisibles = usuario
+    ? enlaces.filter((e) => e.to !== '/registroUsuario' && e.to !== '/login')
+    : enlaces
+
   return (
     <footer className="footer">
       <div className="footer_marca">
@@ -40,18 +48,20 @@ function Footer() {
         <p>Artesanía de alta joyería desde 1987. Cada pieza cuenta una historia.</p>
       </div>
 
-      <div className="footer_navegacion">
-        <h4 className="fuente">Navegación</h4>
-        <ul>
-          {enlaces.map((e) => (
-            <li key={e.to}>
-              <NavLink to={e.to} className={({ isActive }) => (isActive ? 'activo' : undefined)}>
-                {e.texto}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {mostrarNavegacion && (
+        <div className="footer_navegacion">
+          <h4 className="fuente">Navegación</h4>
+          <ul>
+            {enlacesVisibles.map((e) => (
+              <li key={e.to}>
+                <NavLink to={e.to} className={({ isActive }) => (isActive ? 'activo' : undefined)}>
+                  {e.texto}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="footer_contacto">
         <h4 className="fuente">Contacto</h4>
