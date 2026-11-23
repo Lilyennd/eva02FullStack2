@@ -28,6 +28,7 @@ function MenuVendedor() {
     <ul className="navbar-nav me-auto" id="menuVendedor" style={{ display: 'flex' }}>
       <li className="nav-item"><NavLink className="nav-link" to="/inventario">Productos</NavLink></li>
       <li className="nav-item"><NavLink className="nav-link" to="/adminOrdenes">Órdenes</NavLink></li>
+      <li className="nav-item"><NavLink className="nav-link" to="/perfil">Mi perfil</NavLink></li>
     </ul>
   )
 }
