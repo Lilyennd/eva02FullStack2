@@ -104,7 +104,7 @@ export default function PagoError() {
       }
 
       if (!vigente) return
-      // Si hay datos en respaldo los usa, si no muestra los datos de demo
+
       setDatos(respaldo ? datosDesdeRespaldo(respaldo) : datosDemoDefecto)
       setCargando(false)
     }

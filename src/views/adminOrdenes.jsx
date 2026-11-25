@@ -5,7 +5,7 @@ import { esVendedor, useUsuario } from '../services/sesion'
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
-// Valores exactos del ENUM en BD (splendor_completo.sql)
+
 export const ESTADOS_ORDEN = ['Pendiente', 'Procesando', 'Pagada']
 export const ESTADOS = ['Todas', ...ESTADOS_ORDEN]
 
@@ -88,7 +88,7 @@ export function TablaOrdenes({ ordenes, onCambiarEstado, actualizandoId }) {
 }
 
 export default function AdminOrdenes() {
-  // El backend solo permite cambiar el estado a ADMIN (y CLIENTE sobre sus órdenes); el vendedor solo consulta
+
   const puedeCambiarEstado = !esVendedor(useUsuario())
   const [ordenes, setOrdenes] = useState([])
   const [error, setError] = useState('')

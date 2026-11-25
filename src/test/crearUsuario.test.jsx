@@ -19,7 +19,7 @@ describe('Vista Crear Usuario (admin)', () => {
 
     renderConRuta(<CrearUsuario />, '/crearUsuario', '/crearUsuario')
 
-    // la comuna está bloqueada hasta elegir región
+    
     expect(screen.getByLabelText('Comuna')).toBeDisabled()
 
     await user.type(screen.getByLabelText('RUN'), '12345678')

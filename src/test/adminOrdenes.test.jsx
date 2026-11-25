@@ -29,18 +29,18 @@ describe('Vista Órdenes del administrador', () => {
     expect(screen.getByText('B-002')).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: 'Ver boleta' })[0]).toHaveAttribute('href', '/boleta/1')
 
-    // Cambiar estado de B-002 de Pendiente a Procesando
+
     const selectOrdenB = screen.getByLabelText('Estado de orden B-002')
     await user.selectOptions(selectOrdenB, 'Procesando')
     expect(ordenesApi.cambiarEstado).toHaveBeenCalledWith(2, 'Procesando')
 
-    // Filtrar por estado Pagada
+
     const filtroEstado = screen.getByLabelText('Filtrar por estado')
     await user.selectOptions(filtroEstado, 'Pagada')
     expect(screen.getByText('A-001')).toBeInTheDocument()
     expect(screen.queryByText('B-002')).not.toBeInTheDocument()
 
-    // Filtrar por texto
+
     fireEvent.change(filtroEstado, { target: { value: '' } })
     await user.type(screen.getByRole('textbox'), 'luis')
     expect(screen.getByText('B-002')).toBeInTheDocument()

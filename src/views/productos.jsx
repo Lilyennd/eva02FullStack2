@@ -5,7 +5,7 @@ import { apiFetch, urlImagen } from '../services/api'
 
 const EVENTO_CARRITO = 'carrito-actualizado'
 
-// Lee el carrito guardado en el navegador (si no hay nada, devuelve una lista vacía)
+
 export function leerCarrito() {
   try {
     return JSON.parse(localStorage.getItem('carrito')) || []
@@ -14,7 +14,7 @@ export function leerCarrito() {
   }
 }
 
-// Guarda el carrito y avisa a las demás partes de la página que cambió
+
 function guardarCarrito(carrito) {
   localStorage.setItem('carrito', JSON.stringify(carrito))
   window.dispatchEvent(new Event(EVENTO_CARRITO)) 
@@ -27,7 +27,7 @@ export function useCarrito() {
   useEffect(() => {
     const sincronizar = () => setCarrito(leerCarrito())
     window.addEventListener(EVENTO_CARRITO, sincronizar)
-    window.addEventListener('storage', sincronizar) // cambios desde otra pestaña
+    window.addEventListener('storage', sincronizar) 
     return () => {
       window.removeEventListener(EVENTO_CARRITO, sincronizar)
       window.removeEventListener('storage', sincronizar)
@@ -37,12 +37,12 @@ export function useCarrito() {
   return carrito
 }
 
-// Cuenta cuántas unidades de un producto hay en el carrito
+
 export function contarEnCarrito(carrito, id_producto) {
   return carrito.filter((p) => p.id_producto === id_producto).length
 }
 
-// Devuelve el carrito nuevo (o el mismo si ya no queda stock)
+
 export function agregar(carrito, nombre, precio, id_producto, stock) {
   if (contarEnCarrito(carrito, id_producto) >= stock) {
     alert('No queda más stock de ' + nombre)
@@ -67,12 +67,12 @@ export function vaciar() {
 
 const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
-// BD: productos.en_oferta + productos.precio_oferta. Si está en oferta se cobra el precio de oferta.
+
 export const precioFinal = (producto) =>
   producto.en_oferta && producto.precio_oferta ? Number(producto.precio_oferta) : Number(producto.precio)
 const rutaImagenProducto = (img) => urlImagen(img, 'productos')
 
-// Filtra productos por nombre, origen, corte, color o descripción (insensible a tildes y mayúsculas)
+
 const normalizar = (texto) =>
   String(texto || '')
     .normalize('NFD')
@@ -118,7 +118,7 @@ export function TarjetaProducto({ producto, deshabilitado, onAgregar }) {
           </p>
 
           <div className="mt-auto d-flex gap-2">
-            {/* Lleva a /producto/1, /producto/2, etc. (coincide con la ruta de App.jsx) */}
+
             <Link
               to={`/producto/${producto.id_producto}`}
               className="btn btn-outline-dark flex-fill"
@@ -147,12 +147,12 @@ export default function Productos() {
   const [busqueda, setBusqueda] = useState(() => searchParams.get('q') || '')
   const [error, setError] = useState(false)
 
-  // Sincroniza si se busca desde la barra superior (Navbar)
+
   useEffect(() => {
     setBusqueda(searchParams.get('q') || '')
   }, [searchParams])
 
-  // Al cargar la página, pide la lista de productos al backend
+
   useEffect(() => {
     apiFetch('/api/productos')
       .then((respuesta) => respuesta.json())

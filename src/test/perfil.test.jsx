@@ -8,7 +8,7 @@ vi.mock('../services/api', () => ({ urlImagen: (img) => img, usuariosApi: { obte
 
 describe('Vista Perfil', () => {
   it('muestra los datos del usuario con sesión y enlaza a editar y a sus compras', async () => {
-    // sesión iniciada
+
     localStorage.setItem('usuarioActual', JSON.stringify({ id_usuario: 1, id_rol: 1 }))
     usuariosApi.obtener.mockResolvedValue({
       id_usuario: 1, nombre: 'Ana', apellidos: 'Soto', run: '19011022K',

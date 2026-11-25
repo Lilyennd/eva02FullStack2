@@ -5,15 +5,15 @@ import { esAdmin, guardarUsuario, useUsuario } from '../services/sesion'
 
 export default function EditarUsuario() {
   const navigate = useNavigate()
-  // Lee el id de /editarUsuario/5
+
   const { id: idUsuario } = useParams()
   const avisado = useRef(false)
   const sesion = useUsuario()
 
-  // Admin vuelve a la lista de usuarios; el resto vuelve a su perfil
+
   const admin = esAdmin(sesion)
   const volverA = admin ? '/listarUsuarios' : '/perfil'
-  // Un admin no puede cambiarse el rol a sí mismo (se quedaría sin acceso)
+
   const esPropiaCuenta = !!sesion && String(sesion.id_usuario) === String(idUsuario)
 
   const [datos, setDatos] = useState({ run: '', nombre: '', apellidos: '', correo: '' })
@@ -21,7 +21,7 @@ export default function EditarUsuario() {
     telefono: null, direccion: null, id_region: null, id_comuna: null, id_rol: null,
   })
 
-  // Al cargar, trae los datos del usuario a editar
+
   useEffect(() => {
     if (!idUsuario) {
       if (!avisado.current) {

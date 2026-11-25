@@ -12,16 +12,16 @@ const productoVacio = {
 
 export default function ModificarProducto() {
   const navigate = useNavigate()
-  // Lee el id de /modificarProducto/3 (si entras sin id, queda undefined)
+
   const { id: idInicial } = useParams()
   const { categorias, imagenes } = useCatalogosProducto(IMAGENES_PRODUCTO)
   const [listaProductos, setListaProductos] = useState([])
   const [idSeleccionado, setIdSeleccionado] = useState('')
   const [datos, setDatos] = useState(productoVacio)
-  // Imagen nueva elegida por el usuario (si no elige ninguna, queda null)
+
   const [archivo, setArchivo] = useState(null)
 
-  // Al cargar, trae todos los productos y, si venía un id, deja ese seleccionado
+
   useEffect(() => {
     let vigente = true
     apiFetch('/api/productos')
@@ -44,7 +44,7 @@ export default function ModificarProducto() {
     setDatos((prev) => ({ ...prev, [id]: value }))
   }
 
-  // Rellena el formulario con los datos del producto elegido
+
   const seleccionar = (id, lista) => {
     setIdSeleccionado(id)
     setArchivo(null)
@@ -88,7 +88,6 @@ export default function ModificarProducto() {
       return
     }
 
-    // 1) Si se eligió una imagen nueva, se sube primero; si no, se conserva la actual
     let imagen = datos.imagen_principal || null
     if (archivo) {
       try {
@@ -99,7 +98,7 @@ export default function ModificarProducto() {
       }
     }
 
-    // 2) Se actualiza el producto con esa imagen
+
     const paqueteDatos = {
       nombre: datos.nombre,
       descripcion: datos.descripcion || null,
@@ -169,7 +168,7 @@ export default function ModificarProducto() {
                     stepPrecio="100000"
                   />
 
-                  {/* Cambiar la imagen: si no eliges ninguna, se conserva la actual */}
+
                   <div className="mb-3">
                     <label htmlFor="archivoImagen" className="form-label">Subir imagen nueva (opcional)</label>
                     <input

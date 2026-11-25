@@ -35,7 +35,7 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
 
     panel.addEventListener('hidden.bs.offcanvas', finalizar, { once: true })
 
-    // Usa el botón nativo data-bs-dismiss para cerrar con la misma instancia que abrió el offcanvas
+    
     const btnCerrar = panel.querySelector('[data-bs-dismiss="offcanvas"]')
     if (btnCerrar) {
       btnCerrar.click()
@@ -44,7 +44,7 @@ function Carrito({ carrito, onQuitar, onVaciar, onPagar }) {
       instancia.hide()
     }
 
-    // Respaldo por si la transición CSS no dispara el evento
+  
     setTimeout(finalizar, 320)
   }
 

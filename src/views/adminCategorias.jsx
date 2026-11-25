@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { categoriasApi } from '../services/api'
 
-// Gestión de Categorías: GET, POST, PUT y DELETE /api/categorias
+
 export default function AdminCategorias() {
   const [categorias, setCategorias] = useState([])
   const [nombre, setNombre] = useState('')

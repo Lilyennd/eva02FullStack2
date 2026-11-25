@@ -19,18 +19,16 @@ describe('Vista Nuevo Blog (Admin)', () => {
 
     renderConRuta(<NuevoBlog />, '/nuevoBlog', '/nuevoBlog')
 
-    // Validación: título vacío
+
     await user.click(screen.getByRole('button', { name: 'Guardar blog' }))
     expect(alerta).toHaveBeenCalledWith('El título del blog es obligatorio.')
     expect(blogsApi.crear).not.toHaveBeenCalled()
 
-    // Validación: resumen vacío
     await user.type(screen.getByLabelText('Título del Blog *'), 'Historia del Rubí')
     await user.click(screen.getByRole('button', { name: 'Guardar blog' }))
     expect(alerta).toHaveBeenCalledWith('El resumen (descripción corta) es obligatorio.')
     expect(blogsApi.crear).not.toHaveBeenCalled()
 
-    // Completar datos y subir imagen
     await user.type(screen.getByLabelText('Resumen (Descripción corta) *'), 'Origen y valor histórico')
     await user.type(screen.getByLabelText('Contenido completo'), 'Primer párrafo\nSegundo párrafo')
 

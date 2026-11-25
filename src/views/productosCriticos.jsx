@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { productosApi } from '../services/api'
 
-// Productos con stock <= stock crítico: GET /api/productos/criticos
+
 export default function ProductosCriticos() {
   const [productos, setProductos] = useState([])
   const [error, setError] = useState('')

@@ -5,13 +5,13 @@ import { apiFetch } from '../services/api'
 
 
 export default function PagoCorrecto() {
-  // Lee el id de /pagoCorrecto/12
+
   const { id } = useParams()
 
   const [orden, setOrden] = useState(null)
   const [estado, setEstado] = useState(id ? 'cargando' : 'sinId')
 
-  // Pide la orden al backend para mostrar la boleta
+
   useEffect(() => {
     if (!id) return
     let vigente = true
@@ -54,7 +54,6 @@ export default function PagoCorrecto() {
     )
   }
 
-  // Si la orden no quedó pagada, se muestra la pantalla de error de pago
   if (orden.estado !== 'Pagada') return <Navigate to={'/pagoError/' + id} replace />
 
   const cliente = {

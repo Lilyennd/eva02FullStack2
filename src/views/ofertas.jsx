@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { agregar, contarEnCarrito, precioFinal, TarjetaProducto, useCarrito } from './productos'
 import { apiFetch } from '../services/api'
 
-// Vista Ofertas: solo los productos con en_oferta (GET /api/productos?oferta=1)
+
 export default function Ofertas() {
   const carrito = useCarrito()
   const [productos, setProductos] = useState([])

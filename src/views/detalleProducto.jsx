@@ -8,7 +8,7 @@ const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 const rutaImagenProducto = (img) => urlImagen(img, 'productos')
 
 export default function DetalleProducto() {
-  // Lee el id desde la dirección: /producto/1 -> id = "1"
+
   const { id: idProducto } = useParams()
   const carrito = useCarrito()
   const usuario = useUsuario()
@@ -17,11 +17,10 @@ export default function DetalleProducto() {
   const [producto, setProducto] = useState(null)
   const [error, setError] = useState(false)
 
-  // Cada vez que cambia el id, pide el producto al backend
+
   useEffect(() => {
     if (!idProducto) return
 
-    // Evita actualizar la pantalla si ya se cambió de producto
     let vigente = true
     setProducto(null)
     setError(false)
@@ -44,7 +43,7 @@ export default function DetalleProducto() {
     }
   }, [idProducto])
 
-  // Texto del título según el estado
+
   let nombre = 'Cargando...'
   if (!idProducto) nombre = 'Producto no encontrado'
   else if (error) nombre = 'Error al cargar el producto'
