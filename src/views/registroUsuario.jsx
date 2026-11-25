@@ -61,7 +61,7 @@ export default function RegistroUsuario() {
       return
     }
 
-    // Registro público: siempre asigna rol CLIENTE (1)
+
     const usuario = {
       run,
       nombre: datos.nombre.trim(),
