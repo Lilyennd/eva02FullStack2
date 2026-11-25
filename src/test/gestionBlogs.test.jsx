@@ -5,10 +5,10 @@ import GestionBlogs from '../views/gestionBlogs'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ urlImagen: (img) => img,
-  apiFetch: vi.fn(),
-  API_URL: 'http://localhost:8080',
-}))
+vi.mock('../services/api', async () => {
+  const real = await vi.importActual('../services/api')
+  return { ...real, urlImagen: (img) => img, apiFetch: vi.fn(real.apiFetch) }
+})
 
 const blogsMock = [
   { id_blog: 1, titulo: 'Cómo elegir un diamante', descripcion_corta: 'Guía de las 4 Cs', imagen: 'blog1.jpg' },
@@ -52,4 +52,25 @@ describe('Vista Gestión de Blogs (Admin)', () => {
 
     expect(await screen.findByText('No hay blogs publicados actualmente.')).toBeInTheDocument()
   })
+
+  it('debe traer los blogs reales del backend y enlazar a modificar', async () => {
+    const real = await vi.importActual('../services/api')
+    apiFetch.mockImplementation(real.apiFetch)
+
+    renderConRuta(<GestionBlogs />, '/gestionBlogs', '/gestionBlogs')
+
+    
+    expect(
+      await screen.findByText(
+        'De las minas al brillo: el origen de los diamantes',
+        {},
+        { timeout: 8000 }
+      )
+    ).toBeInTheDocument()
+
+    expect(screen.getByRole('link', { name: 'Agregar Nuevo Blog' })).toHaveAttribute('href', '/nuevoBlog')
+
+    const linksModificar = screen.getAllByRole('link', { name: 'Modificar' })
+    expect(linksModificar[0]).toHaveAttribute('href', '/modificarBlog?id=1')
+  }, 15000)
 })
