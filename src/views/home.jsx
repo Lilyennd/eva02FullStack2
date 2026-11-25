@@ -122,7 +122,7 @@ export default function Home() {
 
       <section className="faq-container my-5 container">
         <div className="text-center mb-4">
-          <p className="herotitulo" style={{ color: 'rgb(40, 42, 108)' }}>Preguntas Frecuentes</p>
+          <p className="herotitulo" style={{ color: 'rgb(253, 253, 254)' }}>Preguntas Frecuentes</p>
           <h2 className="fst-italic fw-normal text-white">
             Lo que solemos resolver antes de adquirir una gema preciosa.
           </h2>

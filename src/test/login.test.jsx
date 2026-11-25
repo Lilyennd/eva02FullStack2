@@ -4,7 +4,10 @@ import Login from '../views/login'
 import { apiFetch } from '../services/api'
 import { renderConRuta, respuesta } from './utils'
 
-vi.mock('../services/api', () => ({ urlImagen: (img) => img, apiFetch: vi.fn() }))
+vi.mock('../services/api', async () => {
+  const real = await vi.importActual('../services/api')
+  return { ...real, urlImagen: (img) => img, apiFetch: vi.fn(real.apiFetch) }
+})
 
 describe('Vista Login (Cliente)', () => {
   it('debe validar el formulario, iniciar sesión y redirigir según el rol', async () => {
@@ -36,7 +39,8 @@ describe('Vista Login (Cliente)', () => {
     expect(JSON.parse(opciones.body)).toEqual({ correo: 'ana@gmail.com', password: 'abcd' })
     expect(JSON.parse(localStorage.getItem('usuarioActual')).nombre).toBe('Ana')
   })
-    it('manda al administrador (id_rol 2) al panel /admin', async () => {
+
+  it('manda al administrador (id_rol 2) al panel /admin', async () => {
     apiFetch.mockResolvedValue(respuesta({ usuario: { id_usuario: 1, nombre: 'Prof', id_rol: 2 } }))
 
     renderConRuta(<Login />, '/login', '/login')
@@ -47,4 +51,40 @@ describe('Vista Login (Cliente)', () => {
 
     await waitFor(() => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/admin'))
   })
+
+  it('con el backend real: el admin inicia sesión, guarda el token y va a /admin', async () => {
+    const real = await vi.importActual('../services/api')
+    apiFetch.mockImplementation(real.apiFetch)
+    localStorage.clear()
+
+    renderConRuta(<Login />, '/login', '/login')
+
+    fireEvent.change(screen.getByLabelText('Correo Electrónico'), { target: { value: 'admin@profesor.duoc.cl' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'admin123' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }))
+
+    await waitFor(
+      () => expect(screen.getByTestId('ubicacion')).toHaveTextContent('/admin'),
+      { timeout: 8000 }
+    )
+    expect(localStorage.getItem('token')).toBeTruthy()
+    expect(JSON.parse(localStorage.getItem('usuarioActual')).correo).toBe('admin@profesor.duoc.cl')
+  }, 15000)
+
+  it('con el backend real: una contraseña incorrecta muestra el error', async () => {
+    const real = await vi.importActual('../services/api')
+    apiFetch.mockImplementation(real.apiFetch)
+    localStorage.clear()
+
+    renderConRuta(<Login />, '/login', '/login')
+
+    fireEvent.change(screen.getByLabelText('Correo Electrónico'), { target: { value: 'admin@profesor.duoc.cl' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'mala1234' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }))
+
+    expect(
+      await screen.findByText('Credenciales inválidas', {}, { timeout: 8000 })
+    ).toBeInTheDocument()
+    expect(localStorage.getItem('token')).toBeNull()
+  }, 15000)
 })
