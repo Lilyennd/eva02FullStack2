@@ -14,7 +14,7 @@ export default function NuevoProducto() {
   const navigate = useNavigate()
   const { categorias, imagenes } = useCatalogosProducto(IMAGENES_PRODUCTO)
   const [datos, setDatos] = useState(productoVacio)
-  // Archivo de imagen elegido por el usuario (si no elige ninguno, queda null)
+
   const [archivo, setArchivo] = useState(null)
 
   const handleChange = (e) => {
@@ -55,7 +55,7 @@ export default function NuevoProducto() {
       return
     }
 
-    // 1) Si se eligió un archivo, se sube primero y se usa la ruta que devuelve el backend
+   
     let imagen = datos.imagen_principal || null
     if (archivo) {
       try {
@@ -66,7 +66,7 @@ export default function NuevoProducto() {
       }
     }
 
-    // 2) Se crea el producto con esa imagen
+  
     const nuevoProducto = {
       codigo_producto: codigo,
       nombre,
@@ -125,7 +125,6 @@ export default function NuevoProducto() {
                     stepPrecio="0.01"
                   />
 
-                  {/* Subir una imagen propia (tiene prioridad sobre la del desplegable) */}
                   <div className="mb-3">
                     <label htmlFor="archivoImagen" className="form-label">Subir imagen (opcional)</label>
                     <input

@@ -21,14 +21,14 @@ describe('Vista Nuevo Producto (Admin)', () => {
     renderConRuta(<NuevoProducto />, '/nuevoProducto', '/nuevoProducto')
     expect(await screen.findByRole('option', { name: 'Diamantes' })).toBeInTheDocument()
 
-    // Validación: código vacío o menor a 3 caracteres
+ 
     await user.click(screen.getByRole('button', { name: 'Guardar producto' }))
     expect(alerta).toHaveBeenCalledWith(
       'El código del producto es obligatorio y debe tener al menos 3 letras/números.',
     )
     expect(apiFetch).not.toHaveBeenCalled()
 
-    // Completar campos obligatorios
+
     await user.type(screen.getByLabelText('Código *'), 'DIA-02')
     await user.type(screen.getByLabelText('Nombre *'), 'Diamante Corte Princesa')
     await user.type(screen.getByLabelText('Precio *'), '1800000')

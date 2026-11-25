@@ -38,7 +38,7 @@ import Reportes from './views/reportes'
 import Perfil from './views/perfil'
 import './assets/css/style.css'
 
-// Estructura común: barra arriba, contenido en el medio y pie de página abajo
+
 function Layout() {
   return (
     <>

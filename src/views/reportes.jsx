@@ -13,7 +13,7 @@ export default function Reportes() {
   const [hasta, setHasta] = useState('')
   const [filtro, setFiltro] = useState({ desde: '', hasta: '' })
 
-  // El inventario refleja el estado actual
+ 
   useEffect(() => {
     let vigente = true
     apiFetch('/api/productos')
@@ -26,7 +26,7 @@ export default function Reportes() {
     return () => { vigente = false }
   }, [])
 
-  // Las órdenes se consultan según el filtro de fechas
+
   useEffect(() => {
     let vigente = true
     ordenesApi
@@ -57,7 +57,7 @@ export default function Reportes() {
     setFiltro({ desde: '', hasta: '' })
   }
 
-  // Agrupa las órdenes por estado (cantidad y total de cada uno)
+
   const porEstado = {}
   ordenes.forEach((o) => {
     if (!porEstado[o.estado]) porEstado[o.estado] = { cantidad: 0, total: 0 }
@@ -72,15 +72,13 @@ export default function Reportes() {
   const unidades = productos.reduce((suma, p) => suma + Number(p.stock), 0)
   const valorInventario = productos.reduce((suma, p) => suma + Number(p.stock) * Number(p.precio), 0)
 
-  // Texto del período, se usa en la pantalla, en la impresión y en el nombre del Excel
+
   const textoPeriodo =
     filtro.desde || filtro.hasta
       ? `Órdenes entre ${filtro.desde || 'el inicio'} y ${filtro.hasta || 'hoy'}`
       : 'Mostrando todas las órdenes'
 
-  // ---------------------- DESCARGAS A EXCEL ----------------------
-
-  // Una fila por orden: es el reporte de ventas
+ 
   const descargarVentas = () => {
     const filas = ordenes.map((o) => ({
       numero_orden: o.numero_orden,
@@ -151,7 +149,7 @@ export default function Reportes() {
       <div className="container py-5">
        <h1 className="text-center mb-4 herotitulo" style={{ color: 'white' }}>Reportes</h1>
 
-        {/* Encabezado que solo se ve al imprimir */}
+
         <div className="solo-impresion text-center mb-4">
           <h2 className="h4 fw-bold mb-1" style={{ color: 'white' }}>
             Reporte de ventas e inventario - Splendor
@@ -163,7 +161,7 @@ export default function Reportes() {
 
         {error && <p className="text-danger text-center">{error}</p>}
 
-        {/* Filtro de fechas (no se imprime) */}
+
         <div className="card shadow-sm p-3 mb-4 no-print">
           <form className="row g-2 align-items-end" onSubmit={aplicar} id="formFiltroFechas">
             <div className="col-md-4">
@@ -186,7 +184,7 @@ export default function Reportes() {
           </small>
         </div>
 
-        {/* Botones de descarga e impresión (no se imprimen) */}
+
         <div className="card shadow-sm p-3 mb-4 no-print">
           <div className="d-flex flex-wrap gap-2">
             <button type="button" className="btn btn-success" onClick={descargarVentas}
@@ -228,7 +226,7 @@ export default function Reportes() {
           </div>
         </div>
 
-        {/* Detalle de ventas: una fila por orden */}
+
         <div className="card shadow border-0 rounded-4 p-4 mb-4">
           <h5 className="fw-bold mb-3">Detalle de ventas</h5>
           <div className="table-responsive">

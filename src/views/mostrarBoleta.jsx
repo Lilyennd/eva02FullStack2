@@ -6,12 +6,12 @@ const formatearPrecio = (valor) => Number(valor).toLocaleString('es-CL')
 
 export default function MostrarBoleta() {
   const navigate = useNavigate()
-  // Lee el id de /boleta/12
+ 
   const { id } = useParams()
   const [orden, setOrden] = useState(null)
   const [error, setError] = useState(id ? '' : 'No se indicó la orden.')
 
-  // Pide la orden al backend cuando cambia el id
+
   useEffect(() => {
     if (!id) return
     let vigente = true

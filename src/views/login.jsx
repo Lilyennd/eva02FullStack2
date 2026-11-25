@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { apiFetch } from '../services/api'
 import { guardarUsuario } from '../services/sesion'
 
-// Revisa que el correo termine en uno de los dominios permitidos
+
 function correoPermitido(correo) {
   const c = correo.trim().toLowerCase()
   return c.endsWith('@profesor.duoc.cl') || c.endsWith('@duocuc.cl') || c.endsWith('@gmail.com')
@@ -16,22 +16,21 @@ export default function Login() {
   const [errorCorreo, setErrorCorreo] = useState('')
   const [errorPassword, setErrorPassword] = useState('')
 
-  // Según el rol del usuario, lo manda a una página distinta
+a
   const redirigirSegunRol = (rol) => {
     if (rol === 2) {
-      navigate('/admin')       // Administrador
+      navigate('/admin')      
     } else if (rol === 3) {
-      navigate('/inventario')  // Vendedor
+      navigate('/inventario') 
     } else {
-      navigate('/home')        // Cliente
+      navigate('/home')       
     }
   }
 
-  // Integración de Google Identity Services
+  
   useEffect(() => {
     const inicializarGoogle = () => {
       if (window.google?.accounts?.id) {
-        // Le dice a Google cuál es tu app (el ID viene del .env)
         window.google.accounts.id.initialize({
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
           callback: handleGoogleResponse,
@@ -39,12 +38,12 @@ export default function Login() {
 
         const divBoton = document.getElementById('googleBtnDiv')
         if (divBoton) {
-          // Mide cuánto espacio hay disponible dentro de la tarjeta
+
           const anchoDisponible = divBoton.parentElement.clientWidth
-          // Google acepta botones de 200 a 400 px, usamos máximo 320
+
           const ancho = Math.min(320, Math.max(200, anchoDisponible))
 
-          // Dibuja el botón de Google con ese ancho
+  
           window.google.accounts.id.renderButton(divBoton, {
             theme: 'outline',
             size: 'large',
@@ -55,7 +54,7 @@ export default function Login() {
       }
     }
 
-    // Si el script de Google ya cargó, inicia de inmediato; si no, espera 1 segundo
+
     if (window.google?.accounts?.id) {
       inicializarGoogle()
     } else {
@@ -64,7 +63,7 @@ export default function Login() {
     }
   }, [])
 
-  // Se ejecuta cuando Google devuelve el token: lo manda al backend para validarlo
+
   const handleGoogleResponse = async (response) => {
     try {
       const res = await apiFetch('/api/login/google', {
@@ -85,7 +84,7 @@ export default function Login() {
     }
   }
 
-  // Login normal con correo y contraseña
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorCorreo('')
@@ -117,7 +116,7 @@ export default function Login() {
         return
       }
 
-      // Guarda usuario y token JWT
+
       guardarUsuario(data.usuario, data.token)
       redirigirSegunRol(data.usuario.id_rol)
     } catch (error) {
@@ -170,7 +169,6 @@ export default function Login() {
                   <span className="text-muted small">o inicia sesión con</span>
                 </div>
 
-                {/* Botón oficial de Google Identity Services */}
                 <div className="d-flex justify-content-center mb-3 overflow-hidden">
                   <div id="googleBtnDiv"></div>
                 </div>

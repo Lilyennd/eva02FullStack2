@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiFetch, API_URL } from '../services/api'
 
-// Decide dónde está la imagen del blog
+
 export const rutaImagenBlog = (img) => {
   if (!img) return '/img/fondoaz.jpg'
-  // Imagen subida desde el formulario: vive en el backend
+
   if (img.startsWith('/uploads/')) return API_URL + '/api/v1' + img
   if (/^(https?:)?\/\//.test(img) || img.startsWith('/')) return img
   if (img.startsWith('img/')) return '/' + img
@@ -17,7 +17,7 @@ export default function Blogs() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(false)
 
-  // Al cargar la página, pide la lista de blogs al backend
+
   useEffect(() => {
     let vigente = true
     apiFetch('/api/blogs')

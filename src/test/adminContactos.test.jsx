@@ -46,27 +46,27 @@ describe('Vista Bandeja de Contacto (Admin)', () => {
     expect(screen.getByText('Pedro Morales')).toBeInTheDocument()
     expect(screen.getByText('Sin leer: 1')).toBeInTheDocument()
 
-    // Filtrar solo mensajes "Sin leer"
+  
     const selectEstado = screen.getByLabelText('Filtrar mensajes por estado')
     await user.selectOptions(selectEstado, 'Sin leer')
     expect(screen.getByText('Camila Díaz')).toBeInTheDocument()
     expect(screen.queryByText('Pedro Morales')).not.toBeInTheDocument()
 
-    // Volver a "Todos" y filtrar por texto
+  
     await user.selectOptions(selectEstado, 'Todos')
     const buscador = screen.getByPlaceholderText('Buscar por nombre, correo o contenido del mensaje')
     await user.type(buscador, 'esmeraldas')
     expect(screen.getByText('Pedro Morales')).toBeInTheDocument()
     expect(screen.queryByText('Camila Díaz')).not.toBeInTheDocument()
 
-    // Limpiar búsqueda y marcar el mensaje nuevo como leído
+
     await user.clear(buscador)
     await user.click(screen.getByRole('button', { name: 'Marcar leído' }))
     await waitFor(() => expect(contactoApi.marcarLeido).toHaveBeenCalledWith(1))
     expect(await screen.findByText('Mensaje marcado como leído.')).toBeInTheDocument()
     expect(screen.getByText('Sin leer: 0')).toBeInTheDocument()
 
-    // Eliminar el primer mensaje
+
     const botonesEliminar = screen.getAllByRole('button', { name: 'Eliminar' })
     await user.click(botonesEliminar[0])
     await waitFor(() => expect(contactoApi.eliminar).toHaveBeenCalledWith(1))

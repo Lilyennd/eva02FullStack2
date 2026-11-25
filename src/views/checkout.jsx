@@ -183,7 +183,7 @@ export default function Checkout() {
     }
   }
 
-  // El backend solo permite crear órdenes (POST /ordenes) a CLIENTE y ADMIN; el vendedor no compra
+
   if (esVendedor(usuario)) {
     return (
       <div className="background min-vh-100 py-5">
@@ -196,7 +196,7 @@ export default function Checkout() {
     )
   }
 
-  // Obligatorio iniciar sesión para comprar (Rúbrica de Seguridad)
+
   if (!usuario) {
     return (
       <div className="background min-vh-100 py-5">

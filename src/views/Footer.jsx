@@ -35,7 +35,7 @@ const redes = [
 
 function Footer() {
   const usuario = useUsuario()
-  // Staff (admin/vendedor): sin enlaces de la tienda. Cliente con sesión: sin registro ni inicio de sesión.
+
   const mostrarNavegacion = !esStaff(usuario)
   const enlacesVisibles = usuario
     ? enlaces.filter((e) => e.to !== '/registroUsuario' && e.to !== '/login')
