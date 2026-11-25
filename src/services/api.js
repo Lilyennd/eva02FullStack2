@@ -5,9 +5,9 @@
 const env = import.meta.env || {}
 
 // Backend en el VPS 
-export const API_URL = (env.VITE_API_URL || 'http://186.64.113.33:8008').replace(/\/$/, '')
+//export const API_URL = (env.VITE_API_URL || 'http://186.64.113.33:8008').replace(/\/$/, '')
 // Backend local 
-// export const API_URL = (env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '')
+ export const API_URL = (env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '')
 
 // fetch automático anteponiendo API_URL, agregando Authorization Bearer y versionando a /api/v1/
 export function apiFetch(ruta, opciones = {}) {
